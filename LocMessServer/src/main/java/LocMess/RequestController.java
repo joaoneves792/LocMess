@@ -62,6 +62,11 @@ public class RequestController {
         }
     }
 
+
+    /*----------------------------------------------
+    DEBUG METHODS
+    ------------------------------------------------ */
+
     @RequestMapping("/test")
     public Response testSession(@RequestParam(value="id") long id){
         if(_sessions.containsKey(id)){
@@ -69,6 +74,13 @@ public class RequestController {
         }else{
             return new Response(false);
         }
+    }
+
+    @RequestMapping("debug-clear-all")
+    public Response clearAll(){
+        _sessions.clear();
+        _registeredUsers.clear();
+        return new Response(true);
     }
 
 }
