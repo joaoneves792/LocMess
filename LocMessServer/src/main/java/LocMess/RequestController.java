@@ -6,12 +6,15 @@ import LocMess.Exceptions.AuthenticationException;
 import LocMess.Exceptions.InsufficientArgumentsException;
 import LocMess.Locations.GPSLocation;
 import LocMess.Locations.Location;
+import LocMess.Locations.WiFiLocation;
 import LocMess.Responses.Cookie;
 import LocMess.Responses.LocationsList;
 import LocMess.Responses.Response;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -87,7 +90,7 @@ public class RequestController implements ErrorController{
                                    @RequestParam(value="longitude", required=false)Double longitude,
                                    @RequestParam(value="radius", required=false)Double radius
         ){*/
-    @RequestMapping(value="/createLocation", method= RequestMethod.POST)
+    @RequestMapping(value="/locations", method= RequestMethod.POST)
     public Response createLocation(@RequestBody Map<String, String> params){
         try{
             if(params.containsKey("id")) {
@@ -96,26 +99,39 @@ public class RequestController implements ErrorController{
                 throw new AuthenticationException();
             }
 
+            String locationName;
+            Location location;
+
             if(params.containsKey("name") &&
                     params.containsKey("latitude") &&
                     params.containsKey("longitude") &&
-                    params.containsKey("radius")){
+                    params.containsKey("radius")) {
 
-                String locationName = params.get("name");
+                locationName = params.get("name");
 
                 Double latitude = new Double(params.get("latitude"));
                 Double longitude = new Double(params.get("longitude"));
                 Double radius = new Double(params.get("radius"));
 
-                Location location = new GPSLocation(locationName, latitude, longitude, radius);
-                if(_locations.containsKey(locationName)){
-                    _locations.remove(locationName);
-                }
-                _locations.put(locationName, location);
-                return new Response(true, "Location successfully added.");
+                location = new GPSLocation(locationName, latitude, longitude, radius);
+
+            }else if(params.containsKey("name")){
+                locationName = params.get("name");
+
+                params.remove("name");
+                params.remove("id");
+                Collection<String> ssids = params.values();
+                location = new WiFiLocation(locationName, ssids);
+
             }else{
                 throw new InsufficientArgumentsException();
             }
+
+            if (_locations.containsKey(locationName)) {
+                _locations.remove(locationName);
+            }
+            _locations.put(locationName, location);
+            return new Response(true, "Location successfully added.");
 
         }catch (InsufficientArgumentsException |
                 AuthenticationException e){
@@ -123,11 +139,25 @@ public class RequestController implements ErrorController{
         }
     }
 
-    @RequestMapping(value="/listLocations", method = RequestMethod.GET)
+    @RequestMapping(value="/locations", method = RequestMethod.GET)
     public Response listLocations(@RequestParam(value = "id")long sessionId){
         try {
             getSession(sessionId);
             return new LocationsList(_locations.elements());
+        }catch (AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
+    @RequestMapping(value="/locations/{locationName}", method = RequestMethod.DELETE)
+    public Response deleteLocation(@PathVariable("locationName") String locationName, @RequestParam(value="id")long sessionId){
+        try{
+            getSession(sessionId);
+            if(_locations.containsKey(locationName)){
+                _locations.remove(locationName);
+            }
+            return new Response(true);
+
         }catch (AuthenticationException e){
             return new Response(e);
         }

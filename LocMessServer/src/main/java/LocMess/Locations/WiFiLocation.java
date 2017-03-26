@@ -1,21 +1,21 @@
 package LocMess.Locations;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by joao on 3/25/17.
  */
 public class WiFiLocation extends Location{
-    private List<String> _wifiIds;
+    private Collection<String> _wifiIds;
 
     private final String _type = "Wifi";
 
-    public WiFiLocation(String name, List<String> wifiIds) {
+    public WiFiLocation(String name, Collection<String> wifiIds) {
         super(name);
         _wifiIds = wifiIds;
     }
 
-    public List<String> getWifiIds(){
+    public Collection<String> getWifiIds(){
         return _wifiIds;
     }
 

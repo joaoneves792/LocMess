@@ -9,6 +9,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertFalse;
@@ -92,12 +93,27 @@ public abstract class LocMessTest {
         vars.put("longitude", longitude.toString());
         vars.put("radius", radius.toString());
 
-        return this.restTemplate.postForObject(URL + port + "/createLocation", vars, String.class);
+        return this.restTemplate.postForObject(URL + port + "/locations", vars, String.class);
+    }
+
+    protected String addWifiLocation(String id, String name, List<String> ssids){
+        Map<String, String> vars = new HashMap<>();
+        vars.put("id", id);
+        vars.put("name", name);
+        String SSID = "ssid";
+        int i = 1;
+        for(String ssid : ssids){
+            vars.put(SSID+(i++), ssid);
+        }
+        return this.restTemplate.postForObject(URL+port+"/locations", vars, String.class);
     }
 
     protected String requestLocationList(String id){
-        return this.restTemplate.getForObject(URL + port + "/listLocations?id="+id, String.class);
+        return this.restTemplate.getForObject(URL + port + "/locations?id="+id, String.class);
     }
 
+    protected void deleteLocation(String id, String location){
+        this.restTemplate.delete(URL+port+"/locations/"+location+"?id="+id);
+    }
 
 }
