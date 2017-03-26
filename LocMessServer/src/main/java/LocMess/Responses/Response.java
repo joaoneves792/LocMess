@@ -16,6 +16,12 @@ public class Response {
         }
     }
 
+    public Response(boolean successful, String message){
+        _successful = successful;
+        _message = message;
+
+    }
+
     public Response(Exception e){
         _successful = false;
         _message = e.getMessage();

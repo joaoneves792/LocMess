@@ -1,5 +1,6 @@
 package LocMess;
 
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,32 @@ public class APITest {
        this.restTemplate.getForObject(URL+port+"/debug-clear-all", String.class);
     }
 
+    private void assertFail(String response)throws Exception{
+        JSONObject json = new JSONObject(response);
+        Boolean success = (Boolean)json.get("successful");
+        assertFalse("Request succeeded when it should have failed!", success);
+    }
+
+    private void assertSuccess(String response)throws Exception{
+        JSONObject json = new JSONObject(response);
+        Boolean success = (Boolean)json.get("successful");
+        assertTrue("Request failed when it should have succeeded!", success);
+    }
+
     private String register(String username, String password)throws Exception{
         return this.restTemplate.getForObject(URL + port + "/register?username="+username+"&password="+password, String.class);
     }
 
     private String login(String username, String password)throws Exception{
         return this.restTemplate.getForObject(URL + port + "/login?username="+username+"&password="+password, String.class);
+    }
+
+    private String logout(String id){
+        return this.restTemplate.getForObject(URL + port + "/logout?id="+id, String.class);
+    }
+
+    private String testSession(String id){
+        return this.restTemplate.getForObject(URL + port + "/test?id="+id, String.class);
     }
 
     @Test
@@ -59,24 +80,41 @@ public class APITest {
     @Test
     public void testRegister()throws Exception{
         String response = register(USERNAME, PASSWORD);
-        assertFalse("Register FAILED!", response.contains("false"));
+        assertSuccess(response);
+    }
+
+    @Test
+    public void testRegisterTwice()throws Exception{
+       testRegister();
+       assertFail(register(USERNAME, PASSWORD));
     }
 
     @Test
     public void loginTest()throws Exception{
         register(USERNAME, PASSWORD);
         String response = login(USERNAME, PASSWORD);
-        assertFalse("Login FAILED!", response.contains("false"));
+        assertSuccess(response);
     }
 
     @Test
     public void failedLogin()throws Exception{
         register(USERNAME, PASSWORD);
         String response = login(WRONG_USERNAME, PASSWORD);
-        assertTrue("Login accepted unregistered user", response.contains("false"));
+        assertFail(response);
         response = login(USERNAME, WRONG_PASSWORD);
-        assertTrue("Login accepted wrong password", response.contains("false"));
+        assertFail(response);
         response = login(WRONG_USERNAME, WRONG_PASSWORD);
-        assertTrue("Login accepted wrong username and password", response.contains("false"));
+        assertFail(response);
+    }
+
+    @Test
+    public void logoutTest()throws Exception{
+        register(USERNAME, PASSWORD);
+        String response = login(USERNAME, PASSWORD);
+        JSONObject json = new JSONObject(response);
+        String id = (json.get("sessionId")).toString();
+        assertSuccess(testSession(id));
+        assertSuccess(logout(id));
+        assertFail(testSession(id));
     }
 }
