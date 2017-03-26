@@ -3,13 +3,16 @@ package LocMess;
 import Crypto.Cryptography;
 import Crypto.exceptions.FailedToHashException;
 import LocMess.Exceptions.AuthenticationException;
+import LocMess.Exceptions.InsufficientArgumentsException;
+import LocMess.Locations.GPSLocation;
+import LocMess.Locations.Location;
 import LocMess.Responses.Cookie;
+import LocMess.Responses.LocationsList;
 import LocMess.Responses.Response;
 import org.springframework.boot.autoconfigure.web.ErrorController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -21,6 +24,14 @@ public class RequestController implements ErrorController{
 
     private ConcurrentHashMap<Long, Session> _sessions = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, String> _registeredUsers = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Location> _locations = new ConcurrentHashMap<>();
+
+    private Session getSession(long sessionId)throws AuthenticationException{
+        if(_sessions.containsKey(sessionId)){
+            return _sessions.get(sessionId);
+        }
+        throw new AuthenticationException("User is not logged in.");
+    }
 
     @RequestMapping("/register")
     public Response register(@RequestParam(value="username")String username, @RequestParam(value="password") String password){
@@ -69,6 +80,59 @@ public class RequestController implements ErrorController{
         return new Response(true);
     }
 
+    /*@RequestMapping(value="/createLocation", method= RequestMethod.POST)
+    public Response createLocation(@RequestParam(value="id")long sessionId,
+                                   @RequestParam(value="name")String locationName,
+                                   @RequestParam(value="latitude", required=false)Double latitude,
+                                   @RequestParam(value="longitude", required=false)Double longitude,
+                                   @RequestParam(value="radius", required=false)Double radius
+        ){*/
+    @RequestMapping(value="/createLocation", method= RequestMethod.POST)
+    public Response createLocation(@RequestBody Map<String, String> params){
+        try{
+            if(params.containsKey("id")) {
+                getSession(new Long(params.get("id")));
+            }else{
+                throw new AuthenticationException();
+            }
+
+            if(params.containsKey("name") &&
+                    params.containsKey("latitude") &&
+                    params.containsKey("longitude") &&
+                    params.containsKey("radius")){
+
+                String locationName = params.get("name");
+
+                Double latitude = new Double(params.get("latitude"));
+                Double longitude = new Double(params.get("longitude"));
+                Double radius = new Double(params.get("radius"));
+
+                Location location = new GPSLocation(locationName, latitude, longitude, radius);
+                if(_locations.containsKey(locationName)){
+                    _locations.remove(locationName);
+                }
+                _locations.put(locationName, location);
+                return new Response(true, "Location successfully added.");
+            }else{
+                throw new InsufficientArgumentsException();
+            }
+
+        }catch (InsufficientArgumentsException |
+                AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
+    @RequestMapping(value="/listLocations", method = RequestMethod.GET)
+    public Response listLocations(@RequestParam(value = "id")long sessionId){
+        try {
+            getSession(sessionId);
+            return new LocationsList(_locations.elements());
+        }catch (AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
     /*---------------------------------------------
      RESPONSE FOR BAD REQUESTS
      ---------------------------------------------*/
@@ -87,10 +151,11 @@ public class RequestController implements ErrorController{
     ------------------------------------------------ */
     @RequestMapping("/test")
     public Response testSession(@RequestParam(value="id") long id){
-        if(_sessions.containsKey(id)){
+        try {
+            getSession(id);
             return new Response(true);
-        }else{
-            return new Response(false);
+        }catch (AuthenticationException e){
+            return new Response(e);
         }
     }
 
@@ -98,6 +163,7 @@ public class RequestController implements ErrorController{
     public Response clearAll(){
         _sessions.clear();
         _registeredUsers.clear();
+        _locations.clear();
         return new Response(true);
     }
 
