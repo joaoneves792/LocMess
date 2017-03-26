@@ -8,6 +8,8 @@ public class GPSLocation extends Location{
     private double _longitude;
     private double _radius;
 
+    private final String _type = "GPS";
+
     public GPSLocation(String name, double latitude, double longitude, double radius) {
         super(name);
         _latitude = latitude;
@@ -25,5 +27,9 @@ public class GPSLocation extends Location{
 
     public double getRadius(){
         return _radius;
+    }
+
+    public String getType(){
+        return _type;
     }
 }

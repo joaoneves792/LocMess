@@ -8,6 +8,8 @@ import java.util.List;
 public class WiFiLocation extends Location{
     private List<String> _wifiIds;
 
+    private final String _type = "Wifi";
+
     public WiFiLocation(String name, List<String> wifiIds) {
         super(name);
         _wifiIds = wifiIds;
@@ -15,5 +17,9 @@ public class WiFiLocation extends Location{
 
     public List<String> getWifiIds(){
         return _wifiIds;
+    }
+
+    public String getType(){
+        return _type;
     }
 }
