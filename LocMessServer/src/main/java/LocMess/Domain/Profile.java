@@ -42,4 +42,8 @@ public class Profile {
         return _password;
     }
 
+    public boolean equals(Profile otherProfile){
+        return (_username.equals(otherProfile.getUsername()) && _password.equals(otherProfile.getPassword()));
+    }
+
 }

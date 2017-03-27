@@ -19,13 +19,13 @@ import static junit.framework.TestCase.assertTrue;
 public class ProfileTests extends LocMessTest {
 
 
-    private final String INTEREST1_KEY = "job";
-    private final String INTEREST1_VALUE = "Student";
-    private final String INTEREST1_DIFFERENT_VALUE = "Clown";
+    protected static final String INTEREST1_KEY = "job";
+    protected static final String INTEREST1_VALUE = "Student";
+    protected static final String INTEREST1_DIFFERENT_VALUE = "Clown";
 
-    private final String INTEREST2_KEY = "club";
-    private final String INTEREST2_VALUE = "SCP";
-    private final String INTEREST2_DIFFERENT_VALUE = "SLB";
+    protected static final String INTEREST2_KEY = "club";
+    protected static final String INTEREST2_VALUE = "SCP";
+    protected static final String INTEREST2_DIFFERENT_VALUE = "SLB";
 
     @Test
     public void addInterestTest()throws Exception{

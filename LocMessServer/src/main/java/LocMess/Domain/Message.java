@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public class Message {
 
+    private Long _id;
+
     private Profile _sender;
     private Location _location;
     private boolean _whitelisted;
@@ -23,7 +25,7 @@ public class Message {
     private Date _endDate;
 
 
-    public Message(Profile sender, Location location, boolean whitelisted, Map<String, String> rules, Date startDate, Date endDate, String message){
+    public Message(Long id, Profile sender, Location location, boolean whitelisted, Map<String, String> rules, Date startDate, Date endDate, String message){
         _sender = sender;
         _location = location;
         _whitelisted = whitelisted;
@@ -31,6 +33,7 @@ public class Message {
         _startDate = startDate;
         _endDate = endDate;
         _message = message;
+        _id = id;
     }
 
     public boolean canDeliver(Profile user, GPSLocation GPSLocation, WiFiLocation wiFiLocation){
@@ -102,6 +105,8 @@ public class Message {
         return _endDate;
     }
 
-
+    public Long getId(){
+        return _id;
+    }
 
 }

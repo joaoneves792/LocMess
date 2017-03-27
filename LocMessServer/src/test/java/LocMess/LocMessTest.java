@@ -135,4 +135,21 @@ public abstract class LocMessTest {
         return this.restTemplate.getForObject(URL+port+"/interests?id="+id, String.class);
     }
 
+    protected String postMessage(String id, String location, Map<String, String> rules, boolean whitelist, String startDate, String endDate, String message){
+        Map<String, String> vars = new HashMap<>();
+        vars.put("location", location);
+        vars.put("whitelist", (whitelist)?"true":"false");
+        vars.put("startDate", startDate);
+        vars.put("endDate", endDate);
+        vars.put("message", message);
+        if(null != rules)
+            vars.putAll(rules);
+
+        return this.restTemplate.postForObject(URL+port+"/messages/"+id, vars, String.class);
+    }
+
+    protected String getUserMessages(String id){
+        return this.restTemplate.getForObject(URL+port+"/messages/"+id, String.class);
+    }
+
 }

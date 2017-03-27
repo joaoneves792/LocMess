@@ -2,6 +2,7 @@ package LocMess;
 
 import Crypto.Cryptography;
 import Crypto.exceptions.FailedToHashException;
+import LocMess.Domain.Message;
 import LocMess.Domain.Profile;
 import LocMess.Domain.Session;
 import LocMess.Exceptions.AuthenticationException;
@@ -13,8 +14,10 @@ import LocMess.Responses.*;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -28,6 +31,9 @@ public class RequestController implements ErrorController{
     private ConcurrentHashMap<String, Profile> _registeredUsers = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Location> _locations = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Integer> _interestKeys = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, Message> _messages = new ConcurrentHashMap<>();
+    private long _messageId = 0;
+
 
     private Session getSession(long sessionId)throws AuthenticationException{
         if(_sessions.containsKey(sessionId)){
@@ -219,6 +225,68 @@ public class RequestController implements ErrorController{
         }
     }
 
+    @RequestMapping(value="/messages/{id}", method= RequestMethod.POST)
+    public Response createMessage(@PathVariable("id")long id, @RequestBody Map<String, String> params){
+        try{
+
+            Profile profile = getSession(id).getProfile();
+
+            Long messageId = _messageId++;
+
+            String desiredLocation = params.get("location");
+            if(!_locations.containsKey(desiredLocation))
+                return new Response(false, "Invalid location.");
+            Location location = _locations.get(desiredLocation);
+            params.remove("location");
+
+            boolean whitelisted = (params.get("whitelist").equals("true"));
+            params.remove("whitelist");
+
+            DateFormat format = new SimpleDateFormat("HH:mm-MM/dd/yyyy", Locale.ENGLISH); //Example 14:30-12/24/2017
+            Date startDate = format.parse(params.get("startDate"));
+            Date endDate = format.parse(params.get("endDate"));
+            params.remove("startDate");
+            params.remove("endDate");
+
+            String message = params.get("message");
+            params.remove("message");
+
+            Map<String, String> rules = null;
+
+            if(params.values().size() > 0){
+                rules = new HashMap<>(params);
+            }
+
+            Message m = new Message(messageId, profile, location, whitelisted, rules, startDate, endDate, message);
+
+            _messages.put(messageId, m);
+            return new Response(true, "Message successfully posted.");
+
+        }catch (AuthenticationException |
+                ParseException e){
+            return new Response(e);
+        }
+
+    }
+
+    @RequestMapping(value="/messages/{id}", method=RequestMethod.GET)
+    public Response listUserMessages(@PathVariable("id")long id){
+        try {
+            Profile profile = getSession(id).getProfile();
+
+            List<Message> messages = new LinkedList<>();
+            for(Message m : _messages.values()){
+                if(profile.equals(m.getSender()))
+                    messages.add(m);
+            }
+
+            return new MessagesList(messages);
+
+        }catch (AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
     /*---------------------------------------------
      RESPONSE FOR BAD REQUESTS
      ---------------------------------------------*/
@@ -251,6 +319,7 @@ public class RequestController implements ErrorController{
         _registeredUsers.clear();
         _locations.clear();
         _interestKeys.clear();
+        _messages.clear();
         return new Response(true);
     }
 

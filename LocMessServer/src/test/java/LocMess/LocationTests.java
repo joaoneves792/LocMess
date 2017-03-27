@@ -16,21 +16,21 @@ import static junit.framework.TestCase.assertTrue;
 public class LocationTests extends LocMessTest {
 
 
-    private static final String LOCATION_NAME = "Arco do Cego";
-    private static final double LOCATION_LATITUDE = 38.7343829;
-    private static final double LOCATION_LONGITUDE = -9.1403882;
-    private static final double LOCATION_RADIUS = 20;
+    protected static final String LOCATION_NAME = "Arco do Cego";
+    protected static final double LOCATION_LATITUDE = 38.7343829;
+    protected static final double LOCATION_LONGITUDE = -9.1403882;
+    protected static final double LOCATION_RADIUS = 20;
 
 
-    private static final String LOCATION2_NAME = "Taguspark";
-    private static final double LOCATION2_LATITUDE = 48.7343829;
-    private static final double LOCATION2_LONGITUDE = -19.1403882;
-    private static final double LOCATION2_RADIUS = 200;
+    protected static final String LOCATION2_NAME = "Taguspark";
+    protected static final double LOCATION2_LATITUDE = 48.7343829;
+    protected static final double LOCATION2_LONGITUDE = -19.1403882;
+    protected static final double LOCATION2_RADIUS = 200;
 
-    private static final String WIFI_LOCATION_NAME = "RNL";
-    private static final String SSID1 = "eduroam";
-    private static final String SSID2 = "ZON-B4C31";
-    private static final String SSID3 = "MEO-CD35F";
+    protected static final String WIFI_LOCATION_NAME = "RNL";
+    protected static final String SSID1 = "eduroam";
+    protected static final String SSID2 = "ZON-B4C31";
+    protected static final String SSID3 = "MEO-CD35F";
 
     @Test
     public void addLocationTest()throws Exception{
