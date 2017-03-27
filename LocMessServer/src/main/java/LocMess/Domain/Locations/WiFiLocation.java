@@ -22,4 +22,16 @@ public class WiFiLocation extends Location{
     public String getType(){
         return _type;
     }
+
+    /*Another location is equal to this location if it contains at least all the ssids this one contains*/
+    public boolean equals(Location otherLocation){
+        if(!otherLocation.getType().equals(_type))
+            return false;
+        WiFiLocation otherWiFiLocation = (WiFiLocation)otherLocation;
+        for(String ssid : _wifiIds){
+            if(!otherWiFiLocation.getWifiIds().contains(ssid))
+                return false;
+        }
+        return true;
+    }
 }
