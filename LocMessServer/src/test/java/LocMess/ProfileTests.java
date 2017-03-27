@@ -21,10 +21,11 @@ public class ProfileTests extends LocMessTest {
 
     private final String INTEREST1_KEY = "job";
     private final String INTEREST1_VALUE = "Student";
+    private final String INTEREST1_DIFFERENT_VALUE = "Clown";
 
     private final String INTEREST2_KEY = "club";
     private final String INTEREST2_VALUE = "SCP";
-
+    private final String INTEREST2_DIFFERENT_VALUE = "SLB";
 
     @Test
     public void addInterestTest()throws Exception{
@@ -116,5 +117,37 @@ public class ProfileTests extends LocMessTest {
 
         json = (JSONArray)new JSONObject(response).get("keys");
         assertEquals(0, json.length());
+    }
+
+    @Test
+    public void multipleUsersInterestsTest()throws Exception{
+        addMultipleInterestsTest();
+        register(USERNAME2, PASSWORD2);
+
+        String id1 = loginGetId(USERNAME, PASSWORD);
+        String id2 = loginGetId(USERNAME2, PASSWORD2);
+
+        addInterest(id2, INTEREST1_KEY, INTEREST1_DIFFERENT_VALUE);
+
+        String response = getInterests(id1);
+
+        assertSuccess(response);
+        assertTrue(response.contains(INTEREST1_KEY));
+        assertTrue(response.contains(INTEREST1_VALUE));
+        assertTrue(response.contains(INTEREST2_KEY));
+        assertTrue(response.contains(INTEREST2_VALUE));
+
+        response = getInterests(id2);
+        assertSuccess(response);
+        assertTrue(response.contains(INTEREST1_KEY));
+        assertTrue(response.contains(INTEREST1_DIFFERENT_VALUE));
+
+        response = listAllInterests(id1);
+        assertTrue(response.contains(INTEREST1_KEY));
+        assertTrue(response.contains(INTEREST2_KEY));
+
+        JSONArray json = (JSONArray)new JSONObject(response).get("keys");
+        assertEquals(2, json.length());
+
     }
 }

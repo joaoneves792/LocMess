@@ -36,6 +36,9 @@ public abstract class LocMessTest {
     public static final String USERNAME = "spammer92";
     public static final String PASSWORD = "123456";
 
+    public static final String USERNAME2 = "clickbait87";
+    public static final String PASSWORD2 = "654321";
+
 
     @org.junit.Before
     public void setUp() throws Exception {
