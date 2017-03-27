@@ -1,4 +1,4 @@
-package LocMess.Locations;
+package LocMess.Domain.Locations;
 
 import java.util.Collection;
 

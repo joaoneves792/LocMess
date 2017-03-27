@@ -2,19 +2,18 @@ package LocMess;
 
 import Crypto.Cryptography;
 import Crypto.exceptions.FailedToHashException;
+import LocMess.Domain.Profile;
+import LocMess.Domain.Session;
 import LocMess.Exceptions.AuthenticationException;
 import LocMess.Exceptions.InsufficientArgumentsException;
-import LocMess.Locations.GPSLocation;
-import LocMess.Locations.Location;
-import LocMess.Locations.WiFiLocation;
-import LocMess.Responses.Cookie;
-import LocMess.Responses.LocationsList;
-import LocMess.Responses.Response;
+import LocMess.Domain.Locations.GPSLocation;
+import LocMess.Domain.Locations.Location;
+import LocMess.Domain.Locations.WiFiLocation;
+import LocMess.Responses.*;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,8 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RequestController implements ErrorController{
 
     private ConcurrentHashMap<Long, Session> _sessions = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, String> _registeredUsers = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Profile> _registeredUsers = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Location> _locations = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Integer> _interestKeys = new ConcurrentHashMap<>();
 
     private Session getSession(long sessionId)throws AuthenticationException{
         if(_sessions.containsKey(sessionId)){
@@ -43,7 +43,7 @@ public class RequestController implements ErrorController{
                 throw new AuthenticationException("User already exists.");
 
             String passwordToStore = Cryptography.encodeForStorage(Cryptography.hash(password.getBytes()));
-            _registeredUsers.put(username, passwordToStore);
+            _registeredUsers.put(username, new Profile(username, passwordToStore));
 
             return new Response(true);
 
@@ -61,9 +61,9 @@ public class RequestController implements ErrorController{
 
 
             String hashedPassword = Cryptography.encodeForStorage(Cryptography.hash(password.getBytes()));
-            if(_registeredUsers.get(username).equals(hashedPassword)){
+            if(_registeredUsers.get(username).getPassword().equals(hashedPassword)){
                 Cookie sessionCookie = new Cookie(true);
-                Session session = new Session(sessionCookie.getSessionId(), username);
+                Session session = new Session(sessionCookie.getSessionId(), _registeredUsers.get(username));
                 _sessions.put(sessionCookie.getSessionId(), session);
                 return sessionCookie;
             }else
@@ -83,13 +83,6 @@ public class RequestController implements ErrorController{
         return new Response(true);
     }
 
-    /*@RequestMapping(value="/createLocation", method= RequestMethod.POST)
-    public Response createLocation(@RequestParam(value="id")long sessionId,
-                                   @RequestParam(value="name")String locationName,
-                                   @RequestParam(value="latitude", required=false)Double latitude,
-                                   @RequestParam(value="longitude", required=false)Double longitude,
-                                   @RequestParam(value="radius", required=false)Double radius
-        ){*/
     @RequestMapping(value="/locations", method= RequestMethod.POST)
     public Response createLocation(@RequestBody Map<String, String> params){
         try{
@@ -163,6 +156,69 @@ public class RequestController implements ErrorController{
         }
     }
 
+    @RequestMapping(value = "/profiles/{id}", method = RequestMethod.GET)
+    public Response listInterests(@PathVariable(value = "id")long id){
+        try {
+            Profile profile = getSession(id).getProfile();
+            return new InterestsList(profile.getInterests());
+        }catch (AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
+    @RequestMapping(value="/profiles/{id}/{key}", method = RequestMethod.PUT)
+    public Response addInterest(@PathVariable("id")long id, @PathVariable(value ="key")String key, @RequestParam(value="value")String value){
+        try {
+            Profile profile = getSession(id).getProfile();
+            profile.addInterest(key, value);
+            if(_interestKeys.containsKey(key)){
+                int count = _interestKeys.get(key);
+                _interestKeys.put(key, ++count);
+            }else{
+                _interestKeys.put(key, 1);
+            }
+
+            return new Response(true, "Successfully added a new interest.");
+
+        }catch (AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
+    @RequestMapping(value = "/profiles/{id}/{key}", method = RequestMethod.DELETE)
+    public Response removeInterest(@PathVariable("id")long id, @PathVariable("key")String key){
+        try {
+            Profile profile = getSession(id).getProfile();
+            if(profile.getInterests().containsKey(key)){
+                profile.getInterests().remove(key);
+                int count = _interestKeys.get(key);
+                count--;
+                if(count<=0){
+                    _interestKeys.remove(key);
+                }else{
+                    _interestKeys.put(key, count);
+                }
+            }else{
+                return new Response(false, "There is no interest with this key.");
+            }
+            return new Response(true, "Successfully deleted this interest.");
+
+        }catch (AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
+    @RequestMapping(value = "/interests", method = RequestMethod.GET)
+    public Response listGlobalInterests(@RequestParam("id")long id){
+        try {
+            getSession(id);
+            return new PossibleKeysList(_interestKeys.keys());
+
+        }catch (AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
     /*---------------------------------------------
      RESPONSE FOR BAD REQUESTS
      ---------------------------------------------*/
@@ -194,6 +250,7 @@ public class RequestController implements ErrorController{
         _sessions.clear();
         _registeredUsers.clear();
         _locations.clear();
+        _interestKeys.clear();
         return new Response(true);
     }
 

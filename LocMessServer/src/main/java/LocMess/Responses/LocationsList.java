@@ -1,9 +1,8 @@
 package LocMess.Responses;
 
-import LocMess.Locations.Location;
+import LocMess.Domain.Locations.Location;
 
 import java.util.Enumeration;
-import java.util.List;
 
 /**
  * Created by joao on 3/25/17.

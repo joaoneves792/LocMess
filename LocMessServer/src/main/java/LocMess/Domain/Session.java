@@ -1,4 +1,4 @@
-package LocMess;
+package LocMess.Domain;
 
 import java.security.SecureRandom;
 import java.util.Date;
@@ -12,12 +12,12 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * Created by joao on 3/25/17.
  */
 public class Session {
-    private final String _username;
+    private Profile _profile;
     private long _sessionId;
     private Date _loginTimestamp;
 
-    public Session(long sessionId, String user){
-        _username = user;
+    public Session(long sessionId, Profile profile){
+        _profile = profile;
         _sessionId = sessionId;
         _loginTimestamp = new Date();
     }
@@ -27,8 +27,12 @@ public class Session {
         return _sessionId;
     }
 
+    public Profile getProfile(){
+        return _profile;
+    }
+
     public String getUsername(){
-        return _username;
+        return _profile.getUsername();
     }
 
     public boolean isExpired(){

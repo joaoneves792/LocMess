@@ -1,4 +1,4 @@
-package LocMess.Locations;
+package LocMess.Domain.Locations;
 
 /**
  * Created by joao on 3/25/17.

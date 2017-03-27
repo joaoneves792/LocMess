@@ -116,4 +116,20 @@ public abstract class LocMessTest {
         this.restTemplate.delete(URL+port+"/locations/"+location+"?id="+id);
     }
 
+    protected void addInterest(String id, String key, String value){
+        this.restTemplate.put(URL+port+"/profiles/"+id+"/"+key+"?value="+value, null);
+    }
+
+    protected String getInterests(String id){
+        return this.restTemplate.getForObject(URL+port+"/profiles/"+id, String.class);
+    }
+
+    protected void deleteInterest(String id, String key){
+        this.restTemplate.delete(URL+port+"/profiles/"+id+"/"+key);
+    }
+
+    protected String listAllInterests(String id){
+        return this.restTemplate.getForObject(URL+port+"/interests?id="+id, String.class);
+    }
+
 }
