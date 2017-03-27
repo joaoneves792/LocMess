@@ -152,6 +152,10 @@ public abstract class LocMessTest {
         return this.restTemplate.getForObject(URL+port+"/messages/"+id, String.class);
     }
 
+    protected void deleteMessage(String id, String messageId){
+        this.restTemplate.delete(URL+port+"/messages/"+id+"/"+messageId);
+    }
+
     protected String getMessages(String id, double latitude, double longitude, List<String> ssids){
         String ssidList = "";
         for(String ssid : ssids)

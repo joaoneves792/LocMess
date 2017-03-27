@@ -1,5 +1,6 @@
 package LocMess.Responses;
 
+import LocMess.Domain.DeliverableMessage;
 import LocMess.Domain.Locations.Location;
 import LocMess.Domain.Message;
 
@@ -10,14 +11,14 @@ import java.util.List;
  * Created by joao on 3/25/17.
  */
 public class MessagesList extends Response{
-    private List<Message> _messages;
+    private List<DeliverableMessage> _messages;
 
-    public MessagesList(List<Message> messages) {
+    public MessagesList(List<DeliverableMessage> messages) {
         super(true);
         _messages = messages;
     }
 
-    public List<Message> getMessages(){
+    public List<DeliverableMessage> getMessages(){
         return _messages;
     }
 

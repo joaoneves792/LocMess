@@ -1,5 +1,7 @@
 package LocMess;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -160,5 +162,38 @@ public class MessageTests extends LocMessTest {
         assertSuccess(response);
         assertFalse(response.contains(MESSAGE1));
 
+    }
+
+    @Test
+    public void deleteMessageTest()throws Exception{
+        String id = loginGetId(USERNAME, PASSWORD);
+
+        String response = postMessage(id, LocationTests.LOCATION_NAME, null, true, today, tomorrow, MESSAGE1);
+        assertSuccess(response);
+
+        response = getUserMessages(id);
+        assertSuccess(response);
+        assertTrue(response.contains(MESSAGE1));
+
+        JSONObject json = new JSONObject(response);
+        JSONArray array = (JSONArray)json.get("messages");
+        JSONObject firstMessage = (JSONObject)array.get(0);
+        String messageId = firstMessage.get("id").toString();
+
+        response = getMessages(id, LocationTests.LOCATION_LATITUDE, LocationTests.LOCATION_LONGITUDE, Arrays.asList(LocationTests.SSID3));
+        assertSuccess(response);
+        assertTrue(response.contains(MESSAGE1));
+
+
+        deleteMessage(id, messageId);
+
+
+        response = getUserMessages(id);
+        assertSuccess(response);
+        assertFalse(response.contains(MESSAGE1));
+
+        response = getMessages(id, LocationTests.LOCATION_LATITUDE, LocationTests.LOCATION_LONGITUDE, Arrays.asList(LocationTests.SSID3));
+        assertSuccess(response);
+        assertFalse(response.contains(MESSAGE1));
     }
 }

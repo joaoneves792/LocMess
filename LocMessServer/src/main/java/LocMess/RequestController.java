@@ -276,13 +276,34 @@ public class RequestController implements ErrorController{
         try {
             Profile profile = getSession(id).getProfile();
 
-            List<Message> messages = new LinkedList<>();
+            List<DeliverableMessage> messages = new LinkedList<>();
             for(Message m : _messages.values()){
                 if(profile.equals(m.getSender()))
-                    messages.add(m);
+                    messages.add(new DeliverableMessage(m));
             }
 
             return new MessagesList(messages);
+
+        }catch (AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
+    @RequestMapping(value = "/messages/{id}/{messageId}", method = RequestMethod.DELETE)
+    public Response deleteMessage(@PathVariable(value = "id")long id, @PathVariable(value = "messageId")long messageId){
+        try {
+            Profile profile = getSession(id).getProfile();
+
+            if(!_messages.containsKey(messageId)){
+                return new Response(false, "There is no such message on the server!");
+            }
+            Message m = _messages.get(messageId);
+            if(!m.getSender().equals(profile)){
+                return new Response(false, "The message that you are trying to delete doesn't belong to you!");
+            }
+            _messages.remove(messageId);
+
+            return new Response(true, "Message successfully deleted.");
 
         }catch (AuthenticationException e){
             return new Response(e);
@@ -304,7 +325,7 @@ public class RequestController implements ErrorController{
                 }
             }
 
-            return new DeliverMessagesList(messages);
+            return new MessagesList(messages);
 
         }catch (AuthenticationException e){
             return new Response(e);
