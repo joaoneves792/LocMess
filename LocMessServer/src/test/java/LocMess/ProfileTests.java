@@ -4,11 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SplittableRandom;
-
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;

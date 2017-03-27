@@ -152,4 +152,12 @@ public abstract class LocMessTest {
         return this.restTemplate.getForObject(URL+port+"/messages/"+id, String.class);
     }
 
+    protected String getMessages(String id, double latitude, double longitude, List<String> ssids){
+        String ssidList = "";
+        for(String ssid : ssids)
+            ssidList += ssid+",";
+        ssidList = ssidList.replaceAll(",$", "");
+        return this.restTemplate.getForObject(URL+port+"/messages?id="+id+"&latitude="+latitude+"&longitude="+longitude+"&ssid="+ssidList, String.class);
+    }
+
 }

@@ -2,6 +2,7 @@ package LocMess;
 
 import Crypto.Cryptography;
 import Crypto.exceptions.FailedToHashException;
+import LocMess.Domain.DeliverableMessage;
 import LocMess.Domain.Message;
 import LocMess.Domain.Profile;
 import LocMess.Domain.Session;
@@ -19,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
@@ -32,7 +34,7 @@ public class RequestController implements ErrorController{
     private ConcurrentHashMap<String, Location> _locations = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Integer> _interestKeys = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Long, Message> _messages = new ConcurrentHashMap<>();
-    private long _messageId = 0;
+    private AtomicLong _messageId = new AtomicLong(0);
 
 
     private Session getSession(long sessionId)throws AuthenticationException{
@@ -231,7 +233,7 @@ public class RequestController implements ErrorController{
 
             Profile profile = getSession(id).getProfile();
 
-            Long messageId = _messageId++;
+            Long messageId = _messageId.incrementAndGet();
 
             String desiredLocation = params.get("location");
             if(!_locations.containsKey(desiredLocation))
@@ -281,6 +283,28 @@ public class RequestController implements ErrorController{
             }
 
             return new MessagesList(messages);
+
+        }catch (AuthenticationException e){
+            return new Response(e);
+        }
+    }
+
+    @RequestMapping(value = "/messages", method = RequestMethod.GET)
+    public Response getMessages(@RequestParam(value = "id")long id, @RequestParam(value = "latitude")double latitude, @RequestParam(value = "longitude")double longitude, @RequestParam(value = "ssid") List<String> ssids){
+        try {
+            Profile profile = getSession(id).getProfile();
+            GPSLocation gps = new GPSLocation("", latitude, longitude, 0);
+            WiFiLocation wifi = new WiFiLocation("", ssids);
+
+            List<DeliverableMessage> messages = new LinkedList<>();
+
+            for(Message m : _messages.values()){
+                if(m.canDeliver(profile,gps, wifi)){
+                    messages.add(new DeliverableMessage(m));
+                }
+            }
+
+            return new DeliverMessagesList(messages);
 
         }catch (AuthenticationException e){
             return new Response(e);

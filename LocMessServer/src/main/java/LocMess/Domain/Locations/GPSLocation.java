@@ -84,9 +84,6 @@ public class GPSLocation extends Location{
             return false;
         GPSLocation otherGPSLocation = (GPSLocation)otherLocation;
 
-        if(this.distanceTo(otherGPSLocation) <= this.getRadius())
-            return true;
-        else
-            return false;
+        return this.distanceTo(otherGPSLocation) <= this.getRadius();
     }
 }
