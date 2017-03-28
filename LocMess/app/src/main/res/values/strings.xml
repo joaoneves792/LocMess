@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="app_name">LocMess</string>
+
+    <string name="login">Login</string>
+    <string name="signup">Signup</string>
+    <string name="submit">Submit</string>
+
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+    <string name="home">Home</string>
+
+</resources>
