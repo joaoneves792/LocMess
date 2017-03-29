@@ -3,8 +3,13 @@ package pt.ulisboa.tecnico.cmov.locmess;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import pt.ulisboa.tecnico.cmov.locmess.ServerCommands.RegisterCommand;
+import pt.ulisboa.tecnico.cmov.locmess.Tasks.SimpleToastTask;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -20,13 +25,17 @@ public class SignupActivity extends AppCompatActivity {
         // autofill username from login screen
         EditText editText = (EditText) findViewById(R.id.editTextUsername);
         editText.setText(message);
+
     }
 
     /** Called when the user taps the SIGNUP button */
     public void submit(View view) {
         Intent intent = new Intent(this, HomeActivity.class);
 
-        startActivity(intent);
+        RegisterCommand command = new RegisterCommand("admin", "password");
+        (new SimpleToastTask(getApplicationContext())).execute(new RegisterCommand("admin", "12345"));
+
+        //startActivity(intent);
     }
 
 
