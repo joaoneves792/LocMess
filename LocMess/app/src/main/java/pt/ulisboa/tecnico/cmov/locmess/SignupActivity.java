@@ -29,7 +29,14 @@ public class SignupActivity extends AppCompatActivity {
 
     /** Called when the user taps the SIGNUP button */
     public void submit(View view) {
-        (new RegisterTask(this,"admin", "12345")).execute();
+        String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
+        String password = ((EditText)findViewById(R.id.editTextPassword)).getText().toString();
+        String retypePassword = ((EditText)findViewById(R.id.editTextPasswordRetype)).getText().toString();
+        if(password.equals(retypePassword)) {
+            (new RegisterTask(this, username, password)).execute();
+        }else{
+            Toast.makeText(this, getResources().getString(R.string.badPasswordMatch), Toast.LENGTH_SHORT).show();
+        }
     }
 
 

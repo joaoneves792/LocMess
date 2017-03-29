@@ -1,29 +1,30 @@
 package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
- import android.content.Context;
- import android.content.Intent;
- import android.util.Log;
- import android.widget.Toast;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
 
- import org.codehaus.jackson.map.ObjectMapper;
- import org.springframework.web.client.RestClientException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.web.client.RestClientException;
 
- import java.io.IOException;
+import java.io.IOException;
 
- import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
- import pt.ulisboa.tecnico.cmov.locmess.LoginActivity;
- import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
+import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
+import pt.ulisboa.tecnico.cmov.locmess.LoginActivity;
+import pt.ulisboa.tecnico.cmov.locmess.Responses.Cookie;
+import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 /**
  * Created by joao on 3/29/17.
  */
 
-public class RegisterTask extends RestTask{
+public class LoginTask extends RestTask{
 
     private String _username;
     private String _password;
 
-    public RegisterTask(Context appContext, String username, String password){
+    public LoginTask(Context appContext, String username, String password){
         super(appContext);
         _username = username;
         _password = password;
@@ -32,7 +33,7 @@ public class RegisterTask extends RestTask{
     @Override
     protected String doInBackground(Void... params){
         try {
-            return _rest.getForObject(_url+"/register?username=" + _username + "&password=" + _password, String.class);
+            return _rest.getForObject(_url+"/login?username=" + _username + "&password=" + _password, String.class);
         }catch (RestClientException e){
             Log.e("REST ERROR", e.getClass().toString()+" : "+e.getMessage());
             return e.getMessage();
@@ -41,14 +42,17 @@ public class RegisterTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
-        String toastMessage;
+        String toastMessage = "";
         boolean successfull = false;
+        long sessionId = 0;
         try {
             ObjectMapper mapper = new ObjectMapper();
             Response simpleResponse = mapper.readValue(result, Response.class);
             successfull = simpleResponse.getSuccessful();
             if (successfull) {
-                toastMessage = simpleResponse.getMessage(); //Here we are expecting a simple response, if not then map it to a more complex response!
+                Cookie cookie = mapper.readValue(result, Cookie.class);
+                sessionId = cookie.getSessionId();
+                toastMessage = cookie.getMessage();
             } else {
                 toastMessage = simpleResponse.getMessage();
             }
@@ -58,9 +62,8 @@ public class RegisterTask extends RestTask{
         }
         Toast.makeText(_context, toastMessage, Toast.LENGTH_SHORT).show();
         if(successfull) {
-            Intent intent = new Intent(_context, LoginActivity.class);
-            intent.putExtra("USERNAME", _username);
-            intent.putExtra("PASSWORD", _password);
+            Intent intent = new Intent(_context, HomeActivity.class);
+            intent.putExtra("SESSIONID", sessionId);
             _context.startActivity(intent);
         }
     }

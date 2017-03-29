@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import pt.ulisboa.tecnico.cmov.locmess.Tasks.LoginTask;
+
 public class LoginActivity extends AppCompatActivity {
 
     String msg = "LoginActivity : ";
@@ -19,6 +21,19 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(msg, "onCreate() event");
     }
 
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        String username = getIntent().getStringExtra("USERNAME");
+        String password = getIntent().getStringExtra("PASSWORD");
+        if(null == username || null == password){
+            return;
+        }
+        ((EditText)findViewById(R.id.editTextUsername)).setText(username);
+        ((EditText)findViewById(R.id.editTextPassword)).setText(password);
+
+    }
 
     /** Called when the user taps the SIGNUP button */
     public void signup(View view) {
@@ -35,8 +50,9 @@ public class LoginActivity extends AppCompatActivity {
 
     /** Called when the user taps the SIGNUP button */
     public void login(View view) {
-        //FIXME
-
+        String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
+        String password = ((EditText)findViewById(R.id.editTextPassword)).getText().toString();
+        (new LoginTask(this,username, password)).execute();
     }
 
 

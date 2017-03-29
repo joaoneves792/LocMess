@@ -10,6 +10,9 @@
 
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="passwordAgain">Retype Password</string>
+
+    <string name="badPasswordMatch">Passwords do not match!</string>
 
     <string name="home">Home</string>
 
