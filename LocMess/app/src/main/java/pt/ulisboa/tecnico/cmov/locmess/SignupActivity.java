@@ -8,8 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import pt.ulisboa.tecnico.cmov.locmess.ServerCommands.RegisterCommand;
-import pt.ulisboa.tecnico.cmov.locmess.Tasks.SimpleToastTask;
+import pt.ulisboa.tecnico.cmov.locmess.Tasks.RegisterTask;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -30,12 +29,7 @@ public class SignupActivity extends AppCompatActivity {
 
     /** Called when the user taps the SIGNUP button */
     public void submit(View view) {
-        Intent intent = new Intent(this, HomeActivity.class);
-
-        RegisterCommand command = new RegisterCommand("admin", "password");
-        (new SimpleToastTask(getApplicationContext())).execute(new RegisterCommand("admin", "12345"));
-
-        //startActivity(intent);
+        (new RegisterTask(this,"admin", "12345")).execute();
     }
 
 

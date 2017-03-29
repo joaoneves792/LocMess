@@ -10,8 +10,7 @@ import java.util.List;
 public class MessagesList extends Response{
     private List<DeliverableMessage> _messages;
 
-    public MessagesList(List<DeliverableMessage> messages) {
-        super(true);
+    public MessagesList(boolean successful, String message, List<DeliverableMessage> messages) {
         _messages = messages;
     }
 
