@@ -20,49 +20,36 @@ import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
  * Created by joao on 3/29/17.
  */
 
-public class LoginTask extends RestTask{
+public class LogoutTask extends RestTask{
 
-    private String _username;
-    private String _password;
+    private long _sessionId;
 
     private boolean _successful = false;
-    private long _sessionId = 0;
 
-
-    public LoginTask(Activity appContext, String username, String password){
+    public LogoutTask(Activity appContext, long sessionId){
         super(appContext);
-        _username = username;
-        _password = password;
+        _sessionId = sessionId;
     }
 
     @Override
     protected String doInBackground(Void... params){
         String result;
         try {
-            result =  _rest.getForObject(_url+"/login?username=" + _username + "&password=" + _password, String.class);
+            result = _rest.getForObject(_url+"/logout?id=" + _sessionId, String.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            Response response = mapper.readValue(result, Response.class);
+
+            _successful = response.getSuccessful();
+            return response.getMessage();
+
         }catch (RestClientException e){
             Log.e("REST ERROR", e.getClass().toString()+" : "+e.getMessage());
             _successful = false;
             return e.getMessage();
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Cookie cookie = mapper.readValue(result, Cookie.class);
-            _sessionId = cookie.getSessionId();
-
-            _successful = cookie.getSuccessful();
-            return cookie.getMessage();
-
         }catch (IOException e){
-            try{
-                Response simpleResponse = mapper.readValue(result, Response.class);
-                _successful = simpleResponse.getSuccessful();
-                return simpleResponse.getMessage();
-            }catch (IOException ex){
-                _successful = false;
-                return ex.getMessage();
-            }
+            _successful = false;
+            return e.getMessage();
         }
     }
 
@@ -70,8 +57,7 @@ public class LoginTask extends RestTask{
     protected void onPostExecute(String result){
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
         if(_successful) {
-            Intent intent = new Intent(_context, HomeActivity.class);
-            intent.putExtra("SESSIONID", _sessionId);
+            Intent intent = new Intent(_context, LoginActivity.class);
             _context.startActivity(intent);
         }
     }

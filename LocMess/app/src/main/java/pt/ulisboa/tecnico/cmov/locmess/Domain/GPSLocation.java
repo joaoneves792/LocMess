@@ -4,41 +4,45 @@ package pt.ulisboa.tecnico.cmov.locmess.Domain;
  * Created by joao on 3/25/17.
  */
 public class GPSLocation extends Location{
-    private double _latitude;
-    private double _longitude;
-    private double _radius;
+    private double latitude;
+    private double longitude;
+    private double radius;
 
-    private final String _type = "GPS";
+    private final String type = "GPS";
 
-    public GPSLocation(String name, double latitude, double longitude, double radius) {
+    public GPSLocation(String name, double lat, double longi, double rad) {
         super(name);
-        _latitude = latitude;
-        _longitude = longitude;
-        _radius = radius;
+        latitude = lat;
+        this.longitude = longi;
+        this.radius = rad;
+    }
+
+    public GPSLocation(){
+
     }
 
     public double getLongitude(){
-        return _longitude;
+        return longitude;
     }
 
     public double getLongitudeRadians(){
-        return Math.toRadians(_longitude);
+        return Math.toRadians(longitude);
     }
 
     public  double getLatitude(){
-        return _latitude;
+        return latitude;
     }
 
     public double getLatitudeRadians(){
-        return Math.toRadians(_latitude);
+        return Math.toRadians(latitude);
     }
 
     public double getRadius(){
-        return _radius;
+        return radius;
     }
 
     public String getType(){
-        return _type;
+        return type;
     }
 
     /**
@@ -80,7 +84,7 @@ public class GPSLocation extends Location{
 
 
     public boolean equals(Location otherLocation){
-        if(!otherLocation.getType().equals(_type))
+        if(!otherLocation.getType().equals(type))
             return false;
         GPSLocation otherGPSLocation = (GPSLocation)otherLocation;
 

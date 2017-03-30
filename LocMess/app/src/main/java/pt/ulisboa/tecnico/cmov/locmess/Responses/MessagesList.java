@@ -8,14 +8,18 @@ import java.util.List;
  * Created by joao on 3/25/17.
  */
 public class MessagesList extends Response{
-    private List<DeliverableMessage> _messages;
+    private List<DeliverableMessage> messages;
 
     public MessagesList(boolean successful, String message, List<DeliverableMessage> messages) {
-        _messages = messages;
+        this.messages = messages;
+    }
+
+    public MessagesList(){
+
     }
 
     public List<DeliverableMessage> getMessages(){
-        return _messages;
+        return messages;
     }
 
 }

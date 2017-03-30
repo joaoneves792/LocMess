@@ -70,7 +70,10 @@ public class RequestController implements ErrorController{
 
             String hashedPassword = Cryptography.encodeForStorage(Cryptography.hash(password.getBytes()));
             if(_registeredUsers.get(username).getPassword().equals(hashedPassword)){
-                Cookie sessionCookie = new Cookie(true);
+                Cookie sessionCookie;
+                do {
+                    sessionCookie = new Cookie(true);
+                }while (_sessions.containsKey(sessionCookie.getSessionId()));
                 Session session = new Session(sessionCookie.getSessionId(), _registeredUsers.get(username));
                 _sessions.put(sessionCookie.getSessionId(), session);
                 return sessionCookie;
@@ -178,13 +181,15 @@ public class RequestController implements ErrorController{
     public Response addInterest(@PathVariable("id")long id, @PathVariable(value ="key")String key, @RequestParam(value="value")String value){
         try {
             Profile profile = getSession(id).getProfile();
-            profile.addInterest(key, value);
-            if(_interestKeys.containsKey(key)){
-                int count = _interestKeys.get(key);
-                _interestKeys.put(key, ++count);
-            }else{
-                _interestKeys.put(key, 1);
+            if(!profile.getInterests().containsKey(key)){
+                if(_interestKeys.containsKey(key)){
+                    int count = _interestKeys.get(key);
+                    _interestKeys.put(key, ++count);
+                }else{
+                    _interestKeys.put(key, 1);
+                }
             }
+            profile.addInterest(key, value);
 
             return new Response(true, "Successfully added a new interest.");
 

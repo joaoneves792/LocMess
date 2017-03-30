@@ -6,29 +6,33 @@ import java.util.Collection;
  * Created by joao on 3/25/17.
  */
 public class WiFiLocation extends Location{
-    private Collection<String> _wifiIds;
+    private Collection<String> wifiIds;
 
-    private final String _type = "Wifi";
+    private final String type = "Wifi";
 
     public WiFiLocation(String name, Collection<String> wifiIds) {
         super(name);
-        _wifiIds = wifiIds;
+        this.wifiIds = wifiIds;
+    }
+
+    public WiFiLocation(){
+
     }
 
     public Collection<String> getWifiIds(){
-        return _wifiIds;
+        return wifiIds;
     }
 
     public String getType(){
-        return _type;
+        return type;
     }
 
     /*Another location is equal to this location if it contains at least all the ssids this one contains*/
     public boolean equals(Location otherLocation){
-        if(!otherLocation.getType().equals(_type))
+        if(!otherLocation.getType().equals(type))
             return false;
         WiFiLocation otherWiFiLocation = (WiFiLocation)otherLocation;
-        for(String ssid : _wifiIds){
+        for(String ssid : wifiIds){
             if(!otherWiFiLocation.getWifiIds().contains(ssid))
                 return false;
         }

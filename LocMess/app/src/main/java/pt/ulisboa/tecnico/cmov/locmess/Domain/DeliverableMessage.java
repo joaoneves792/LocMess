@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.locmess.Domain;
 
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -9,32 +8,36 @@ import java.util.Map;
  */
 public class DeliverableMessage {
 
-    private Long _id;
+    private Long id;
 
-    private String _sender;
-    private String _location;
-    private Map<String,String> _rules;
-    private String _message;
+    private String sender;
+    private String location;
+    private Map<String,String> rules;
+    private String message;
+
+    public DeliverableMessage(){
+
+    }
 
 
     public String getSender() {
-        return _sender;
+        return sender;
     }
 
     public String getLocation() {
-        return _location;
+        return location;
     }
 
     public Map<String, String> getRules() {
-        return _rules;
+        return rules;
     }
 
     public String getMessage() {
-        return _message;
+        return message;
     }
 
     public Long getId(){
-        return _id;
+        return id;
     }
 
 }

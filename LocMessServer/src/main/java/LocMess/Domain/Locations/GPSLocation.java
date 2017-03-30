@@ -21,16 +21,8 @@ public class GPSLocation extends Location{
         return _longitude;
     }
 
-    public double getLongitudeRadians(){
-        return Math.toRadians(_longitude);
-    }
-
     public  double getLatitude(){
         return _latitude;
-    }
-
-    public double getLatitudeRadians(){
-        return Math.toRadians(_latitude);
     }
 
     public double getRadius(){

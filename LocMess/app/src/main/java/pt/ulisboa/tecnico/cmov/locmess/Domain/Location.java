@@ -4,14 +4,18 @@ package pt.ulisboa.tecnico.cmov.locmess.Domain;
  * Created by joao on 3/25/17.
  */
 public abstract class Location {
-    private String _name;
+    private String name;
 
     public Location(String name) {
-        _name = name;
+        this.name = name;
+    }
+
+    public Location(){
+
     }
 
     public String getName(){
-        return _name;
+        return name;
     }
 
     public abstract String getType();

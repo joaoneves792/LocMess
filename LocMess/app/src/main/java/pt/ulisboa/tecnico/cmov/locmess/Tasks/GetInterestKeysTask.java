@@ -1,45 +1,46 @@
 package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 
-import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
-import pt.ulisboa.tecnico.cmov.locmess.LoginActivity;
-import pt.ulisboa.tecnico.cmov.locmess.Responses.Cookie;
+import pt.ulisboa.tecnico.cmov.locmess.R;
+import pt.ulisboa.tecnico.cmov.locmess.Responses.InterestsList;
+import pt.ulisboa.tecnico.cmov.locmess.Responses.PossibleKeysList;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 /**
  * Created by joao on 3/29/17.
  */
 
-public class LoginTask extends RestTask{
+public class GetInterestKeysTask extends RestTask{
 
-    private String _username;
-    private String _password;
 
     private boolean _successful = false;
-    private long _sessionId = 0;
+
+    private long _sessionId;
+    private List<String> _interests;
 
 
-    public LoginTask(Activity appContext, String username, String password){
+    public GetInterestKeysTask(Activity appContext, long sessionId){
         super(appContext);
-        _username = username;
-        _password = password;
+        _sessionId = sessionId;
     }
 
     @Override
     protected String doInBackground(Void... params){
         String result;
         try {
-            result =  _rest.getForObject(_url+"/login?username=" + _username + "&password=" + _password, String.class);
+            result =  _rest.getForObject(_url+"/interests?id="+_sessionId, String.class);
         }catch (RestClientException e){
             Log.e("REST ERROR", e.getClass().toString()+" : "+e.getMessage());
             _successful = false;
@@ -48,11 +49,10 @@ public class LoginTask extends RestTask{
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            Cookie cookie = mapper.readValue(result, Cookie.class);
-            _sessionId = cookie.getSessionId();
-
-            _successful = cookie.getSuccessful();
-            return cookie.getMessage();
+            PossibleKeysList keys = mapper.readValue(result, PossibleKeysList.class);
+            _interests = keys.getKeys();
+            _successful = keys.getSuccessful();
+            return keys.getMessage();
 
         }catch (IOException e){
             try{
@@ -70,9 +70,11 @@ public class LoginTask extends RestTask{
     protected void onPostExecute(String result){
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
         if(_successful) {
-            Intent intent = new Intent(_context, HomeActivity.class);
-            intent.putExtra("SESSIONID", _sessionId);
-            _context.startActivity(intent);
+            /*TextView text = (TextView) _context.findViewById(R.id.debugText);
+            text.setText("");
+            for(String key : _interests){
+                text.setText(text.getText() + key + "\n");
+            }*/
         }
     }
 

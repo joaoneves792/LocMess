@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -22,7 +23,7 @@ import pt.ulisboa.tecnico.cmov.locmess.R;
 
 public abstract class RestTask extends AsyncTask<Void, Void, String> {
 
-    protected Context _context;
+    protected Activity _context;
     protected RestTemplate _rest;
     protected String _url;
 
@@ -36,7 +37,7 @@ public abstract class RestTask extends AsyncTask<Void, Void, String> {
         _rest.setMessageConverters(messageConverters);
     }
 
-    protected RestTask(Context appContext){
+    protected RestTask(Activity appContext){
         super();
         _context = appContext;
         _url = appContext.getResources().getString(R.string.serverURL);
