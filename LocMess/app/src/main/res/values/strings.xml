@@ -5,8 +5,12 @@
     <string name="app_name">LocMess</string>
 
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
     <string name="signup">Signup</string>
     <string name="submit">Submit</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -15,5 +19,24 @@
     <string name="badPasswordMatch">Passwords do not match!</string>
 
     <string name="home">Home</string>
+
+    <string name="locations">Locations</string>
+    <string name="addLocation">Add Location</string>
+    <string name="deleteLocation">Delete Location</string>
+
+    <string name="profile">Profile</string>
+    <string name="addInterest">Add Interest</string>
+    <string name="deleteInterest">Delete Interest</string>
+
+    <string name="messages">Messages</string>
+    <string name="saveMessage">Save Message</string>
+    <string name="savedMessages">Saved Messages</string>
+    <string name="deleteMessage">Delete Message</string>
+    <string name="post">Post</string>
+    <string name="title">Title</string>
+    <string name="text">Text</string>
+
+
+    <string name="settings">Settings</string>
 
 </resources>

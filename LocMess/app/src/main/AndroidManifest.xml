@@ -20,15 +20,71 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SignupActivity"
-            android:parentActivityName=".LoginActivity" >
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
+        <activity
+            android:name=".SignupActivity"
+            android:parentActivityName=".LoginActivity">
+
+            <!-- The meta-data tag is required to support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LoginActivity" />
         </activity>
 
-        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".HomeActivity" />
+
+        <activity
+            android:name=".MessagesActivity"
+            android:parentActivityName=".HomeActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+
+        <activity
+            android:name=".MessageViewActivity"
+            android:parentActivityName=".MessagesActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MessagesActivity" />
+        </activity>
+
+        <activity
+            android:name=".PostMessageActivity"
+            android:parentActivityName=".MessagesActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MessagesActivity" />
+        </activity>
+
+        <activity
+            android:name=".LocationsActivity"
+            android:parentActivityName=".HomeActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+
+        <activity
+            android:name=".AddLocationActivity"
+            android:parentActivityName=".LocationsActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LocationsActivity" />
+        </activity>
+
+        <activity
+            android:name=".ProfileActivity"
+            android:parentActivityName=".HomeActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
 
     </application>
 
