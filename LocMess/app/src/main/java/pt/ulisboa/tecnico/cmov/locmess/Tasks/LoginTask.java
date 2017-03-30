@@ -42,26 +42,29 @@ public class LoginTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
-        String toastMessage = "";
-        boolean successfull = false;
+        String toastMessage;
+        boolean successful;
         long sessionId = 0;
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            Response simpleResponse = mapper.readValue(result, Response.class);
-            successfull = simpleResponse.getSuccessful();
-            if (successfull) {
-                Cookie cookie = mapper.readValue(result, Cookie.class);
-                sessionId = cookie.getSessionId();
-                toastMessage = cookie.getMessage();
-            } else {
-                toastMessage = simpleResponse.getMessage();
-            }
+            Cookie cookie = mapper.readValue(result, Cookie.class);
+            sessionId = cookie.getSessionId();
+
+            successful = cookie.getSuccessful();
+            toastMessage = cookie.getMessage();
 
         }catch (IOException e){
-            toastMessage = result;
+            try{
+                Response simpleResponse = mapper.readValue(result, Response.class);
+                successful = simpleResponse.getSuccessful();
+                toastMessage = simpleResponse.getMessage();
+            }catch (IOException ex){
+                successful = false;
+                toastMessage = ex.getMessage();
+            }
         }
         Toast.makeText(_context, toastMessage, Toast.LENGTH_SHORT).show();
-        if(successfull) {
+        if(successful) {
             Intent intent = new Intent(_context, HomeActivity.class);
             intent.putExtra("SESSIONID", sessionId);
             _context.startActivity(intent);

@@ -15,6 +15,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        Toast.makeText(this, new Long(getIntent().getLongExtra("SESSIONID", -1)).toString(), Toast.LENGTH_LONG);
+        Toast.makeText(this, new Long(getIntent().getLongExtra("SESSIONID", -1)).toString(), Toast.LENGTH_LONG).show();
     }
 }
