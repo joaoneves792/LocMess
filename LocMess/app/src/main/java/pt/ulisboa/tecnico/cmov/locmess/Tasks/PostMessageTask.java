@@ -21,7 +21,7 @@ import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
  * Created by joao on 3/29/17.
  */
 
-public class PostMessageTask extends RestTask{
+public class PostMessageTask extends RestTask {
 
     private long _sessionId;
     private String _location;

@@ -27,27 +27,28 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="0.0">
 
-        <EditText
-            android:id="@+id/editTextEndDate"
+        <LinearLayout
             android:layout_width="352dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/setEndDate"
-            android:inputType="textPersonName"
-            app:layout_constraintTop_toBottomOf="@+id/editTextStartDate"
-            tools:layout_editor_absoluteX="8dp" />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            tools:layout_editor_absoluteX="8dp">
 
-        <EditText
-            android:id="@+id/editTextStartDate"
-            android:layout_width="352dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/setStartDate"
-            android:inputType="textPersonName"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            tools:layout_editor_absoluteX="8dp" />
+            <TextView
+                android:id="@+id/textViewStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/startDate" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/endDate" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextBody"
@@ -89,6 +90,30 @@
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="303dp" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="352dp"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            android:id="@+id/linearLayout2">
+
+            <Button
+                android:id="@+id/buttonStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/setStartDate" />
+
+            <Button
+                android:id="@+id/buttonEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/setEndDate" />
         </LinearLayout>
 
         <LinearLayout

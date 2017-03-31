@@ -42,8 +42,15 @@
     <string name="title">Title</string>
     <string name="text">Text</string>
     <string name="chooseLocation">Choose Location</string>
+    <string name="setStartDate">Set start date</string>
+    <string name="setEndDate">Set end date</string>
+    <string name="startDate">Start date</string>
+    <string name="endDate">End date</string>
 
 
     <string name="settings">Settings</string>
+    <string name="delete">Delete</string>
+    <string name="key">Key</string>
+    <string name="value">Value</string>
 
 </resources>
