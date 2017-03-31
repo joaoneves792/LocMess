@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
+import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
 import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Cookie;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.LocationsList;
@@ -83,9 +88,39 @@ public class GetLocationsTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
+
+        Log.d("damm ", "postexecute");
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
+
         if(_successful) {
-            /*TextView text = (TextView)_context.findViewById(R.id.debugText);
+            Log.d("damm ", "successderp");
+
+
+            ListView list = (ListView) _context.findViewById(R.id.listViewLocations);
+
+            List<String> locationNames = new LinkedList<>();
+            Log.d("damm ", "location.getName()");
+            for(Location location : _locations) {
+                Log.d("damm ", location.getName());
+                locationNames.add(location.getName());
+            }
+
+            ArrayAdapter<String> locationsAdapter = new ArrayAdapter<>(_context, android.R.layout.simple_list_item_1, locationNames);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(_context, MessageViewActivity.class);
+                    intent.putExtra("SESSIONID", _sessionId);
+                    _context.startActivity(intent);
+                }
+            });
+
+            list.setAdapter(locationsAdapter);
+
+
+
+            /*
+            TextView text = (TextView)_context.findViewById(R.id.debugText);
             text.setText("");
             for(Location loc : _locations) {
                 String locText = loc.getName();
@@ -102,7 +137,8 @@ public class GetLocationsTask extends RestTask{
             }
             //Intent intent = new Intent(_context, HomeActivity.class);
             //intent.putExtra("SESSIONID", _sessionId);
-            //_context.startActivity(intent);*/
+            //_context.startActivity(intent);
+            */
         }
     }
 

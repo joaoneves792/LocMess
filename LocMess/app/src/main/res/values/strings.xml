@@ -23,12 +23,17 @@
     <string name="locations">Locations</string>
     <string name="addLocation">Add Location</string>
     <string name="deleteLocation">Delete Location</string>
+    <string name="name">Name</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="radius">Radius</string>
 
     <string name="profile">Profile</string>
     <string name="addInterest">Add Interest</string>
     <string name="deleteInterest">Delete Interest</string>
 
     <string name="messages">Messages</string>
+    <string name="postMessage">Post New Message</string>
     <string name="saveMessage">Save Message</string>
     <string name="savedMessages">Saved Messages</string>
     <string name="deleteMessage">Delete Message</string>

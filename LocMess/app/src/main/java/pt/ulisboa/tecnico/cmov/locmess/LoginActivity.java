@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     public void login(View view) {
         String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
         String password = ((EditText)findViewById(R.id.editTextPassword)).getText().toString();
-        (new LoginTask(this,username, password)).execute();
+        (new LoginTask(this, username, password)).execute();
     }
 
 

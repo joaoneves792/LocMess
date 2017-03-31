@@ -6,4 +6,85 @@
     android:layout_height="match_parent"
     tools:context="pt.ulisboa.tecnico.cmov.locmess.AddLocationActivity">
 
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:id="@+id/constraintLayout2">
+
+        <Button
+            android:id="@+id/buttonUploadLocation"
+            android:layout_width="352dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:onClick="uploadLocation"
+            android:text="@string/submit"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextRadius" />
+
+        <EditText
+            android:id="@+id/editTextLatitude"
+            android:layout_width="352dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/latitude"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@+id/editTextName"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextLongitude"
+            android:layout_width="352dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/longitude"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@+id/editTextLatitude"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="352dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextRadius"
+            android:layout_width="352dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/radius"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@+id/editTextLongitude"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.constraint.ConstraintLayout>
