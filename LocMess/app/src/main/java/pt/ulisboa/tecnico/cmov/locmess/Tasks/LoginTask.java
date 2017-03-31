@@ -72,6 +72,7 @@ public class LoginTask extends RestTask{
         if(_successful) {
             Intent intent = new Intent(_context, HomeActivity.class);
             intent.putExtra("SESSIONID", _sessionId);
+            intent.putExtra("USERNAME", _username);
             _context.startActivity(intent);
         }
     }
