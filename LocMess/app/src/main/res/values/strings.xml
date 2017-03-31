@@ -20,6 +20,7 @@
 
     <string name="home">Home</string>
 
+    <string name="location">Location</string>
     <string name="locations">Locations</string>
     <string name="addLocation">Add Location</string>
     <string name="deleteLocation">Delete Location</string>
@@ -40,6 +41,7 @@
     <string name="post">Post</string>
     <string name="title">Title</string>
     <string name="text">Text</string>
+    <string name="chooseLocation">Choose Location</string>
 
 
     <string name="settings">Settings</string>
