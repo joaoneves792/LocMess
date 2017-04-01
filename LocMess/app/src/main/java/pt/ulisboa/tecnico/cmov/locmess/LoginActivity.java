@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.LoginTask;
+import pt.ulisboa.tecnico.cmov.locmess.Tasks.TestSessionTask;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,6 +27,18 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+
+        //Test the session of the last logged in user
+        DataManager dm = DataManager.getInstance();
+        try {
+            String username = dm.getLastLoggedInUsername(getApplicationContext());
+            dm.setUser(username);
+            long sessionId = dm.getSessionId(getApplicationContext());
+            (new TestSessionTask(this, sessionId)).execute(); //If the session is still valid then we jump to HomeActiivity
+        }catch (StorageException e){
+            //do nothing and let the user proceed to login
+        }
+
         String username = getIntent().getStringExtra("USERNAME");
         String password = getIntent().getStringExtra("PASSWORD");
         if(null == username || null == password){
