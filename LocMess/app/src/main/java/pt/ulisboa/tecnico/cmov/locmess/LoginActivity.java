@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.LoginTask;
 
 public class LoginActivity extends AppCompatActivity {
@@ -28,7 +29,12 @@ public class LoginActivity extends AppCompatActivity {
         String username = getIntent().getStringExtra("USERNAME");
         String password = getIntent().getStringExtra("PASSWORD");
         if(null == username || null == password){
-            return;
+            try {
+                username = DataManager.getInstance().getLastLoggedInUsername(getApplicationContext());
+                password = "";
+            }catch (StorageException e){
+                return;
+            }
         }
         ((EditText)findViewById(R.id.editTextUsername)).setText(username);
         ((EditText)findViewById(R.id.editTextPassword)).setText(password);
@@ -48,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /** Called when the user taps the SIGNUP button */
+    /** Called when the user taps the LOGIN button */
     public void login(View view) {
         String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
         String password = ((EditText)findViewById(R.id.editTextPassword)).getText().toString();

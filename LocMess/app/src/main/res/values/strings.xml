@@ -17,6 +17,7 @@
     <string name="passwordAgain">Retype Password</string>
 
     <string name="badPasswordMatch">Passwords do not match!</string>
+    <string name="sessionFailed">You need to login again.</string>
 
     <string name="home">Home</string>
 

@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.storage.StorageManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
 import pt.ulisboa.tecnico.cmov.locmess.LoginActivity;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Cookie;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
+
+import pt.ulisboa.tecnico.cmov.locmess.DataManager;
 
 /**
  * Created by joao on 3/29/17.
@@ -70,9 +73,13 @@ public class LoginTask extends RestTask{
     protected void onPostExecute(String result){
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
         if(_successful) {
+            DataManager dm = DataManager.getInstance();
+            dm.setUser(_username);
+            dm.setLasLoggedInUsername(_context.getApplicationContext(), _username);
+            dm.setSessionId(_context.getApplicationContext(), _sessionId);
+            dm.setUsername(_context.getApplicationContext(), _username);
+
             Intent intent = new Intent(_context, HomeActivity.class);
-            intent.putExtra("SESSIONID", _sessionId);
-            intent.putExtra("USERNAME", _username);
             _context.startActivity(intent);
         }
     }

@@ -6,6 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -148,8 +151,18 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        _sessionId = getIntent().getLongExtra("SESSIONID", -1);
-        _username = getIntent().getStringExtra("USERNAME");
+        DataManager dm = DataManager.getInstance();
+        try {
+            _sessionId = dm.getSessionId(getApplicationContext());
+            _username = dm.getUsername(getApplicationContext());
+            if(_username.equals("") || -1 == _sessionId){
+                throw new StorageException();
+            }
+        }catch (StorageException e){
+            Log.d(DataManager.STORAGE_TAG, "Failed to retrive session data!");
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+        }
         ((TextView)findViewById(R.id.userName)).setText(_username);
         //Toast.makeText(this, new Long(getIntent().getLongExtra("SESSIONID", -1)).toString(), Toast.LENGTH_LONG).show();
     }
@@ -157,19 +170,16 @@ public class HomeActivity extends AppCompatActivity {
 
     public void locations(View view) {
         Intent intent = new Intent(this, LocationsActivity.class);
-        intent.putExtra("SESSIONID", _sessionId);
         startActivity(intent);
     }
 
     public void messages(View view) {
         Intent intent = new Intent(this, MessagesActivity.class);
-        intent.putExtra("SESSIONID", _sessionId);
         startActivity(intent);
     }
 
     public void postMessage(View view) {
         Intent intent = new Intent(this, PostMessageActivity.class);
-        intent.putExtra("SESSIONID", _sessionId);
         startActivity(intent);
     }
 
