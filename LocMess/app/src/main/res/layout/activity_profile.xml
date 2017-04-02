@@ -12,7 +12,8 @@
         android:layout_height="436dp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/buttonAddInterest"
-        tools:layout_editor_absoluteX="8dp" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/buttonAddInterest"
@@ -21,5 +22,6 @@
         android:layout_marginTop="8dp"
         android:text="@string/addInterest"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="8dp" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 </android.support.constraint.ConstraintLayout>

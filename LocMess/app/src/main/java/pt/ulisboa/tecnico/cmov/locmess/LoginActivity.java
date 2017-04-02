@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
         }
+
         ((EditText)findViewById(R.id.editTextUsername)).setText(username);
         ((EditText)findViewById(R.id.editTextPassword)).setText(password);
 

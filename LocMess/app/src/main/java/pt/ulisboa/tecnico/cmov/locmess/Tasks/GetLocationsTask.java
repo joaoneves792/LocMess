@@ -3,10 +3,16 @@ package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +62,7 @@ public class GetLocationsTask extends RestTask{
         JSONObject json;
         _successful = false;
         ObjectMapper mapper = new ObjectMapper();
+
         try {
             result = _rest.getForObject(_url+"/locations?id=" + _sessionId, String.class);
             json = new JSONObject(result);
@@ -63,6 +70,7 @@ public class GetLocationsTask extends RestTask{
             if(!_successful){
                 return json.getString("message");
             }
+
             JSONArray locArray = json.getJSONArray("locations");
             for(int i=0; i<locArray.length(); i++){
                 JSONObject location = locArray.getJSONObject(i);
@@ -74,10 +82,13 @@ public class GetLocationsTask extends RestTask{
                     _locations.add(wifi);
                 }
             }
+
             return json.getString("message");
+
         }catch (RestClientException e){
             Log.e("REST ERROR", e.getClass().toString()+" : "+e.getMessage());
             return e.getMessage();
+
         }catch (JSONException |
                 IOException e){
             Log.e("JSON ERROR", e.getMessage());
@@ -88,24 +99,13 @@ public class GetLocationsTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
-
-        Log.d("damm ", "postexecute");
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
 
         if(_successful) {
-            Log.d("damm ", "successderp");
-
-
             ListView list = (ListView) _context.findViewById(R.id.listViewLocations);
 
-            List<String> locationNames = new LinkedList<>();
-            Log.d("damm ", "location.getName()");
-            for(Location location : _locations) {
-                Log.d("damm ", location.getName());
-                locationNames.add(location.getName());
-            }
+            ListAdapter locationsAdapter = new LocationListAdapter(_context, _locations);
 
-            ArrayAdapter<String> locationsAdapter = new ArrayAdapter<>(_context, android.R.layout.simple_list_item_1, locationNames);
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -118,29 +118,32 @@ public class GetLocationsTask extends RestTask{
             list.setAdapter(locationsAdapter);
 
 
-
-            /*
-            TextView text = (TextView)_context.findViewById(R.id.debugText);
-            text.setText("");
-            for(Location loc : _locations) {
-                String locText = loc.getName();
-                if(loc.getType().equals("GPS")){
-                    GPSLocation gps = (GPSLocation)loc;
-                    locText += " :" + gps.getLatitude() + " " + gps.getLongitude() + " " + gps.getRadius();
-                }else{
-                    WiFiLocation wifi = (WiFiLocation)loc;
-                    for(String ssid : wifi.getWifiIds()){
-                        locText += " " + ssid;
-                    }
-                }
-                text.setText(text.getText() + "\n" + locText);
-            }
-            //Intent intent = new Intent(_context, HomeActivity.class);
-            //intent.putExtra("SESSIONID", _sessionId);
-            //_context.startActivity(intent);
-            */
         }
     }
 
-}
+    // class for the custom display of locations' list
+    protected class LocationListAdapter extends ArrayAdapter<Location> {
 
+        public LocationListAdapter(@NonNull Context context, List<Location> locations) {
+            super(context, R.layout.location_item, locations);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater locationInflater = LayoutInflater.from(getContext());
+            View rowView = locationInflater.inflate(R.layout.location_item, parent, false);
+
+            Location location = getItem(position);
+            TextView locationName = (TextView) rowView.findViewById(R.id.textViewLocationName);
+            TextView locationType = (TextView) rowView.findViewById(R.id.textViewLocationType);
+
+            locationName.setText(location.getName());
+            locationType.setText(location.getType());
+
+            return rowView;
+        }
+
+    }
+
+
+}

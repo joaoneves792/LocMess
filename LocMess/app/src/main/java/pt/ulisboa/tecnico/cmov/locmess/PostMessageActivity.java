@@ -15,10 +15,6 @@ public class PostMessageActivity extends AppCompatActivity {
 
     private long _sessionId = 0;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

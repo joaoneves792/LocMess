@@ -25,13 +25,16 @@ public class LocationsActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+
         try {
             _sessionId = DataManager.getInstance().getSessionId(getApplicationContext());
+
         }catch (StorageException e){
             Toast.makeText(this, R.string.sessionFailed, Toast.LENGTH_SHORT).show();
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
         }
+
         (new GetLocationsTask(this, _sessionId)).execute();
     }
 
