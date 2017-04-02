@@ -110,7 +110,7 @@ public class GetLocationsTask extends RestTask{
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(_context, MessageViewActivity.class);
-                    intent.putExtra("SESSIONID", _sessionId);
+//                    intent.putExtra("SESSIONID", _sessionId);
                     _context.startActivity(intent);
                 }
             });

@@ -28,8 +28,14 @@
     <string name="location">Location</string>
     <string name="manageLocations">Manage locations</string>
     <string name="locations">Locations</string>
+
     <string name="addLocation">Add Location</string>
+    <string name="addGPSLocation">Add GPS Location</string>
+    <string name="addWiFiLocation">Add WiFi Location</string>
+    <string name="addCurrentLocation">Add Current Location</string>
     <string name="deleteLocation">Delete Location</string>
+
+    <string name="ssid">Network SSID</string>
     <string name="name">Name</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>

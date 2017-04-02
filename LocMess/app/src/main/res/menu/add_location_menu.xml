@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/addGPSLocation"
+        android:title="@string/addGPSLocation"
+        />
+
+    <item
+        android:id="@+id/addWiFiLocation"
+        android:title="@string/addWiFiLocation"
+        />
+
+    <item
+        android:id="@+id/addCurrentLocation"
+        android:title="@string/addCurrentLocation"
+        />
+
+</menu>
