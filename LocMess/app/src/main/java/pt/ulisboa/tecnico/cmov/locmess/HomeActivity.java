@@ -44,8 +44,10 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         _navItems.add(new NavItem(getString(R.string.post), getString(R.string.postMessage)));
-        _navItems.add(new NavItem(getString(R.string.locations), getString(R.string.manageLocations)));
         _navItems.add(new NavItem(getString(R.string.messages), getString(R.string.manageMessages)));
+        _navItems.add(new NavItem(getString(R.string.locations), getString(R.string.manageLocations)));
+        _navItems.add(new NavItem(getString(R.string.profile), getString(R.string.manageInterests)));
+        _navItems.add(new NavItem(getString(R.string.settings), getString(R.string.appConfig)));
 
         // DrawerLayout
         _drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -61,12 +63,16 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //selectItemFromDrawer(position);
-                if(_navItems.get(position).mTitle.equals(getString(R.string.post))){
+                if(_navItems.get(position).mTitle.equals(getString(R.string.post))) {
                     postMessage(view);
-                }else if(_navItems.get(position).mTitle.equals(getString(R.string.locations))){
-                    locations(view);
-                }else if(_navItems.get(position).mTitle.equals(getString(R.string.messages))){
+                } else if(_navItems.get(position).mTitle.equals(getString(R.string.messages))) {
                     messages(view);
+                } else if(_navItems.get(position).mTitle.equals(getString(R.string.locations))) {
+                    locations(view);
+                } else if(_navItems.get(position).mTitle.equals(getString(R.string.profile))) {
+                    profile(view);
+                } else if(_navItems.get(position).mTitle.equals(getString(R.string.settings))) {
+                    settings(view);
                 }
             }
         });

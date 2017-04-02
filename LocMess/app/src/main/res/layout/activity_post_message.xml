@@ -28,28 +28,6 @@
         app:layout_constraintVertical_bias="0.0">
 
         <EditText
-            android:id="@+id/editTextEndDate"
-            android:layout_width="352dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/setEndDate"
-            android:inputType="textPersonName"
-            app:layout_constraintTop_toBottomOf="@+id/editTextStartDate"
-            tools:layout_editor_absoluteX="8dp" />
-
-        <EditText
-            android:id="@+id/editTextStartDate"
-            android:layout_width="352dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/setStartDate"
-            android:inputType="textPersonName"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            tools:layout_editor_absoluteX="8dp" />
-
-        <EditText
             android:id="@+id/editTextBody"
             android:layout_width="0dp"
             android:layout_height="223dp"
@@ -61,6 +39,17 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextLocation"
+            android:layout_width="352dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/location"
+            android:inputType="textPersonName"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            tools:layout_editor_absoluteX="8dp" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -105,6 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="postMessage"
                 android:text="@string/post" />
 
             <Button
@@ -112,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="cancel"
                 android:text="@string/cancel" />
         </LinearLayout>
 

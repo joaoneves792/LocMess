@@ -35,13 +35,15 @@
     <string name="addCurrentLocation">Add Current Location</string>
     <string name="deleteLocation">Delete Location</string>
 
-    <string name="ssid">Network SSID</string>
+    <string name="ssid">Network SSIDs</string>
     <string name="name">Name</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="radius">Radius</string>
 
     <string name="profile">Profile</string>
+    <string name="viewProfile">View Profile</string>
+    <string name="manageInterests">Manage Interest</string>
     <string name="addInterest">Add Interest</string>
     <string name="deleteInterest">Delete Interest</string>
 
@@ -62,6 +64,7 @@
 
 
     <string name="settings">Settings</string>
+    <string name="appConfig">App Configuration</string>
     <string name="delete">Delete</string>
     <string name="key">Key</string>
     <string name="value">Value</string>

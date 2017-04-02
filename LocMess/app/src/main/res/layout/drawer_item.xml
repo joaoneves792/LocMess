@@ -15,12 +15,17 @@
         android:text="Line 1"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-        />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp" />
 
     <TextView android:id="@+id/subTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Manage your posted messages"
-        android:layout_below="@+id/title" />
+        android:layout_below="@+id/title"
+        android:layout_alignLeft="@+id/title"
+        android:layout_alignStart="@+id/title" />
 
 </RelativeLayout>
