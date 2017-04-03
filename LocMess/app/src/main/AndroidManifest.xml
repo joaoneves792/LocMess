@@ -64,14 +64,27 @@
                 android:value=".LocationsActivity" />
         </activity>
         <activity
+            android:name=".AddWiFiLocation"
+            android:parentActivityName=".LocationsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LocationsActivity" />
+        </activity>
+
+        <activity
             android:name=".ProfileActivity"
             android:parentActivityName=".HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
-        <activity android:name=".AddWiFiLocation" />
-        <activity android:name=".AddInterestActivity"></activity>
+        <activity
+            android:name=".AddInterestActivity"
+            android:parentActivityName=".ProfileActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ProfileActivity" />
+        </activity>
     </application>
 
 </manifest>

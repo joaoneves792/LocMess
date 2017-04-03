@@ -3,10 +3,10 @@ package pt.ulisboa.tecnico.cmov.locmess;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
-import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetLocationsTask;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetUserProfileTask;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -33,6 +33,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         (new GetUserProfileTask(this, _sessionId)).execute();
+    }
+
+    public void addInterest(View view) {
+        Intent intent = new Intent(this, AddInterestActivity.class);
+        startActivity(intent);
     }
 
 

@@ -55,7 +55,8 @@ public class GetUserProfileTask extends RestTask{
         String result;
         try {
             result =  _rest.getForObject(_url+"/profiles/"+_sessionId, String.class);
-        }catch (RestClientException e){
+
+        } catch(RestClientException e) {
             Log.e("REST ERROR", e.getClass().toString()+" : "+e.getMessage());
             _successful = false;
             return e.getMessage();
@@ -86,50 +87,49 @@ public class GetUserProfileTask extends RestTask{
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
 
         if(_successful) {
-//            ListView list = (ListView) _context.findViewById(R.id.listViewInterests);
-//
-//            ListAdapter interestsAdapter = new GetUserProfileTask.InterestAdapter(_context, _interests);
-//
-//            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    Toast.makeText(_context, "selected something", Toast.LENGTH_SHORT).show();
-//
-////                    Intent intent = new Intent(_context, MessageViewActivity.class);
-////                    intent.putExtra("SESSIONID", _sessionId);
-////                    _context.startActivity(intent);
-//                }
-//            });
-//
-//            list.setAdapter(interestsAdapter);
-//
+            ListView list = (ListView) _context.findViewById(R.id.listViewInterests);
+
+            ListAdapter interestsAdapter = new GetUserProfileTask.InterestAdapter(_context, _interests);
+
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(_context, "selected something", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(_context, MessageViewActivity.class);
+//                    intent.putExtra("SESSIONID", _sessionId);
+//                    _context.startActivity(intent);
+                }
+            });
+
+            list.setAdapter(interestsAdapter);
+
 
         }
     }
 
-//    // class for the custom display of locations' list
-//    protected class InterestAdapter extends ArrayAdapter<Map.Entry<String,String>> {
-//
-//        public InterestAdapter(@NonNull Context context, Map<String,String> interests) {
-//            super(context, R.layout.interest_item, new ArrayList<Map.Entry<String,String>>(interests.values()));
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            LayoutInflater interestInflater = LayoutInflater.from(getContext());
-//            View rowView = interestInflater.inflate(R.layout.interest_item, parent, false);
-//
-//            Map.Entry<String,String> interest = getItem(position);
-//            TextView key = (TextView) rowView.findViewById(R.id.textViewKey);
-//            TextView value = (TextView) rowView.findViewById(R.id.textViewValue);
-//
-//            key.setText(interest.getKey());
-//            value.setText(interest.getValue());
-//
-//            return rowView;
-//        }
-//
-//    }
+    // class for the custom display of locations' list
+    protected class InterestAdapter extends ArrayAdapter<Map.Entry<String,String>> {
+
+        public InterestAdapter(@NonNull Context context, Map<String,String> interests) {
+            super(context, R.layout.interest_item, new ArrayList<>(interests.entrySet()));
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater interestInflater = LayoutInflater.from(getContext());
+            View rowView = interestInflater.inflate(R.layout.interest_item, parent, false);
+
+            Map.Entry<String,String> interest = getItem(position);
+            TextView key = (TextView) rowView.findViewById(R.id.textViewKey);
+            TextView value = (TextView) rowView.findViewById(R.id.textViewValue);
+
+            key.setText(interest.getKey());
+            value.setText(interest.getValue());
+
+            return rowView;
+        }
+
+    }
 
 }
 
