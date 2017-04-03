@@ -70,7 +70,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
-        <activity android:name=".AddWiFiLocation"></activity>
+        <activity android:name=".AddWiFiLocation" />
+        <activity android:name=".AddInterestActivity"></activity>
     </application>
 
 </manifest>
