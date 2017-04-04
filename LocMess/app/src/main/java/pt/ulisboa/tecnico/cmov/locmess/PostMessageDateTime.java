@@ -13,6 +13,10 @@ public class PostMessageDateTime extends AppCompatActivity {
 
     private long _sessionId = 0;
 
+//    private String _title;
+//    private String _text;
+//    private String _location;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +27,12 @@ public class PostMessageDateTime extends AppCompatActivity {
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
         }
+
+//        Intent intent = getIntent();
+//        _title = intent.getStringExtra("TITLE");
+//        _text = intent.getStringExtra("TEXT");
+//        _location = intent.getStringExtra("LOCATION");
+
         setContentView(R.layout.activity_post_message_datetime);
     }
 
@@ -36,6 +46,9 @@ public class PostMessageDateTime extends AppCompatActivity {
         Intent previousIntent = getIntent();
         Intent intent = new Intent(this, PostMessageRules.class);
 
+//        intent.putExtra("TITLE", _title);
+//        intent.putExtra("TEXT", _text);
+//        intent.putExtra("LOCATION", _location);
         intent.putExtra("TITLE", previousIntent.getStringExtra("TITLE"));
         intent.putExtra("TEXT", previousIntent.getStringExtra("TEXT"));
         intent.putExtra("LOCATION", previousIntent.getStringExtra("LOCATION"));

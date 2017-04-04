@@ -42,18 +42,4 @@ public class PostMessageActivity extends AppCompatActivity {
         finish();
     }
 
-//    public void postMessage(View view) {
-//        String text = ((EditText) findViewById(R.id.editTextBody)).getText().toString();
-//        String location = ((EditText) findViewById(R.id.editTextLocation)).getText().toString();
-//        (new PostMessageTask(this, _sessionId, location, null, true, "12:34-01/02/1234", "12:34-01/02/1234", text)).execute();
-//
-////        String location = ((TextView) findViewById(R.id.textViewLocation)).getText().toString();
-////        String startDate = ((EditText) findViewById(R.id.editTextStartDate)).getText().toString();
-////        String endDate = ((EditText) findViewById(R.id.editTextEndDate)).getText().toString();
-////
-////        (new PostMessageTask(this, _sessionId, location, null, true, startDate, endDate, text)).execute();
-//
-//        finish();
-//    }
-
 }

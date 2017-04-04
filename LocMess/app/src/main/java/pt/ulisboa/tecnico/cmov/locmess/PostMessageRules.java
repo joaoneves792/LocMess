@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +26,7 @@ public class PostMessageRules extends AppCompatActivity {
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
         }
-        setContentView(R.layout.activity_post_message_datetime);
+        setContentView(R.layout.activity_post_message_rules);
     }
 
 
@@ -33,6 +35,19 @@ public class PostMessageRules extends AppCompatActivity {
     }
 
     public void postMessage(View view) {
+
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        final int checkedId = radioGroup.getCheckedRadioButtonId();
+//        String mode = (String) ((RadioButton) radioGroup.getChildAt(checkedId)).getText();
+        boolean whitelist = false;
+        switch(checkedId) {
+            case R.id.radioButtonWhitelist:
+                whitelist = true;
+                break;
+            case R.id.radioButtonBlacklist:
+                whitelist = false;
+                break;
+        }
 
         Intent previousIntent = getIntent();
 
@@ -44,24 +59,10 @@ public class PostMessageRules extends AppCompatActivity {
         String enddate = previousIntent.getStringExtra("ENDDATE");
         String endtime = previousIntent.getStringExtra("ENDTIME");
 
-        (new PostMessageTask(this, _sessionId, location, null, true, starttime+"-"+startdate, endtime+"-"+enddate, text)).execute();
+        (new PostMessageTask(this, _sessionId, location, null, whitelist, starttime+"-"+startdate, endtime+"-"+enddate, text)).execute();
 
         finish();
     }
-
-    //    public void postMessage(View view) {
-//        String text = ((EditText) findViewById(R.id.editTextBody)).getText().toString();
-//        String location = ((EditText) findViewById(R.id.editTextLocation)).getText().toString();
-//        (new PostMessageTask(this, _sessionId, location, null, true, "12:34-01/02/1234", "12:34-01/02/1234", text)).execute();
-//
-////        String location = ((TextView) findViewById(R.id.textViewLocation)).getText().toString();
-////        String startDate = ((EditText) findViewById(R.id.editTextStartDate)).getText().toString();
-////        String endDate = ((EditText) findViewById(R.id.editTextEndDate)).getText().toString();
-////
-////        (new PostMessageTask(this, _sessionId, location, null, true, startDate, endDate, text)).execute();
-//
-//        finish();
-//    }
 
 
 }
