@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pt.ulisboa.tecnico.cmov.locmess.PostMessageActivity">
+    tools:context="pt.ulisboa.tecnico.cmov.locmess.PostMessageDateTime">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
@@ -22,57 +22,64 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:id="@+id/constraintLayout"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_marginRight="8dp">
 
         <EditText
-            android:id="@+id/editTextLocation"
-            android:layout_width="match_parent"
+            android:id="@+id/editTextStartDate"
+            android:layout_width="352dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="@string/location"
-            android:inputType="textPersonName"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextMessage" />
-
-        <EditText
-            android:id="@+id/editTextMessage"
-            android:layout_width="match_parent"
-            android:layout_height="259dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/text"
-            android:inputType="textMultiLine"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTitle"
-            tools:layout_editor_absoluteX="97dp" />
-
-        <EditText
-            android:id="@+id/editTextTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/title"
-            android:inputType="textPersonName"
+            android:hint="@string/setStartDate"
+            android:inputType="date"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <EditText
+            android:id="@+id/editTextStartTime"
+            android:layout_width="352dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/setStartTime"
+            android:inputType="time"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextStartDate" />
+
+        <EditText
+            android:id="@+id/editTextEndTime"
+            android:layout_width="352dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/setEndTime"
+            android:inputType="time"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextEndDate" />
+
+        <EditText
+            android:id="@+id/editTextEndDate"
+            android:layout_width="352dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:ems="10"
+            android:hint="@string/setEndDate"
+            android:inputType="date"
+            app:layout_constraintTop_toBottomOf="@+id/editTextStartTime"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <LinearLayout
+            android:layout_width="352dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp">
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
 
             <Button
                 android:id="@+id/buttonCancel"
@@ -87,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="selectDateTimes"
+                android:onClick="selectRules"
                 android:text="@string/next" />
         </LinearLayout>
 

@@ -11,6 +11,8 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
 
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -57,10 +59,18 @@
     <string name="title">Title</string>
     <string name="text">Text</string>
     <string name="chooseLocation">Choose Location</string>
+
     <string name="setStartDate">Set start date</string>
+    <string name="setStartTime">Set start time</string>
     <string name="setEndDate">Set end date</string>
+    <string name="setEndTime">Set end time</string>
     <string name="startDate">Start date</string>
+    <string name="startTime">Start time</string>
     <string name="endDate">End date</string>
+    <string name="endTime">End time</string>
+
+    <string name="whitelist">Whitelist</string>
+    <string name="blacklist">Blacklist</string>
 
 
     <string name="settings">Settings</string>

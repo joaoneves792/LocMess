@@ -4,14 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.PostMessageTask;
 
-public class PostMessageActivity extends AppCompatActivity {
+public class PostMessageRules extends AppCompatActivity {
 
     private long _sessionId = 0;
 
@@ -25,24 +24,32 @@ public class PostMessageActivity extends AppCompatActivity {
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
         }
-        setContentView(R.layout.activity_post_message);
+        setContentView(R.layout.activity_post_message_datetime);
     }
+
 
     public void cancel(View view) {
         finish();
     }
 
-    public void selectDateTimes(View view) {
-        Intent intent = new Intent(this, PostMessageDateTime.class);
-        intent.putExtra("TITLE", ((TextView) findViewById(R.id.editTextTitle)).getText().toString());
-        intent.putExtra("TEXT", ((TextView) findViewById(R.id.editTextMessage)).getText().toString());
-        intent.putExtra("LOCATION", ((TextView) findViewById(R.id.editTextLocation)).getText().toString());
-        startActivity(intent);
+    public void postMessage(View view) {
+
+        Intent previousIntent = getIntent();
+
+        String title = previousIntent.getStringExtra("TITLE");
+        String text = previousIntent.getStringExtra("TEXT");
+        String location = previousIntent.getStringExtra("LOCATION");
+        String startdate = previousIntent.getStringExtra("STARTDATE");
+        String starttime = previousIntent.getStringExtra("STARTTIME");
+        String enddate = previousIntent.getStringExtra("ENDDATE");
+        String endtime = previousIntent.getStringExtra("ENDTIME");
+
+        (new PostMessageTask(this, _sessionId, location, null, true, starttime+"-"+startdate, endtime+"-"+enddate, text)).execute();
 
         finish();
     }
 
-//    public void postMessage(View view) {
+    //    public void postMessage(View view) {
 //        String text = ((EditText) findViewById(R.id.editTextBody)).getText().toString();
 //        String location = ((EditText) findViewById(R.id.editTextLocation)).getText().toString();
 //        (new PostMessageTask(this, _sessionId, location, null, true, "12:34-01/02/1234", "12:34-01/02/1234", text)).execute();
@@ -55,5 +62,6 @@ public class PostMessageActivity extends AppCompatActivity {
 //
 //        finish();
 //    }
+
 
 }
