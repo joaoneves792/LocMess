@@ -59,6 +59,7 @@
     <string name="title">Title</string>
     <string name="text">Text</string>
     <string name="chooseLocation">Choose Location</string>
+    <string name="addRule">Add Rule</string>
 
     <string name="setStartDate">Set start date</string>
     <string name="setStartTime">Set start time</string>

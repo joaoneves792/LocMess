@@ -85,7 +85,8 @@
                 android:value=".ProfileActivity" />
         </activity>
         <activity android:name=".PostMessageDateTime" />
-        <activity android:name=".PostMessageRules"></activity>
+        <activity android:name=".PostMessageRules" />
+        <activity android:name=".AddMessageRuleActivity"></activity>
     </application>
 
 </manifest>

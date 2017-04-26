@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -36,6 +37,7 @@ import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
 import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
+import pt.ulisboa.tecnico.cmov.locmess.PostMessageRules;
 import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Cookie;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.LocationsList;
@@ -110,7 +112,6 @@ public class GetLocationsTask extends RestTask{
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(_context, MessageViewActivity.class);
-//                    intent.putExtra("SESSIONID", _sessionId);
                     _context.startActivity(intent);
                 }
             });
