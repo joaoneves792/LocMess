@@ -102,7 +102,6 @@ public class PostMessageRules extends AppCompatActivity {
 //        });
 
         list.setAdapter(locationsAdapter);
-
     }
 
     // class for the custom display of message rules' list

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
+import pt.ulisboa.tecnico.cmov.locmess.Tasks.LogoutTask;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -212,6 +213,10 @@ public class HomeActivity extends AppCompatActivity {
 
     public void settings(View view) {
         Toast.makeText(this, "not implemented", Toast.LENGTH_LONG).show();
+    }
+
+    public void logout(View view){
+        (new LogoutTask(this, _sessionId)).execute();
     }
 
 
