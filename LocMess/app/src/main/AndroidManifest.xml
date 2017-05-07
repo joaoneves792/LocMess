@@ -3,6 +3,8 @@
     package="pt.ulisboa.tecnico.cmov.locmess">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -86,7 +88,8 @@
         </activity>
         <activity android:name=".PostMessageDateTime" />
         <activity android:name=".PostMessageRules" />
-        <activity android:name=".AddMessageRuleActivity"></activity>
+        <activity android:name=".AddMessageRuleActivity"/>
+        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesBroadcastReceiver"/>
     </application>
 
 </manifest>

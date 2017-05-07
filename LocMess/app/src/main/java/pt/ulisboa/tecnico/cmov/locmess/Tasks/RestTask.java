@@ -27,6 +27,8 @@ public abstract class RestTask extends AsyncTask<Void, Void, String> {
     protected RestTemplate _rest;
     protected String _url;
 
+    protected Context _appContext;
+
     @Override
     protected void onPreExecute(){
         _rest = new RestTemplate();
@@ -41,6 +43,12 @@ public abstract class RestTask extends AsyncTask<Void, Void, String> {
         super();
         _context = appContext;
         _url = appContext.getResources().getString(R.string.serverURL);
+    }
+
+    protected RestTask(Context context){
+        super();
+        _appContext = context;
+        _url = context.getResources().getString(R.string.serverURL);
     }
 
     @Override

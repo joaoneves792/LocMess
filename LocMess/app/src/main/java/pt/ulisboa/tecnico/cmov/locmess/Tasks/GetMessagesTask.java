@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,7 @@ public class GetMessagesTask extends RestTask{
     private List<DeliverableMessage> _receivedMessages;
 
 
-    public GetMessagesTask(Activity appContext, long sessionId, double latitude, double longitude, List<String> ssids){
+    public GetMessagesTask(Context appContext, long sessionId, double latitude, double longitude, List<String> ssids){
         super(appContext);
         _sessionId = sessionId;
         _latitude = latitude;
@@ -82,7 +83,7 @@ public class GetMessagesTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
-        Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
+        Toast.makeText(_appContext, result, Toast.LENGTH_SHORT).show();
         if(_successful) {
             /*TextView text = (TextView) _context.findViewById(R.id.debugText);
             text.setText("");
