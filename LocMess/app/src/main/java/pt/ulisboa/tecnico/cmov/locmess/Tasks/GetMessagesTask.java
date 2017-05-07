@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
+import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
 import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.InterestsList;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.MessagesList;
@@ -85,13 +87,25 @@ public class GetMessagesTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
-        Toast.makeText(_appContext, result, Toast.LENGTH_SHORT).show();
         if(_successful) {
-            /*TextView text = (TextView) _context.findViewById(R.id.debugText);
-            text.setText("");
-            for (DeliverableMessage message : _receivedMessages) {
-                text.setText(text.getText() + message.getMessage() + "\n");
-            }*/
+            Toast.makeText(_appContext, "Checked messages: " + _receivedMessages.size(), Toast.LENGTH_SHORT).show();
+        }/*else {
+            Toast.makeText(_appContext, "Failed to check messages",  Toast.LENGTH_SHORT).show();
+        }*/
+        if(_successful) {
+            LocalCache cache = LocalCache.getInstance();
+            List<DeliverableMessage> newMessages = cache.storeMessages(_receivedMessages);
+            if(newMessages.size() > 0){
+                /*TODO
+                    Generate a notification for each new message in this list
+                 */
+                Toast.makeText(_appContext, "You have new messages!!", Toast.LENGTH_SHORT).show();
+            }
+
+            /*TODO
+                Maybe launch an intent to HomeActivity so it can update the messages list?
+             */
+
         }
     }
 

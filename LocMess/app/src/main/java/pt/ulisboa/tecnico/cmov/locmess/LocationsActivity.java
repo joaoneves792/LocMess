@@ -8,6 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.List;
+
+import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetLocationsTask;
 

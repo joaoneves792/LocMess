@@ -61,7 +61,7 @@ public class MessageTests extends LocMessTest {
     public void postMessageTest()throws Exception{
         String id = loginGetId(USERNAME, PASSWORD);
 
-        String response = postMessage(id, LocationTests.LOCATION_NAME, null, true, today, tomorrow, MESSAGE1);
+        String response = postMessage(id, LocationTests.LOCATION_NAME, null, false, today, tomorrow, MESSAGE1);
         assertSuccess(response);
 
         response = getUserMessages(id);
@@ -77,7 +77,7 @@ public class MessageTests extends LocMessTest {
     public void post2MessagesTest()throws Exception{
         postMessageTest();
         String id = loginGetId(USERNAME, PASSWORD);
-        String response = postMessage(id, LocationTests.WIFI_LOCATION_NAME, null, true, today, tomorrow, MESSAGE2);
+        String response = postMessage(id, LocationTests.WIFI_LOCATION_NAME, null, false, today, tomorrow, MESSAGE2);
         assertSuccess(response);
 
         response = getMessages(id, LocationTests.LOCATION_LATITUDE, LocationTests.LOCATION_LONGITUDE, Arrays.asList(LocationTests.SSID3));
@@ -134,7 +134,7 @@ public class MessageTests extends LocMessTest {
     public void getYesterdaysMessages()throws Exception{
         String id = loginGetId(USERNAME, PASSWORD);
 
-        String response = postMessage(id, LocationTests.LOCATION_NAME, null, true, yesterday, today, MESSAGE1);
+        String response = postMessage(id, LocationTests.LOCATION_NAME, null, false, yesterday, today, MESSAGE1);
         assertSuccess(response);
 
         response = getUserMessages(id);
@@ -168,7 +168,7 @@ public class MessageTests extends LocMessTest {
     public void deleteMessageTest()throws Exception{
         String id = loginGetId(USERNAME, PASSWORD);
 
-        String response = postMessage(id, LocationTests.LOCATION_NAME, null, true, today, tomorrow, MESSAGE1);
+        String response = postMessage(id, LocationTests.LOCATION_NAME, null, false, today, tomorrow, MESSAGE1);
         assertSuccess(response);
 
         response = getUserMessages(id);

@@ -49,13 +49,16 @@ public class DataManager {
 
     private String getAttributeString(Context context, String spFilename, String attributeName)throws StorageException{
         try {
-            String attribute = context.getSharedPreferences(spFilename, Context.MODE_PRIVATE).
-                    getString(attributeName, "");
+            String attribute = context.getSharedPreferences(spFilename, Context.MODE_PRIVATE).getString(attributeName, "");
 
             return attribute;
         } catch ( ClassCastException exception) {
             throw new StorageException(exception);
         }
+    }
+
+    public String getUserAttributeString(Context context, String attributeName)throws StorageException{
+        return getAttributeString(context, _currentUser, attributeName);
     }
 
     private long getAttributeLong(Context context, String spFilename, String attributeName) throws StorageException {
@@ -69,6 +72,18 @@ public class DataManager {
         }
     }
 
+    private void removeAttribute(Context context, String spFilename, String attributeName){
+        context.getSharedPreferences(spFilename, Context.MODE_PRIVATE).edit().remove(attributeName).apply();
+    }
+
+    public void removeUserAttribute(Context context, String attributeName){
+        removeAttribute(context, _currentUser, attributeName);
+    }
+
+    public long getUserAttributeLong(Context context, String attributeName)throws StorageException{
+        return getAttributeLong(context, _currentUser, attributeName);
+    }
+
     private void setAttribute(Context context, String spFilename, String attributeName, String value) {
         SharedPreferences.Editor editor = getEditor(context, spFilename);
 
@@ -80,6 +95,14 @@ public class DataManager {
         SharedPreferences.Editor editor = getEditor(context, spFilename);
         editor.putLong(attributeName, value);
         editor.apply();
+    }
+
+    public void setUserAttribute(Context context, String attributeName, String value){
+        setAttribute(context, _currentUser, attributeName, value);
+    }
+
+    public void setUserAttribute(Context context, String attributeName, long value){
+        setAttribute(context, _currentUser, attributeName, value);
     }
 
     public long getSessionId(Context context)throws StorageException{

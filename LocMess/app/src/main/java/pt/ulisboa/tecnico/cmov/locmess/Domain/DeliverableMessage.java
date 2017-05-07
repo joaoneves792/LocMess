@@ -19,6 +19,13 @@ public class DeliverableMessage {
 
     }
 
+    public DeliverableMessage(long id, String sender, String location, String message){
+        this.id = id;
+        this.sender = sender;
+        this.location = location;
+        this.message = message;
+    }
+
 
     public String getSender() {
         return sender;
