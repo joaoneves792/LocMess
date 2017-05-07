@@ -52,8 +52,8 @@ public class Message {
         }
 
         if(_whitelisted){
-            if(null == _rules) //if there are no rules then deliver to everyone
-                return true;
+            if(null == _rules) //if there are no rules then deliver to nobody
+                return false;
 
             for(String key : _rules.keySet()){
                 if(!user.getInterests().containsKey(key))
@@ -63,8 +63,8 @@ public class Message {
             }
 
         }else{ //Blacklisted
-            if(null == _rules) //if there are no rules then deliver to nobody
-                return false;
+            if(null == _rules) //if there are no rules then deliver to everybody
+                return true;
 
             for(String key : _rules.keySet()){
                 if(user.getInterests().containsKey(key)){
