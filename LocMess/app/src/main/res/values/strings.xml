@@ -62,6 +62,10 @@
     <string name="chooseLocation">Choose Location</string>
     <string name="addRule">Add Rule</string>
 
+    <string name="setStartDateTime">Set start date/time</string>
+    <string name="setEndDateTime">Set end date/time</string>
+    <string name="startDateTime">Start date/time</string>
+    <string name="endDateTime">End date/time</string>
     <string name="setStartDate">Set start date</string>
     <string name="setStartTime">Set start time</string>
     <string name="setEndDate">Set end date</string>

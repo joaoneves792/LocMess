@@ -1,21 +1,32 @@
 package pt.ulisboa.tecnico.cmov.locmess;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.icu.text.DateFormat;
+import java.util.Calendar;
+import android.os.Build;
+import android.provider.CalendarContract;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 
-public class PostMessageDateTime extends AppCompatActivity {
+public class PostMessageDateTime extends AppCompatActivity
+        implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private long _sessionId = 0;
 
-//    private String _title;
-//    private String _text;
-//    private String _location;
+    int _startY, _startM, _startD, _startH, _startMin;
+    int _endY, _endM, _endD, _endH, _endMin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +39,80 @@ public class PostMessageDateTime extends AppCompatActivity {
             startActivity(i);
         }
 
-//        Intent intent = getIntent();
-//        _title = intent.getStringExtra("TITLE");
-//        _text = intent.getStringExtra("TEXT");
-//        _location = intent.getStringExtra("LOCATION");
-
         setContentView(R.layout.activity_post_message_datetime);
+
+        Calendar calendar = Calendar.getInstance();
+        // default values for the start date/time
+        _startY = calendar.get(Calendar.YEAR);
+        _startM = calendar.get(Calendar.MONTH);
+        _startD = calendar.get(Calendar.DAY_OF_MONTH);
+        _startH = calendar.get(Calendar.HOUR_OF_DAY);
+        _startMin = calendar.get(Calendar.MINUTE);
+
+        TextView startDateTime = (TextView) findViewById(R.id.textViewStartDateTime);
+        startDateTime.setText(_startH + ":" + String.format("%02d", _startMin)
+                + " " + String.format("%02d", _startD) + "/" + String.format("%02d", _startM+1) + "/"+ _startY);
+
+        // default values for the end date/time
+        _endY = _startY;
+        _endM = _startM;
+        _endD = _startD + 1;
+        _endH = _startH;
+        _endMin = _startMin;
+
+        TextView endDateTime = (TextView) findViewById(R.id.textViewEndDateTime);
+        endDateTime.setText(_endH + ":" + String.format("%02d", _endMin)
+                + " " + String.format("%02d", _endD) + "/" + String.format("%02d", _endM+1) + "/"+ _endY);
+
+        Button startDateTimeButton = (Button) findViewById(R.id.buttonSetStart);
+        startDateTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(PostMessageDateTime.this, PostMessageDateTime.this, _startY, _startM, _startD);
+                datePickerDialog.show();
+            }
+        });
+
+        Button endDateTimeButton = (Button) findViewById(R.id.buttonSetEnd);
+        endDateTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(PostMessageDateTime.this, PostMessageDateTime.this, _startY, _startM, _startD);
+                datePickerDialog.show();
+            }
+        });
+
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        _startY = year;
+        _startM = month;
+        _startD = dayOfMonth;
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(PostMessageDateTime.this, PostMessageDateTime.this, _startH, _startMin, true);
+        timePickerDialog.show();
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        _startH = hourOfDay;
+        _startMin = minute;
+
+        TextView startDateTime = (TextView) findViewById(R.id.textViewStartDateTime);
+        startDateTime.setText(_startH + ":" + String.format("%02d", _startMin)
+                + " " + String.format("%02d", _startD) + "/" + String.format("%02d", _startM+1) + "/"+ _startY);
+
+        // update of end date/time
+        _endY = _startY;
+        _endM = _startM;
+        _endD = _startD + 1;
+        _endH = _startH;
+        _endMin = _startMin;
+
+        TextView endDateTime = (TextView) findViewById(R.id.textViewEndDateTime);
+        endDateTime.setText(_endH + ":" + String.format("%02d", _endMin)
+                + " " + String.format("%02d", _endD) + "/" + String.format("%02d", _endM+1) + "/"+ _endY);
     }
 
 
@@ -43,24 +122,25 @@ public class PostMessageDateTime extends AppCompatActivity {
 
     public void selectRules(View view) {
 
+        String startDateTime = _startH + ":" + String.format("%02d", _startMin)
+                + "-" + _startY + "/" + String.format("%02d", _startM+1) + "/" + String.format("%02d", _startD);
+
+        String endDateTime = _endH + ":" + String.format("%02d", _endMin)
+                + "-" + _endY + "/" + String.format("%02d", _endM+1) + "/" + String.format("%02d", _endD);
+
+        //FIXME verify end date > start date
+
         Intent previousIntent = getIntent();
         Intent intent = new Intent(this, PostMessageRules.class);
 
-//        intent.putExtra("TITLE", _title);
-//        intent.putExtra("TEXT", _text);
-//        intent.putExtra("LOCATION", _location);
         intent.putExtra("TITLE", previousIntent.getStringExtra("TITLE"));
         intent.putExtra("TEXT", previousIntent.getStringExtra("TEXT"));
         intent.putExtra("LOCATION", previousIntent.getStringExtra("LOCATION"));
-        intent.putExtra("STARTDATE", ((TextView) findViewById(R.id.editTextStartDate)).getText().toString());
-        intent.putExtra("STARTTIME", ((TextView) findViewById(R.id.editTextStartTime)).getText().toString());
-        intent.putExtra("ENDDATE", ((TextView) findViewById(R.id.editTextEndDate)).getText().toString());
-        intent.putExtra("ENDTIME", ((TextView) findViewById(R.id.editTextEndTime)).getText().toString());
+        intent.putExtra("STARTDATETIME", startDateTime);
+        intent.putExtra("ENDDATETIME", endDateTime);
         startActivity(intent);
 
         finish();
     }
-
-
 
 }
