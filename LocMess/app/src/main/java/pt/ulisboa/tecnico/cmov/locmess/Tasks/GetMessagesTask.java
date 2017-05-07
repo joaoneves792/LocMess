@@ -51,8 +51,10 @@ public class GetMessagesTask extends RestTask{
         String result;
 
         String ssidList = "";
-        for(String ssid : _ssids)
-            ssidList += ssid+",";
+        if(null != _ssids) {
+            for (String ssid : _ssids)
+                ssidList += ssid + ",";
+        }
         ssidList = ssidList.replaceAll(",$", "");
         try {
             result = _rest.getForObject(_url+"/messages?id="+_sessionId+"&latitude="+_latitude+"&longitude="+_longitude+"&ssid="+ssidList, String.class);

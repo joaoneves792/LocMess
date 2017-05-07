@@ -6,15 +6,20 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Handler;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.LocationException;
@@ -25,11 +30,38 @@ import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetMessagesTask;
  * Created by joao on 5/7/17.
  */
 
+/*TODO
+    Since scanning for wifi networks is asyncronous we are only getting the ssid list on the next update (ex. the first time we run ssid list is empty)
+    maybe fix this so we only update after receiving the ssid list
+ */
+
+
 public class FetchMessagesBroadcastReceiver extends BroadcastReceiver implements LocationListener{
 
     private double _latitude;
     private double _longitude;
-    private List<String> _ssids;
+    protected WifiManager _mainWifi;
+    private static WifiReceiver _wifiReceiver;
+
+    public class WifiReceiver extends BroadcastReceiver{
+
+        List<String> _ssids = new LinkedList<>();
+        public void onReceive(Context c, Intent intent)
+        {
+            _ssids = new LinkedList<>();
+            List<ScanResult> wifiList;
+            wifiList = _mainWifi.getScanResults();
+            for(ScanResult r : wifiList)
+            {
+               _ssids.add(r.SSID);
+            }
+        }
+
+        public List<String> getSSIDs(){
+            return _ssids;
+        }
+    }
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -53,12 +85,22 @@ public class FetchMessagesBroadcastReceiver extends BroadcastReceiver implements
             return;
         }
         try {
+            _mainWifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            _mainWifi.startScan();
             getGPSCoordinates(context);
 
-            _ssids = new LinkedList<>();
-            _ssids.add("eduroam");
+            List<String> ssids = _wifiReceiver.getSSIDs();
 
-            GetMessagesTask fetchTask = new GetMessagesTask(context, sessionId, _latitude, _longitude, _ssids);
+            /*String ssidsString = "ssids: ";
+            if(null != ssids) {
+                for (String s : ssids) {
+                    ssidsString = ssidsString + s + ", ";
+                }
+            }
+
+            Toast.makeText(context, ssidsString , Toast.LENGTH_SHORT).show();
+            */
+            GetMessagesTask fetchTask = new GetMessagesTask(context, sessionId, _latitude, _longitude, ssids);
 
             fetchTask.execute();
 
@@ -99,6 +141,15 @@ public class FetchMessagesBroadcastReceiver extends BroadcastReceiver implements
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
         //After after 5 seconds
         am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 , pi);
+
+        /*Set Wifi receiver*/
+        _mainWifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        _wifiReceiver = new WifiReceiver();
+        context.registerReceiver(_wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        if(!_mainWifi.isWifiEnabled())
+        {
+            _mainWifi.setWifiEnabled(true);
+        }
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.locmess.R;
+import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 /**
  * Created by joao on 3/29/17.
@@ -39,16 +40,21 @@ public abstract class RestTask extends AsyncTask<Void, Void, String> {
         _rest.setMessageConverters(messageConverters);
     }
 
+    private void setURL(Context context){
+        //_url = context.getResources().getString(R.string.noEmulatorServerURL);
+        _url = context.getResources().getString(R.string.serverURL);
+    }
+
     protected RestTask(Activity appContext){
         super();
         _context = appContext;
-        _url = appContext.getResources().getString(R.string.serverURL);
+        setURL(_context);
     }
 
     protected RestTask(Context context){
         super();
         _appContext = context;
-        _url = context.getResources().getString(R.string.serverURL);
+        setURL(_appContext);
     }
 
     @Override
