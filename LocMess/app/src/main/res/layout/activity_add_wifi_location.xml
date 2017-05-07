@@ -43,13 +43,13 @@
             android:id="@+id/editTextName"
             android:layout_width="352dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/name"
-            android:inputType="textPersonName"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/locationName"
+            android:inputType="textPersonName"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/buttonUploadLocation"

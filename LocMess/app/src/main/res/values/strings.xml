@@ -39,7 +39,7 @@
     <string name="deleteLocation">Delete Location</string>
 
     <string name="ssid">Network SSIDs</string>
-    <string name="name">Name</string>
+    <string name="locationName">Location name</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="radius">Radius</string>

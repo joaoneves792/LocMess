@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="@string/name"
+            android:hint="@string/locationName"
             android:inputType="textPersonName"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -70,10 +70,10 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="@string/latitude"
-            android:inputType="number"
-            app:layout_constraintTop_toBottomOf="@+id/editTextSSID"
+            android:inputType="number|numberDecimal"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextSSID" />
 
         <EditText
             android:id="@+id/editTextLongitude"
@@ -82,10 +82,10 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="@string/longitude"
-            android:inputType="number"
-            app:layout_constraintTop_toBottomOf="@+id/editTextLatitude"
+            android:inputType="number|numberDecimal"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextLatitude" />
 
         <EditText
             android:id="@+id/editTextRadius"
