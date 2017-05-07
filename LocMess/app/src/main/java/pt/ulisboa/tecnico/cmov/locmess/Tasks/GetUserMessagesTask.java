@@ -93,7 +93,6 @@ public class GetUserMessagesTask extends RestTask{
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(_context, MessageViewActivity.class);
-//                    intent.putExtra("SESSIONID", _sessionId);
                     _context.startActivity(intent);
                 }
             });
@@ -123,6 +122,7 @@ public class GetUserMessagesTask extends RestTask{
 
             messageBody.setText(message.getMessage());
             location.setText(message.getLocation());
+            // FIXME add date/time getter to the message
 //            startDate.setText(message.getStartDateTime());
 //            endDate.setText(message.getEndDateTime());
 

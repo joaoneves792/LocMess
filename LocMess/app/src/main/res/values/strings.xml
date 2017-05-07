@@ -43,6 +43,7 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="radius">Radius</string>
+    <string name="useCurrentLocation">Use current location</string>
 
     <string name="profile">Profile</string>
     <string name="viewProfile">View Profile</string>
