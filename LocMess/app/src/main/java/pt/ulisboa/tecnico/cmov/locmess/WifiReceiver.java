@@ -28,10 +28,6 @@ import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetMessagesTask;
 public class WifiReceiver extends BroadcastReceiver{
     private ArrayList<String> _ssids;
 
-    WifiReceiver(){
-        _ssids = new ArrayList<>();
-    }
-
     @Override
     public void onReceive(Context c, Intent intent) {
 
@@ -47,6 +43,9 @@ public class WifiReceiver extends BroadcastReceiver{
     }
 
     public ArrayList<String> getSSIDs(){
+        if(null == _ssids){
+            _ssids = new ArrayList<>();
+        }
         return _ssids;
     }
 

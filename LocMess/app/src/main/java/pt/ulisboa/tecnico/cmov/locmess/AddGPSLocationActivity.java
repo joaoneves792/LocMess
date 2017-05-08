@@ -33,65 +33,40 @@ public class AddGPSLocationActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_add_gps_location);
 
-        try {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: request Permissions
-                return;
-            }
+        try{
+            GPSLocationListener gps = GPSLocationListener.getInstance(this);
 
-            LocationManager locationManager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
 
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                android.location.Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            EditText latitude = (EditText) findViewById(R.id.editTextLatitude);
+            latitude.setText(Double.toString(gps.getLatitude()));
+            EditText longitude = (EditText) findViewById(R.id.editTextLongitude);
+            longitude.setText(Double.toString(gps.getLongitude()));
+            EditText radius = (EditText) findViewById(R.id.editTextRadius);
+            radius.setText("50");
 
-                if (location == null) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60 * 1000, 10, (LocationListener) this);
-                }
 
-                EditText latitude = (EditText) findViewById(R.id.editTextLatitude);
-                latitude.setText(Double.toString(location.getLatitude()));
-                EditText longitude = (EditText) findViewById(R.id.editTextLongitude);
-                longitude.setText(Double.toString(location.getLongitude()));
-                EditText radius = (EditText) findViewById(R.id.editTextRadius);
-                radius.setText("20");
-
-            } else {
-                Toast.makeText(this, "GPS disabled.", Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (SecurityException e) {
-//            Toast.makeText(this, "GPS security exception.", Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (LocationException e) {
+            Toast.makeText(this, "GPS is unavailable", Toast.LENGTH_LONG).show();
         }
 
     }
 
 
     public void useCurentLocation(View view) {
-        try {
-            LocationManager locationManager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
+        try{
+            GPSLocationListener gps = GPSLocationListener.getInstance(this);
 
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                android.location.Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                if (location == null) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60 * 1000, 10, (LocationListener) this);
-                }
+            EditText latitude = (EditText) findViewById(R.id.editTextLatitude);
+            latitude.setText(Double.toString(gps.getLatitude()));
+            EditText longitude = (EditText) findViewById(R.id.editTextLongitude);
+            longitude.setText(Double.toString(gps.getLongitude()));
+            EditText radius = (EditText) findViewById(R.id.editTextRadius);
+            radius.setText("50");
 
-                EditText latitude = (EditText) findViewById(R.id.editTextLatitude);
-                latitude.setText(Double.toString(location.getLatitude()));
-                EditText longitude = (EditText) findViewById(R.id.editTextLongitude);
-                longitude.setText(Double.toString(location.getLongitude()));
-                EditText radius = (EditText) findViewById(R.id.editTextRadius);
-                radius.setText("20");
 
-            } else {
-                Toast.makeText(this, "GPS disabled.", Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (SecurityException e) {
-//            Toast.makeText(this, "GPS security exception.", Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (LocationException e) {
+            Toast.makeText(this, "GPS is unavailable", Toast.LENGTH_LONG).show();
         }
     }
 
