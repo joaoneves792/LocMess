@@ -72,8 +72,6 @@ public class PostMessageRules extends AppCompatActivity {
 
         Intent previousIntent = getIntent();
 
-        // FIXME change server to accept titles
-//        String title = previousIntent.getStringExtra("TITLE");
         String text = previousIntent.getStringExtra("TEXT");
         String location = previousIntent.getStringExtra("LOCATION");
         String startDateTime = previousIntent.getStringExtra("STARTDATETIME");
@@ -95,7 +93,7 @@ public class PostMessageRules extends AppCompatActivity {
 //        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(this, MessageViewActivity.class);
+//                Intent intent = new Intent(this, InterestViewActivity.class);
 //                startActivity(intent);
 //            }
 //        });

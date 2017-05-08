@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -20,25 +21,31 @@ public class MessageViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_view);
 
-        Intent previousIntent = getIntent();
-        long id = Long.parseLong(previousIntent.getStringExtra(MESSAGE_ID));
+        try {
+            Intent previousIntent = getIntent();
+            long id = Long.parseLong(previousIntent.getStringExtra(MESSAGE_ID));
+            DeliverableMessage message = LocalCache.getInstance().getMessage(id);
 
-//        List<DeliverableMessage> messages = LocalCache.getInstance().getMessages();
-//        Log.d("MessageViewActivity :", messages.toString());
+            if (message != null) {
+                TextView sender = (TextView) findViewById(R.id.textViewSender);
+                sender.setText(message.getSender());
 
-        DeliverableMessage message = LocalCache.getInstance().getMessage(id);
+                TextView location = (TextView) findViewById(R.id.textViewLocation);
+                location.setText(message.getLocation());
 
-        TextView sender = (TextView) findViewById(R.id.textViewSender);
-        sender.setText(message.getSender());
+                TextView date = (TextView) findViewById(R.id.textViewPublishDate);
+                date.setText(message.getPublicationDate());
 
-        TextView location = (TextView) findViewById(R.id.textViewLocation);
-        location.setText(message.getLocation());
+                TextView text = (TextView) findViewById(R.id.textViewText);
+                text.setText(message.getMessage());
 
-        TextView date = (TextView) findViewById(R.id.textViewPublishDate);
-        date.setText(message.getPublicationDate());
+            } else {
+                Toast.makeText(this, "Failed to find message with id " + id, Toast.LENGTH_LONG).show();
+            }
 
-        TextView text = (TextView) findViewById(R.id.textViewText);
-        text.setText(message.getMessage());
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "message id from intent = " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
 
         // FIXME change message to seen
 

@@ -154,7 +154,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), MessageViewActivity.class);
-                intent.putExtra(MessageViewActivity.MESSAGE_ID, id);
+                intent.putExtra(MessageViewActivity.MESSAGE_ID, position);
                 startActivity(intent);
             }
         });
