@@ -112,10 +112,15 @@ public class GetMessagesTask extends RestTask{
                                     .setContentTitle(m.getSender())
                                     .setContentText(m.getMessage())
                                     .setAutoCancel(true);
+
+
+//                    Intent resultIntent = new Intent(_appContext, MessageViewActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putLong(MessageViewActivity.MESSAGE_ID, m.getId());
+//                    resultIntent.putExtras(bundle);
                     Intent resultIntent = new Intent(_appContext, MessageViewActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putLong(MessageViewActivity.MESSAGE_ID, m.getId());
-                    resultIntent.putExtras(bundle);
+                    resultIntent.putExtra(MessageViewActivity.MESSAGE_ID, Long.toString(m.getId()));
+
 
                     PendingIntent resultPendingIntent = PendingIntent.getActivity(_appContext,0,resultIntent,
                                     PendingIntent.FLAG_UPDATE_CURRENT);
