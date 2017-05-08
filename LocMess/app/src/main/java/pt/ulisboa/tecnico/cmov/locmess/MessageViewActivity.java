@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 public class MessageViewActivity extends AppCompatActivity {
 
+    public static final String MESSAGE_ID = "MESSAGE_ID";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

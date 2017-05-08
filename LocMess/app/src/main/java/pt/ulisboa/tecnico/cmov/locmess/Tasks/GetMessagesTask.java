@@ -1,7 +1,13 @@
 package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +23,7 @@ import java.util.Map;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
+import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
 import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.InterestsList;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.MessagesList;
@@ -87,25 +94,38 @@ public class GetMessagesTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
-        if(_successful) {
+        /*if(_successful) {
             Toast.makeText(_appContext, "Checked messages: " + _receivedMessages.size(), Toast.LENGTH_SHORT).show();
-        }/*else {
-            Toast.makeText(_appContext, "Failed to check messages",  Toast.LENGTH_SHORT).show();
         }*/
+
         if(_successful) {
             LocalCache cache = LocalCache.getInstance();
             List<DeliverableMessage> newMessages = cache.storeMessages(_receivedMessages);
             if(newMessages.size() > 0){
-                /*TODO
-                    Generate a notification for each new message in this list
-                 */
-                Toast.makeText(_appContext, "You have new messages!!", Toast.LENGTH_SHORT).show();
+                int notifyID = 1;
+                for(DeliverableMessage m : newMessages) {
+
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(_appContext)
+                                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                                    .setContentTitle(m.getSender())
+                                    .setContentText(m.getMessage())
+                                    .setAutoCancel(true);
+                    Intent resultIntent = new Intent(_appContext, MessageViewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(MessageViewActivity.MESSAGE_ID, m.getId());
+                    resultIntent.putExtras(bundle);
+
+                    PendingIntent resultPendingIntent = PendingIntent.getActivity(_appContext,0,resultIntent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                    mBuilder.setContentIntent(resultPendingIntent);
+                    NotificationManager mNotificationManager =
+                            (NotificationManager) _appContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                    mNotificationManager.notify(notifyID++, mBuilder.build());
+                }
             }
-
-            /*TODO
-                Maybe launch an intent to HomeActivity so it can update the messages list?
-             */
-
         }
     }
 
