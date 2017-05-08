@@ -115,16 +115,15 @@ public class GetUserMessagesTask extends RestTask{
             View rowView = messageInflater.inflate(R.layout.posted_message_item, parent, false);
 
             DeliverableMessage message = getItem(position);
+            TextView sender = (TextView) rowView.findViewById(R.id.textViewSender);
             TextView messageBody = (TextView) rowView.findViewById(R.id.textViewMessageBody);
             TextView location = (TextView) rowView.findViewById(R.id.textViewLocation);
-            TextView startDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
-            TextView endDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
+            TextView publishDate = (TextView) rowView.findViewById(R.id.textViewPublishDate);
 
-            messageBody.setText(message.getMessage());
+            sender.setText(message.getSender());
             location.setText(message.getLocation());
-            // FIXME add date/time getter to the message
-//            startDate.setText(message.getStartDateTime());
-//            endDate.setText(message.getEndDateTime());
+            publishDate.setText(message.getPublicationDate());
+            messageBody.setText(message.getMessage());
 
             return rowView;
         }

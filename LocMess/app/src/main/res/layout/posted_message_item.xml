@@ -4,10 +4,10 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewMessageBody"
+        android:id="@+id/textViewSender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/savedMessages" />
+        android:text="@string/poster" />
 
     <TextView
         android:id="@+id/textViewLocation"
@@ -16,14 +16,15 @@
         android:text="location" />
 
     <TextView
-        android:id="@+id/textViewStartDate"
+        android:id="@+id/textViewPublishDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/startDate" />
+        android:text="@string/publishDate" />
 
     <TextView
-        android:id="@+id/textViewEndDate"
+        android:id="@+id/textViewMessageBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/endDate" />
+        android:text="@string/message" />
+
 </LinearLayout>

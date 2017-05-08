@@ -23,12 +23,15 @@ public class MessagesActivity extends AppCompatActivity {
         super.onResume();
         try {
             _sessionId = DataManager.getInstance().getSessionId(getApplicationContext());
-        }catch (StorageException e){
+
+        } catch (StorageException e) {
             Toast.makeText(this, R.string.sessionFailed, Toast.LENGTH_SHORT).show();
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
         }
+
         (new GetUserMessagesTask(this, _sessionId)).execute();
 
     }
+
 }

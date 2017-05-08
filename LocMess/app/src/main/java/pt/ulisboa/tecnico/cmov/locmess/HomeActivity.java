@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,9 +25,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
+import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.LocationException;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
+import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetUserMessagesTask;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.LogoutTask;
 
 public class HomeActivity extends AppCompatActivity {
@@ -103,8 +109,6 @@ public class HomeActivity extends AppCompatActivity {
 
         _drawerLayout.setDrawerListener(_drawerToggle);
 
-
-
     }
 
     @Override
@@ -125,16 +129,40 @@ public class HomeActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.userName)).setText(_username);
         //Toast.makeText(this, new Long(getIntent().getLongExtra("SESSIONID", -1)).toString(), Toast.LENGTH_LONG).show();
 
-        /*Setup Message fetching service*/
+
+        // setup message fetching service
         Context context = getApplicationContext();
-        if(null == _fetchMessagesReceiver){
+        if (_fetchMessagesReceiver == null){
             _fetchMessagesReceiver = new FetchMessagesBroadcastReceiver();
         }
+
         try {
             _fetchMessagesReceiver.SetAlarm(context);
-        }catch (LocationException e){
+        } catch (LocationException e) {
             Toast.makeText(this, "Failed initialize GPS", Toast.LENGTH_LONG).show();
         }
+
+
+        // display messages on home
+        ListView list = (ListView) findViewById(R.id.listViewMessages);
+
+        List<DeliverableMessage> messages = LocalCache.getInstance().getMessages();
+
+        ListAdapter messagesAdapter = new HomeActivity.MessagesListAdapter(this, messages);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), MessageViewActivity.class);
+                intent.putExtra(MessageViewActivity.MESSAGE_ID, id);
+                startActivity(intent);
+            }
+        });
+
+        list.setAdapter(messagesAdapter);
+
+
+
     }
 
 
@@ -238,6 +266,35 @@ public class HomeActivity extends AppCompatActivity {
 
     public void logout(View view){
         (new LogoutTask(this, _sessionId)).execute();
+    }
+
+
+    // class for the custom display of messages
+    protected class MessagesListAdapter extends ArrayAdapter<DeliverableMessage> {
+
+        public MessagesListAdapter(@NonNull Context context, List<DeliverableMessage> messages) {
+            super(context, R.layout.posted_message_item, messages);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater messageInflater = LayoutInflater.from(getContext());
+            View rowView = messageInflater.inflate(R.layout.posted_message_item, parent, false);
+
+            DeliverableMessage message = getItem(position);
+            TextView sender = (TextView) rowView.findViewById(R.id.textViewSender);
+            TextView messageBody = (TextView) rowView.findViewById(R.id.textViewMessageBody);
+            TextView location = (TextView) rowView.findViewById(R.id.textViewLocation);
+            TextView publishDate = (TextView) rowView.findViewById(R.id.textViewPublishDate);
+
+            sender.setText(message.getSender());
+            location.setText(message.getLocation());
+            publishDate.setText(message.getPublicationDate());
+            messageBody.setText(message.getMessage());
+
+            return rowView;
+        }
+
     }
 
 
