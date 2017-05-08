@@ -63,6 +63,11 @@
     <string name="chooseLocation">Choose Location</string>
     <string name="addRule">Add Rule</string>
 
+    <string name="poster">Poster</string>
+    <string name="publishDate">Posted on (mm/dd/yyyy)</string>
+    <string name="message">Message</string>
+
+
     <string name="setStartDateTime">Set start date/time</string>
     <string name="setEndDateTime">Set end date/time</string>
     <string name="startDateTime">Start date/time</string>

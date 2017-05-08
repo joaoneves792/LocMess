@@ -21,7 +21,7 @@ public class MessageViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message_view);
 
         Intent previousIntent = getIntent();
-        long id = Integer.parseInt(previousIntent.getStringExtra(MESSAGE_ID));
+        long id = Long.parseLong(previousIntent.getStringExtra(MESSAGE_ID));
 
 //        List<DeliverableMessage> messages = LocalCache.getInstance().getMessages();
 //        Log.d("MessageViewActivity :", messages.toString());
