@@ -28,6 +28,7 @@ public class LocalCache {
     private static final String SENDER_FIELD = "SENDER";
     private static final String MESSAGE_FIELD = "MESSAGE";
     private static final String LOCATION_FIELD = "LOCATION";
+    private static final String DATE_FIELD = "DATE";
 
     private static List<DeliverableMessage> _messages;
 
@@ -48,6 +49,17 @@ public class LocalCache {
     }
 
 
+    /*Warning: Returns null if message not found!*/
+    public DeliverableMessage getMessage(long id){
+        List<DeliverableMessage> cachedMessages = getMessages();
+        for(DeliverableMessage m : cachedMessages){
+            if(m.getId().equals(id)){
+                return m;
+            }
+        }
+        return null;
+    }
+
     public List<DeliverableMessage> getMessages(){
         fetchFromStorage();
         return _messages;
@@ -56,23 +68,25 @@ public class LocalCache {
     public List<DeliverableMessage> storeMessages(List<DeliverableMessage> freshMessages){
         fetchFromStorage();
 
-        /*Remove already stored messages from freshMessages*/
+
         for(DeliverableMessage m: _messages){
-            Iterator<DeliverableMessage> i = freshMessages.iterator();
-            while (i.hasNext()){
-                DeliverableMessage freshM = i.next();
-                if (m.getId().equals(freshM.getId())){
-                    i.remove();
+            for(DeliverableMessage freshM : freshMessages){
+                if(freshM.getId().equals(m.getId())){
+                    //Mark as old
+                    freshM.setId(-1);
                 }
             }
         }
 
-
+        List<DeliverableMessage> newMessages = new LinkedList<DeliverableMessage>();
         for(DeliverableMessage m : freshMessages){
-            insertIntoStorage(m);
+            if(m.getId() >= 0) {
+                insertIntoStorage(m);
+                newMessages.add(m);
+            }
         }
 
-        return freshMessages; //If this list is not empty than it only contains messages we have never seen before!
+        return newMessages;
     }
 
     private void insertIntoStorage(DeliverableMessage m){
@@ -88,6 +102,7 @@ public class LocalCache {
                 dm.removeUserAttribute(_context, REMOVAL_ID+SENDER_FIELD);
                 dm.removeUserAttribute(_context, REMOVAL_ID+LOCATION_FIELD);
                 dm.removeUserAttribute(_context, REMOVAL_ID+MESSAGE_FIELD);
+                dm.removeUserAttribute(_context, REMOVAL_ID+DATE_FIELD);
             }
 
             /*Build a new Ids Vector*/
@@ -105,6 +120,7 @@ public class LocalCache {
             dm.setUserAttribute(_context, ID+SENDER_FIELD, m.getSender());
             dm.setUserAttribute(_context, ID+LOCATION_FIELD, m.getLocation());
             dm.setUserAttribute(_context, ID+MESSAGE_FIELD, m.getMessage());
+            dm.setUserAttribute(_context, ID+DATE_FIELD, m.getPublicationDate());
 
 
 
@@ -127,7 +143,8 @@ public class LocalCache {
                 String sender = dm.getUserAttributeString(_context, id+SENDER_FIELD);
                 String location = dm.getUserAttributeString(_context, id+LOCATION_FIELD);
                 String message = dm.getUserAttributeString(_context, id+MESSAGE_FIELD);
-                DeliverableMessage m = new DeliverableMessage(Long.parseLong(id), sender, location, message);
+                String date = dm.getUserAttributeString(_context, id+DATE_FIELD);
+                DeliverableMessage m = new DeliverableMessage(Long.parseLong(id), sender, location, message, date);
                 _messages.add(m);
             }
         }catch (StorageException e){

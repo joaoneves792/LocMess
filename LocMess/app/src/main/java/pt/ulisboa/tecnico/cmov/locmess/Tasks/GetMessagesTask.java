@@ -94,14 +94,15 @@ public class GetMessagesTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
-        /*if(_successful) {
+        if(_successful) {
             Toast.makeText(_appContext, "Checked messages: " + _receivedMessages.size(), Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
         if(_successful) {
             LocalCache cache = LocalCache.getInstance();
             List<DeliverableMessage> newMessages = cache.storeMessages(_receivedMessages);
             if(newMessages.size() > 0){
+                Toast.makeText(_appContext, "Got new Messages!" + _receivedMessages.size(), Toast.LENGTH_SHORT).show();
                 int notifyID = 1;
                 for(DeliverableMessage m : newMessages) {
 

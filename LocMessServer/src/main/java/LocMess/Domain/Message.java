@@ -21,6 +21,8 @@ public class Message {
     private Map<String,String> _rules;
     private String _message;
 
+    private Date _publicationDate;
+
     private Date _startDate;
     private Date _endDate;
 
@@ -34,6 +36,7 @@ public class Message {
         _endDate = endDate;
         _message = message;
         _id = id;
+        _publicationDate = new Date();
     }
 
     public boolean canDeliver(Profile user, GPSLocation GPSLocation, WiFiLocation wiFiLocation){
@@ -107,6 +110,10 @@ public class Message {
 
     public Long getId(){
         return _id;
+    }
+
+    public Date getPublicationDate(){
+        return _publicationDate;
     }
 
 }

@@ -5,6 +5,9 @@ import LocMess.Domain.Locations.GPSLocation;
 import LocMess.Domain.Locations.Location;
 import LocMess.Domain.Locations.WiFiLocation;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -19,6 +22,7 @@ public class DeliverableMessage {
     private String _location;
     private Map<String,String> _rules;
     private String _message;
+    private String _publicationDate;
 
 
     public DeliverableMessage(Message originalMessage){
@@ -27,6 +31,9 @@ public class DeliverableMessage {
         _rules = originalMessage.getRules();
         _message = originalMessage.getMessage();
         _id = originalMessage.getId();
+
+        DateFormat df = new SimpleDateFormat("HH:mm MM/dd/yyyy");
+        _publicationDate = df.format(originalMessage.getPublicationDate());
     }
 
 
@@ -48,6 +55,10 @@ public class DeliverableMessage {
 
     public Long getId(){
         return _id;
+    }
+
+    public String getPublicationDate(){
+        return _publicationDate;
     }
 
 }

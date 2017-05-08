@@ -15,15 +15,18 @@ public class DeliverableMessage {
     private Map<String,String> rules;
     private String message;
 
+    private String publicationDate;
+
     public DeliverableMessage(){
 
     }
 
-    public DeliverableMessage(long id, String sender, String location, String message){
+    public DeliverableMessage(long id, String sender, String location, String message, String publicationDate){
         this.id = id;
         this.sender = sender;
         this.location = location;
         this.message = message;
+        this.publicationDate = publicationDate;
     }
 
 
@@ -45,6 +48,14 @@ public class DeliverableMessage {
 
     public Long getId(){
         return id;
+    }
+
+    public void setId(long id){
+        this.id = id;
+    }
+
+    public String getPublicationDate(){
+        return publicationDate;
     }
 
 }
