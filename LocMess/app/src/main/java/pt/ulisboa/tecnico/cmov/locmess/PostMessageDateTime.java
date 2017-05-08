@@ -154,17 +154,17 @@ public class PostMessageDateTime extends AppCompatActivity
     public void selectRules(View view) {
 
         String startDateTime = _startH + ":" + String.format("%02d", _startMin)
-                + "-" + _startY + "/" + String.format("%02d", _startM+1) + "/" + String.format("%02d", _startD);
+                + "-" + String.format("%02d", _startD) + "/" + String.format("%02d", _startM+1) + "/" + _startY;
 
         String endDateTime = _endH + ":" + String.format("%02d", _endMin)
-                + "-" + _endY + "/" + String.format("%02d", _endM+1) + "/" + String.format("%02d", _endD);
+                + "-" + String.format("%02d", _endD) + "/" + String.format("%02d", _endM+1) + "/" + _endY ;
 
         //FIXME verify end date > start date
 
         Intent previousIntent = getIntent();
         Intent intent = new Intent(this, PostMessageRules.class);
 
-        intent.putExtra("TITLE", previousIntent.getStringExtra("TITLE"));
+//        intent.putExtra("TITLE", previousIntent.getStringExtra("TITLE"));
         intent.putExtra("TEXT", previousIntent.getStringExtra("TEXT"));
         intent.putExtra("LOCATION", previousIntent.getStringExtra("LOCATION"));
         intent.putExtra("STARTDATETIME", startDateTime);

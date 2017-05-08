@@ -34,7 +34,7 @@ public class PostMessageActivity extends AppCompatActivity {
 
     public void selectDateTimes(View view) {
         Intent intent = new Intent(this, PostMessageDateTime.class);
-        intent.putExtra("TITLE", ((TextView) findViewById(R.id.editTextTitle)).getText().toString());
+//        intent.putExtra("TITLE", ((TextView) findViewById(R.id.editTextTitle)).getText().toString());
         intent.putExtra("TEXT", ((TextView) findViewById(R.id.editTextMessage)).getText().toString());
         intent.putExtra("LOCATION", ((TextView) findViewById(R.id.editTextLocation)).getText().toString());
         startActivity(intent);

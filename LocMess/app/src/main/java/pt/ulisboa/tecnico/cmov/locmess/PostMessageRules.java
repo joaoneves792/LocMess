@@ -73,7 +73,7 @@ public class PostMessageRules extends AppCompatActivity {
         Intent previousIntent = getIntent();
 
         // FIXME change server to accept titles
-        String title = previousIntent.getStringExtra("TITLE");
+//        String title = previousIntent.getStringExtra("TITLE");
         String text = previousIntent.getStringExtra("TEXT");
         String location = previousIntent.getStringExtra("LOCATION");
         String startDateTime = previousIntent.getStringExtra("STARTDATETIME");
