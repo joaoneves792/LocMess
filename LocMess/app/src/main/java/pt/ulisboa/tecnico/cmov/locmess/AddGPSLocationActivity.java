@@ -76,7 +76,13 @@ public class AddGPSLocationActivity extends AppCompatActivity {
         double longitude = Double.parseDouble(((EditText) findViewById(R.id.editTextLongitude)).getText().toString());
         double radius = Double.parseDouble(((EditText) findViewById(R.id.editTextRadius)).getText().toString());
 
-        (new UploadLocationTask(this, _sessionId, new GPSLocation(name, latitude, longitude, radius))).execute();
+        GPSLocation gpsLocation = new GPSLocation(name, latitude, longitude, radius);
+
+        (new UploadLocationTask(this, _sessionId, gpsLocation)).execute();
+
+        LocalCache lc = LocalCache.getInstance(getApplicationContext());
+        lc.storeLocation(gpsLocation);
+
         finish();
     }
 }

@@ -6,9 +6,14 @@ import android.util.Base64;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
+import pt.ulisboa.tecnico.cmov.locmess.GPSLocationListener;
 
 /**
  * Created by joao on 3/25/17.
@@ -23,6 +28,10 @@ public class DecentralizedMessage {
 
     private String sender;
     private String location;
+    private List<String> ssids;
+    private double latitude;
+    private double longitude;
+    private double radius;
     private Map<String,String> rules;
     private String message;
 
@@ -86,11 +95,64 @@ public class DecentralizedMessage {
         return publicationDate;
     }
 
-    public static String hash(byte[] message) throws NoSuchAlgorithmException {
+    private String hash(byte[] message) throws NoSuchAlgorithmException {
         MessageDigest md;
         md = MessageDigest.getInstance("SHA-256");
         md.update(message);
         byte[] messageDigest = md.digest();
         return Base64.encodeToString(messageDigest, Base64.DEFAULT);
+    }
+
+    public boolean canDeliver(List<String> availableSSIDs, GPSLocationListener gps)throws ParseException{
+
+        Date currentDate = new Date();
+        DateFormat format = new SimpleDateFormat("HH:mm-MM/dd/yyyy", Locale.ENGLISH); //Example 14:30-12/24/2017
+        Date startDate = format.parse(this.startDate);
+        Date endDate = format.parse(this.endDate);
+
+        if(currentDate.before(startDate) || currentDate.after(endDate)){
+            return false;
+        }
+
+        boolean wiFiLocation = (ssids.size() > 0);
+
+        if(!wiFiLocation){
+            GPSLocation messageGPSLocation = new GPSLocation("bogus", latitude, longitude, radius);
+            GPSLocation currentGPSLocation = new GPSLocation("bogus", gps.getLatitude(), gps.getLongitude(), 0);
+            if(!messageGPSLocation.equals(currentGPSLocation))
+                return false;
+        }else{
+            WiFiLocation currentWifiLocation = new WiFiLocation("bogus", availableSSIDs);
+            WiFiLocation messageWifiLocation = new WiFiLocation("bogus", ssids);
+            if(!messageWifiLocation.equals(currentWifiLocation))
+                return false;
+        }
+
+        /* This must be decided on the receiving users device
+
+        if(_whitelisted){
+            if(null == _rules) //if there are no rules then deliver to nobody
+                return false;
+
+            for(String key : _rules.keySet()){
+                if(!user.getInterests().containsKey(key))
+                    return false;
+                if(!user.getInterests().get(key).equals(_rules.get(key)))
+                    return false;
+            }
+
+        }else{ //Blacklisted
+            if(null == _rules) //if there are no rules then deliver to everybody
+                return true;
+
+            for(String key : _rules.keySet()){
+                if(user.getInterests().containsKey(key)){
+                    if(user.getInterests().get(key).equals(_rules.get(key)))
+                        return false;
+                }
+            }
+        }*/
+
+        return true;
     }
 }

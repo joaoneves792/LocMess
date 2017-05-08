@@ -1,14 +1,16 @@
 package pt.ulisboa.tecnico.cmov.locmess;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
+import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
+import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
+import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 
 /**
@@ -22,7 +24,7 @@ public class LocalCache {
     private static final int CACHE_SIZE = 10;
 
     private static final String MESSAGE_CACHE = "MESSAGECACHE";
-    private static final String SEPARATOR = "-";
+    private static final String SEPARATOR = "!-!"; //CAREFULL this cannot contain regex special characters!
     private static final String INVALID_ID = "!";
 
     private static final String SENDER_FIELD = "SENDER";
@@ -30,6 +32,16 @@ public class LocalCache {
     private static final String LOCATION_FIELD = "LOCATION";
     private static final String DATE_FIELD = "DATE";
 
+    private static final String LOCATION_CACHE = "LOCATIONCACHE";
+    private static final String LOCATION = "LOCATION";
+
+    private static final String TYPE_FIELD = "TYPE";
+    private static final String SSIDS_FIELD = "SSIDS";
+    private static final String LAT_FIELD = "LATITUDE";
+    private static final String LONG_FIELD = "LONGITUDE";
+    private static final String RADIUS_FIELD = "RADIUS";
+
+    private static List<Location> _locations;
     private static List<DeliverableMessage> _messages;
 
     public static LocalCache getInstance(Context context) {
@@ -61,12 +73,12 @@ public class LocalCache {
     }
 
     public List<DeliverableMessage> getMessages(){
-        fetchFromStorage();
+        fetchMessagesFromStorage();
         return _messages;
     }
 
     public List<DeliverableMessage> storeMessages(List<DeliverableMessage> freshMessages){
-        fetchFromStorage();
+        fetchMessagesFromStorage();
 
 
         for(DeliverableMessage m: _messages){
@@ -87,6 +99,15 @@ public class LocalCache {
         }
 
         return newMessages;
+    }
+
+    public List<Location> getLocations(){
+        fetchLocationsFromStorage();
+        return _locations;
+    }
+
+    public void storeLocation(Location l){
+        insertIntoStorage(l);
     }
 
     private void insertIntoStorage(DeliverableMessage m){
@@ -130,7 +151,59 @@ public class LocalCache {
         }
     }
 
-    private void fetchFromStorage(){
+    public void insertIntoStorage(Location l){
+        try{
+            DataManager dm = DataManager.getInstance();
+
+            /*Get the stored locations and trim them to CACHE_SIZE*/
+            String locationNames = dm.getUserAttributeString(_context, LOCATION_CACHE);
+            String[] locations = locationNames.split(SEPARATOR);
+            if(locations.length >= CACHE_SIZE){
+                String REMOVAL_LOCATION = locations[0];
+                locations[0] = INVALID_ID;
+                String type = dm.getUserAttributeString(_context, REMOVAL_LOCATION+TYPE_FIELD);
+                dm.removeUserAttribute(_context, REMOVAL_LOCATION+TYPE_FIELD);
+                if(type.equals(WiFiLocation.TYPE)){
+                    dm.removeUserAttribute(_context, REMOVAL_LOCATION+SSIDS_FIELD);
+                }else{
+                    dm.removeUserAttribute(_context, REMOVAL_LOCATION+LAT_FIELD);
+                    dm.removeUserAttribute(_context, REMOVAL_LOCATION+LONG_FIELD);
+                    dm.removeUserAttribute(_context, REMOVAL_LOCATION+RADIUS_FIELD);
+                }
+            }
+            locationNames = "";
+            for(String locName: locations) {
+                if (!locName.equals(INVALID_ID)) {
+                    locationNames += locName + SEPARATOR;
+                }
+            }
+            locationNames += l.getName();
+
+            /*Store it*/
+            dm.setUserAttribute(_context, l.getName()+TYPE_FIELD, l.getType());
+            if(l.getType().equals(WiFiLocation.TYPE)){
+                WiFiLocation w = (WiFiLocation)l;
+                String ssids = "";
+                for(String ssid: w.getWifiIds()){
+                    ssids += ssid + SEPARATOR;
+                }
+                ssids = ssids.replaceAll(SEPARATOR+"$", "");
+                dm.setUserAttribute(_context, l.getName()+SSIDS_FIELD, ssids);
+            }else{
+                GPSLocation g = (GPSLocation)l;
+                dm.setUserAttribute(_context, l.getName()+LAT_FIELD, (float)g.getLatitude());
+                dm.setUserAttribute(_context, l.getName()+LONG_FIELD, (float)g.getLongitude());
+                dm.setUserAttribute(_context, l.getName()+RADIUS_FIELD, (float)g.getRadius());
+            }
+
+
+        }catch (StorageException e){
+            Log.e(LOCATION_CACHE, "Storage error!");
+        }
+
+    }
+
+    private void fetchMessagesFromStorage(){
         try {
             _messages = new LinkedList<>();
             DataManager dm = DataManager.getInstance();
@@ -152,6 +225,43 @@ public class LocalCache {
             Log.e(MESSAGE_CACHE, "Storage error!");
         }
 
+    }
+
+    private void fetchLocationsFromStorage(){
+        try{
+            _locations = new LinkedList<>();
+            DataManager dm = DataManager.getInstance();
+            String locationNames = dm.getUserAttributeString(_context, LOCATION_CACHE);
+            String[] locations = locationNames.split(SEPARATOR);
+            for(String locName: locations){
+                if(locName.equals("")){
+                    continue;
+                }
+                String type = dm.getUserAttributeString(_context, locName+TYPE_FIELD);
+
+                if(type.equals(WiFiLocation.TYPE)){
+                    String ssids = dm.getUserAttributeString(_context, locName+SSIDS_FIELD);
+                    String[] splitSsids = ssids.split(SEPARATOR);
+                    List<String> ssidsList = new ArrayList<String>();
+                    for(String ssid: splitSsids){
+                        if(ssid.equals(""))
+                            continue;
+                        ssidsList.add(ssid);
+                    }
+                    WiFiLocation wiFiLocation = new WiFiLocation(locName, ssidsList);
+                    _locations.add(wiFiLocation);
+                }else{
+                    double longitude = dm.getUserAttributeFloat(_context, locName+LONG_FIELD);
+                    double latitude = dm.getUserAttributeFloat(_context, locName+LAT_FIELD);
+                    double radius = dm.getUserAttributeFloat(_context, locName+RADIUS_FIELD);
+
+                    GPSLocation gpsLocation = new GPSLocation(locName, latitude, longitude, radius);
+                    _locations.add(gpsLocation);
+                }
+            }
+        }catch (StorageException e){
+            Log.e(LOCATION_CACHE, "Storage error!");
+        }
     }
 
 

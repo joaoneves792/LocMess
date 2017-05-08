@@ -10,6 +10,8 @@ public class WiFiLocation extends Location{
 
     private final String type = "Wifi";
 
+    public static final String TYPE = "Wifi";
+
     public WiFiLocation(String name, Collection<String> wifiIds) {
         super(name);
         this.wifiIds = wifiIds;

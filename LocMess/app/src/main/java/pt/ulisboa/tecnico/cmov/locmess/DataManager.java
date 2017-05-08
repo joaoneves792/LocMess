@@ -72,6 +72,24 @@ public class DataManager {
         }
     }
 
+    private float getAttributeFloat(Context context, String spFilename, String attributeName) throws StorageException {
+        try {
+            float attribute = context.getSharedPreferences(spFilename, Context.MODE_PRIVATE).getFloat(attributeName, -1);
+
+            return attribute;
+        } catch ( ClassCastException exception) {
+            throw new StorageException(exception);
+        }
+    }
+
+    public float getUserAttributeFloat(Context context, String attributeName)throws StorageException{
+        return getAttributeFloat(context, _currentUser, attributeName);
+    }
+
+    public void setUserAttribute(Context context, String attributeName, float value){
+        setAttribute(context, _currentUser, attributeName, value);
+    }
+
     private void removeAttribute(Context context, String spFilename, String attributeName){
         context.getSharedPreferences(spFilename, Context.MODE_PRIVATE).edit().remove(attributeName).apply();
     }
@@ -94,6 +112,12 @@ public class DataManager {
     private void setAttribute(Context context, String spFilename, String attributeName, long value) {
         SharedPreferences.Editor editor = getEditor(context, spFilename);
         editor.putLong(attributeName, value);
+        editor.apply();
+    }
+
+    private void setAttribute(Context context, String spFilename, String attributeName, float value) {
+        SharedPreferences.Editor editor = getEditor(context, spFilename);
+        editor.putFloat(attributeName, value);
         editor.apply();
     }
 

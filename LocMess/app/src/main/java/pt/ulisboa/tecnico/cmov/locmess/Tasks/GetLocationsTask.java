@@ -101,6 +101,10 @@ public class GetLocationsTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
+
+        /*TODO
+        @PAULO Please see the comments on PostMessageActivity.java*/
+         */
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
 
         if(_successful) {

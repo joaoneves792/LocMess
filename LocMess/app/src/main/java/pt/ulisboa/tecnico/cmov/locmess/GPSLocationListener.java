@@ -43,7 +43,7 @@ public class GPSLocationListener  implements LocationListener{
         return ourInstance;
     }
 
-    GPSLocationListener(Context context)throws LocationException{
+    private GPSLocationListener(Context context)throws LocationException{
         _latitude = 0.0;
         _longitude = 0.0;
 

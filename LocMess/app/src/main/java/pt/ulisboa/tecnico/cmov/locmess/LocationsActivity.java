@@ -64,6 +64,7 @@ public class LocationsActivity extends AppCompatActivity {
                 return true;
 
             case R.id.addCurrentLocation:
+                /*@Paulo if you actually get around to implementing this dont forget to insert the new location on the LocalCache!!!*/
                 Toast.makeText(getApplicationContext(), "FIXME Add Current Location not yet implemented.", Toast.LENGTH_LONG).show();
                 return true;
 

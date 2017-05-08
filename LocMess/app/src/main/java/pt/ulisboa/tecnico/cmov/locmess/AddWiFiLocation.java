@@ -42,7 +42,12 @@ public class AddWiFiLocation extends AppCompatActivity {
         String ssids = ((EditText) findViewById(R.id.editTextSSID)).getText().toString();
         String[] ssidsCollection = ssids.split(";");
 
-        (new UploadLocationTask(this, _sessionId, new WiFiLocation(name, Arrays.asList(ssidsCollection)))).execute();
+        WiFiLocation wiFiLocation = new WiFiLocation(name, Arrays.asList(ssidsCollection));
+
+        (new UploadLocationTask(this, _sessionId, wiFiLocation)).execute();
+
+        LocalCache.getInstance(getApplicationContext()).storeLocation(wiFiLocation);
+
         finish();
     }
 }

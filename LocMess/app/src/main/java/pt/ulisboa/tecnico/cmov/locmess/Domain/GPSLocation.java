@@ -9,6 +9,7 @@ public class GPSLocation extends Location{
     private double radius;
 
     private final String type = "GPS";
+    public static final String TYPE = "GPS";
 
     public GPSLocation(String name, double lat, double longi, double rad) {
         super(name);
