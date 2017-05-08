@@ -29,6 +29,7 @@ import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetMessagesTask;
 public class GPSLocationListener  implements LocationListener{
     private static final int UPDATE_INTERVAL = 60*1000;
     private static final int UPDATE_MIN_DISTANCE_METERS = 10;
+    public static final String GPS_TAG = "GPS";
 
     private static GPSLocationListener ourInstance;
 

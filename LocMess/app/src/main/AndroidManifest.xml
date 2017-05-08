@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 
     <application
@@ -93,7 +94,8 @@
         <activity android:name=".PostMessageRules" />
         <activity android:name=".AddMessageRuleActivity"/>
         <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesBroadcastReceiver"/>
-        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesBroadcastReceiver$WifiReceiver"/>
+        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.WifiReceiver"/>
+        <service android:enabled="true" android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesService" />
     </application>
 
 </manifest>
