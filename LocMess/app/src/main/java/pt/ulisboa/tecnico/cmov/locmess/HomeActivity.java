@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import pt.ulisboa.tecnico.cmov.locmess.Exceptions.LocationException;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.LogoutTask;
 
@@ -129,7 +130,11 @@ public class HomeActivity extends AppCompatActivity {
         if(null == _fetchMessagesReceiver){
             _fetchMessagesReceiver = new FetchMessagesBroadcastReceiver();
         }
-        _fetchMessagesReceiver.SetAlarm(context);
+        try {
+            _fetchMessagesReceiver.SetAlarm(context);
+        }catch (LocationException e){
+            Toast.makeText(this, "Failed initialize GPS", Toast.LENGTH_LONG).show();
+        }
     }
 
 

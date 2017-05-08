@@ -36,10 +36,8 @@ import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetMessagesTask;
  */
 
 
-public class FetchMessagesBroadcastReceiver extends BroadcastReceiver implements LocationListener{
+public class FetchMessagesBroadcastReceiver extends BroadcastReceiver{
 
-    private double _latitude;
-    private double _longitude;
     protected WifiManager _mainWifi;
     private static WifiReceiver _wifiReceiver;
 
@@ -87,7 +85,7 @@ public class FetchMessagesBroadcastReceiver extends BroadcastReceiver implements
         try {
             _mainWifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             _mainWifi.startScan();
-            getGPSCoordinates(context);
+            GPSLocationListener gps = GPSLocationListener.getInstance(context);
 
             List<String> ssids = _wifiReceiver.getSSIDs();
 
@@ -100,7 +98,7 @@ public class FetchMessagesBroadcastReceiver extends BroadcastReceiver implements
 
             Toast.makeText(context, ssidsString , Toast.LENGTH_SHORT).show();
             */
-            GetMessagesTask fetchTask = new GetMessagesTask(context, sessionId, _latitude, _longitude, ssids);
+            GetMessagesTask fetchTask = new GetMessagesTask(context, sessionId, gps.getLatitude(), gps.getLongitude(), ssids);
 
             fetchTask.execute();
 
@@ -113,29 +111,13 @@ public class FetchMessagesBroadcastReceiver extends BroadcastReceiver implements
         wl.release();
     }
 
-    private void getGPSCoordinates(Context context) throws LocationException{
-        try {
-            LocationManager locationManager = (LocationManager) context.getSystemService(android.content.Context.LOCATION_SERVICE);
 
-            //getting GPS status
-            if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                throw new LocationException("DISABLED");
-            }
+    public void SetAlarm(Context context)throws LocationException{
 
-            android.location.Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(null == location){
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60*1000, 10, this);
-            }else{
-                _latitude = location.getLatitude();
-                _longitude = location.getLongitude();
-            }
+        /*Initialize the GPS listener*/
+        GPSLocationListener.getInstance(context);
 
-        }catch (SecurityException e){
-            throw new LocationException("SECURITY");
-        }
-    }
-
-    public void SetAlarm(Context context) {
+        /*Set up the Intent for this class periodicaly*/
         AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, FetchMessagesBroadcastReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
@@ -151,22 +133,4 @@ public class FetchMessagesBroadcastReceiver extends BroadcastReceiver implements
             _mainWifi.setWifiEnabled(true);
         }
     }
-
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        //Ignore
-    }
-
-    public void onProviderEnabled(String provider) {
-        //Ignore
-    }
-
-    public void onProviderDisabled(String provider) {
-        //Ignore
-    }
-
-    public void onLocationChanged(android.location.Location location) {
-        _latitude = location.getLatitude();
-        _longitude = location.getLongitude();
-    }
-
 }
