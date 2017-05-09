@@ -12,6 +12,9 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="remove">Remove</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
@@ -40,6 +43,7 @@
 
     <string name="ssid">Network SSIDs</string>
     <string name="locationName">Location name</string>
+    <string name="locationType">Location type</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="radius">Radius</string>
@@ -87,7 +91,6 @@
 
     <string name="settings">Settings</string>
     <string name="appConfig">App Configuration</string>
-    <string name="delete">Delete</string>
     <string name="key">Key</string>
     <string name="value">Value</string>
 

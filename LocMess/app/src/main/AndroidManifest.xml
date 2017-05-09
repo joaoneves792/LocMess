@@ -3,12 +3,11 @@
     package="pt.ulisboa.tecnico.cmov.locmess">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:allowBackup="true"
@@ -48,41 +47,38 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MessagesActivity" />
         </activity>
-
         <activity
             android:name=".PostMessageActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".HomeActivity"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
-
         <activity
             android:name=".PostMessageDateTime"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".PostMessageActivity">
+            android:parentActivityName=".PostMessageActivity"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PostMessageActivity" />
         </activity>
         <activity
             android:name=".PostMessageRules"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".PostMessageDateTime">
+            android:parentActivityName=".PostMessageDateTime"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PostMessageDateTime" />
         </activity>
         <activity
             android:name=".AddMessageRuleActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".PostMessageRules">
+            android:parentActivityName=".PostMessageRules"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PostMessageRules" />
         </activity>
-
         <activity
             android:name=".LocationsActivity"
             android:parentActivityName=".HomeActivity">
@@ -119,9 +115,14 @@
                 android:value=".ProfileActivity" />
         </activity>
 
-        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesBroadcastReceiver"/>
-        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.WifiReceiver"/>
-        <service android:enabled="true" android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesService" />
+        <receiver android:name=".FetchMessagesBroadcastReceiver" />
+        <receiver android:name=".WifiReceiver" />
+
+        <service
+            android:name=".FetchMessagesService"
+            android:enabled="true" />
+
+        <activity android:name=".LocationGPSViewActivity"></activity>
     </application>
 
 </manifest>

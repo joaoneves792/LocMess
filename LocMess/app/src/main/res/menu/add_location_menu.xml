@@ -11,9 +11,4 @@
         android:title="@string/addWiFiLocation"
         />
 
-    <item
-        android:id="@+id/addCurrentLocation"
-        android:title="@string/addCurrentLocation"
-        />
-
 </menu>

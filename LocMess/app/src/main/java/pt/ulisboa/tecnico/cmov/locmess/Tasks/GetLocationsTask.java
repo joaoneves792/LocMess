@@ -36,7 +36,11 @@ import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
+<<<<<<< HEAD
 import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
+=======
+import pt.ulisboa.tecnico.cmov.locmess.LocationGPSViewActivity;
+>>>>>>> GPSlocationViewActivity; delete location
 import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
 import pt.ulisboa.tecnico.cmov.locmess.PostMessageRules;
 import pt.ulisboa.tecnico.cmov.locmess.R;
@@ -127,13 +131,28 @@ public class GetLocationsTask extends RestTask{
 
         ListAdapter locationsAdapter = new LocationListAdapter(_context, _locations);
 
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(_context, MessageViewActivity.class);
+//                _context.startActivity(intent);
+//            }
+//        });
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(_context, MessageViewActivity.class);
-                _context.startActivity(intent);
+
+                // start GPS view activity
+                if (( (TextView) view.findViewById(R.id.textViewLocationType)).getText().toString().equals("GPS")) {
+                    Intent intent = new Intent(_context, LocationGPSViewActivity.class);
+                    intent.putExtra("LOCATIONNAME", ((TextView) view.findViewById(R.id.textViewLocationName)).getText().toString());
+                    _context.startActivity(intent);
+                }
+
             }
         });
+
+//            list.setAdapter(locationsAdapter);
 
         list.setAdapter(locationsAdapter);
 

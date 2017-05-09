@@ -63,10 +63,10 @@ public class LocationsActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
 
-            case R.id.addCurrentLocation:
-                /*@Paulo if you actually get around to implementing this dont forget to insert the new location on the LocalCache!!!*/
-                Toast.makeText(getApplicationContext(), "FIXME Add Current Location not yet implemented.", Toast.LENGTH_LONG).show();
-                return true;
+//            case R.id.addCurrentLocation:
+//                /*@Paulo if you actually get around to implementing this dont forget to insert the new location on the LocalCache!!!*/
+//                Toast.makeText(getApplicationContext(), "FIXME Add Current Location not yet implemented.", Toast.LENGTH_LONG).show();
+//                return true;
 
             default:
                 // action not recognised, invoke superclass to handle it.
@@ -77,35 +77,4 @@ public class LocationsActivity extends AppCompatActivity {
 
 }
 
-
-
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        _sessionId = getIntent().getLongExtra("SESSIONID", -1);
-//        setContentView(R.layout.activity_locations);
-//
-//        Button addLocationButton = (Button) findViewById(R.id.buttonAddLocation);
-//        addLocationButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                PopupMenu addLocationPopupMenu = new PopupMenu(getApplicationContext(), v);
-//
-//                addLocationPopupMenu.inflate(R.menu.add_location_menu);
-//                addLocationPopupMenu.show();
-//
-//                addLocationPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//
-//                        Toast.makeText(getApplicationContext(), item.toString(), Toast.LENGTH_SHORT).show();
-//                        return false;
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
 
