@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.locmess.Responses;
 
-import java.util.Enumeration;
 import java.util.Map;
 
 /**

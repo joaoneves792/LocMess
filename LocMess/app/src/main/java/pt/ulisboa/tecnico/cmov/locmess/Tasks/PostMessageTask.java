@@ -8,13 +8,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
-import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
-import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 /**

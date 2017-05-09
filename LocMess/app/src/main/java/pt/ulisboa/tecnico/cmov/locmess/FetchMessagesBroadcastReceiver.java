@@ -1,35 +1,14 @@
 package pt.ulisboa.tecnico.cmov.locmess;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.PowerManager;
-import android.util.Log;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Handler;
-
-import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.LocationException;
-import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
-import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetMessagesTask;
 
 /**
  * Created by joao on 5/7/17.

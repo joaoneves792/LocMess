@@ -2,31 +2,24 @@ package pt.ulisboa.tecnico.cmov.locmess;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
-import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetLocationsTask;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.PostMessageTask;
 
 public class PostMessageRules extends AppCompatActivity {

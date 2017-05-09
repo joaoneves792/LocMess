@@ -2,23 +2,9 @@ package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
 import android.app.Activity;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.web.client.RestClientException;
-
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
-import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
-import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
-import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
-import pt.ulisboa.tecnico.cmov.locmess.R;
 
 /**
  * Created by joao on 3/29/17.

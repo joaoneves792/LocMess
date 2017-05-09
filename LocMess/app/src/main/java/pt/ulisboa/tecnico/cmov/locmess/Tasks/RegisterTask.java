@@ -1,19 +1,17 @@
 package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
- import android.app.Activity;
- import android.content.Context;
- import android.content.Intent;
- import android.util.Log;
- import android.widget.Toast;
+import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
 
- import org.codehaus.jackson.map.ObjectMapper;
- import org.springframework.web.client.RestClientException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.web.client.RestClientException;
 
- import java.io.IOException;
+import java.io.IOException;
 
- import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
- import pt.ulisboa.tecnico.cmov.locmess.LoginActivity;
- import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
+import pt.ulisboa.tecnico.cmov.locmess.LoginActivity;
+import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 /**
  * Created by joao on 3/29/17.

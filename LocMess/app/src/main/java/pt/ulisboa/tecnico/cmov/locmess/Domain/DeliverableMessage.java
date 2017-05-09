@@ -1,8 +1,6 @@
 package pt.ulisboa.tecnico.cmov.locmess.Domain;
 
 
-import java.util.Map;
-
 /**
  * Created by joao on 3/25/17.
  */

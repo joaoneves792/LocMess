@@ -1,12 +1,9 @@
 package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
 import android.app.Activity;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
-import pt.ulisboa.tecnico.cmov.locmess.R;
 
 public class GetLocationIntoCacheTask extends GetLocationsTask{
 

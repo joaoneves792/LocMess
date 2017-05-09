@@ -3,8 +3,6 @@ package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,29 +22,15 @@ import org.json.JSONObject;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
-import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
-<<<<<<< HEAD
 import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
-=======
 import pt.ulisboa.tecnico.cmov.locmess.LocationGPSViewActivity;
->>>>>>> GPSlocationViewActivity; delete location
-import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
-import pt.ulisboa.tecnico.cmov.locmess.PostMessageRules;
 import pt.ulisboa.tecnico.cmov.locmess.R;
-import pt.ulisboa.tecnico.cmov.locmess.Responses.Cookie;
-import pt.ulisboa.tecnico.cmov.locmess.Responses.LocationsList;
-import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 /**
  * Created by joao on 3/29/17.

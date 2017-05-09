@@ -1,9 +1,5 @@
 package pt.ulisboa.tecnico.cmov.locmess.Responses;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
-import java.security.SecureRandom;
-
 /**
  * Created by joao on 3/25/17.
  */

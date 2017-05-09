@@ -1,8 +1,8 @@
 package pt.ulisboa.tecnico.cmov.locmess.Responses;
 
-import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
-
 import java.util.List;
+
+import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 
 /**
  * Created by joao on 3/25/17.

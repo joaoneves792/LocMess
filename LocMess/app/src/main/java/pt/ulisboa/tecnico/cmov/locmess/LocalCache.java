@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.locmess;
 
 import android.content.Context;
-import android.util.ArrayMap;
 import android.util.Log;
 
 import java.util.ArrayList;

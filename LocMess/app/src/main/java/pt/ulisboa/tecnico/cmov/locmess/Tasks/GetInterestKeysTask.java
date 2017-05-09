@@ -2,19 +2,14 @@ package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
 import android.app.Activity;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 
-import pt.ulisboa.tecnico.cmov.locmess.R;
-import pt.ulisboa.tecnico.cmov.locmess.Responses.InterestsList;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.PossibleKeysList;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 

@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.locmess;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 
