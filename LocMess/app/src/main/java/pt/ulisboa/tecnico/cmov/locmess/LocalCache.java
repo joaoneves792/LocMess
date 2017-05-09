@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.locmess;
 
 import android.content.Context;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import pt.ulisboa.tecnico.cmov.locmess.Domain.DecentralizedMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
@@ -27,18 +29,17 @@ public class LocalCache {
     private static final int CACHE_SIZE = 10;
 
     private static final String MESSAGE_CACHE = "MESSAGECACHE";
-    private static final String SEPARATOR = "!-!"; //CAREFULL this cannot contain regex special characters!
+    private static final String SEPARATOR = "!------!"; //CAREFULL this cannot contain regex special characters!
     private static final String INVALID_ID = "!";
+    private static final long DELETE_ID = -9999999;
 
     private static final String SENDER_FIELD = "SENDER";
     private static final String MESSAGE_FIELD = "MESSAGE";
     private static final String LOCATION_FIELD = "LOCATION";
     private static final String DATE_FIELD = "DATE";
-    private static final String HASH_FIELD = "HASH";
     private static final String ID_FIELD = "ID";
 
     private static final String LOCATION_CACHE = "LOCATIONCACHE";
-    private static final String LOCATION = "LOCATION";
 
     private static final String TYPE_FIELD = "TYPE";
     private static final String SSIDS_FIELD = "SSIDS";
@@ -48,6 +49,12 @@ public class LocalCache {
 
     private static final String PROFILE = "PROFILE";
     private static final String KEY_VALUE_SEPARATOR = ",";
+
+    private static final String DECENTRALIZED = "DECENTRALIZED";
+    private static final String STARTDATE = "STARTDATE";
+    private static final String ENDDATE = "ENDDATE";
+    private static final String WHITELISTED = "WHITELISTED";
+    private static final String RULES = "RULES";
 
     private static List<Location> _locations;
     private static List<DeliverableMessage> _messages;
@@ -94,14 +101,14 @@ public class LocalCache {
             for(DeliverableMessage freshM : freshMessages){
                 if(freshM.equals(m)){
                     //Mark as old
-                    freshM.setId(-1);
+                    freshM.setId(DELETE_ID);
                 }
             }
         }
 
         List<DeliverableMessage> newMessages = new LinkedList<DeliverableMessage>();
         for(DeliverableMessage m : freshMessages){
-            if(m.getId() >= 0) {
+            if(m.getId() != DELETE_ID) {
                 insertIntoStorage(m);
                 newMessages.add(m);
             }
@@ -176,6 +183,106 @@ public class LocalCache {
             Log.e(MESSAGE_CACHE, "Storage error!");
         }
 
+    }
+
+    /*--------------DECENTRALIZED-MESSAGES--------------------------------------------------------*/
+
+    public List<DecentralizedMessage> getMyDecentralizedMessages(){
+        List<DecentralizedMessage> messages = new LinkedList<>();
+        try {
+            DataManager dm = DataManager.getInstance();
+            String messagesHashes = dm.getUserAttributeString(_context, DECENTRALIZED + MESSAGE_CACHE);
+            String[] hashes = messagesHashes.split(SEPARATOR);
+            for(String hash : hashes){
+                if(hash.equals("")){
+                    continue;
+                }
+                Long id = dm.getUserAttributeLong(_context, hash+DECENTRALIZED+ID_FIELD);
+                String sender = dm.getUserAttributeString(_context, hash+DECENTRALIZED+SENDER_FIELD);
+                String location = dm.getUserAttributeString(_context, hash+DECENTRALIZED+LOCATION_FIELD);
+                String message = dm.getUserAttributeString(_context, hash+DECENTRALIZED+MESSAGE_FIELD);
+                String date = dm.getUserAttributeString(_context, hash+DECENTRALIZED+DATE_FIELD);
+                String startDate = dm.getUserAttributeString(_context, hash+DECENTRALIZED+STARTDATE);
+                String endDate = dm.getUserAttributeString(_context, hash+DECENTRALIZED+ENDDATE);
+                boolean whitelist = (dm.getUserAttributeString(_context, hash+DECENTRALIZED+WHITELISTED).equals("true"));
+                String rules = dm.getUserAttributeString(_context, hash+DECENTRALIZED+RULES);
+
+
+                Map<String,String> rulesMap = new HashMap<>();
+                String[] keyValuePairs = rules.split(SEPARATOR);
+                for(String keyValue : keyValuePairs){
+                    if(keyValue.equals(""))
+                        continue;
+                    String[] splitInterest = keyValue.split(KEY_VALUE_SEPARATOR);
+                    if(splitInterest[0].equals("") || splitInterest[1].equals(""))
+                        continue;
+                    rulesMap.put(splitInterest[0], splitInterest[1]);
+                }
+
+                DecentralizedMessage m = new DecentralizedMessage(hash, sender, location, whitelist, rulesMap, message, date, startDate, endDate);
+                messages.add(m);
+            }
+
+        }catch (StorageException e){
+            Log.e(MESSAGE_CACHE, "Storage error!");
+        }
+        return messages;
+    }
+
+    public void insertIntoStorage(DecentralizedMessage m){
+        try {
+            DataManager dm = DataManager.getInstance();
+
+            /*Get the stored Hashes and trim them to CACHE_SIZE*/
+            String messageHashes = dm.getUserAttributeString(_context, DECENTRALIZED+MESSAGE_CACHE);
+            String[] hashes = messageHashes.split(SEPARATOR);
+            if(hashes.length >= CACHE_SIZE){
+                String REMOVAL_ID = hashes[0];
+                hashes[0]  = INVALID_ID;  /*We allways remove the first and append to the last*/
+                dm.removeUserAttribute(_context, REMOVAL_ID+DECENTRALIZED+ID_FIELD);
+                dm.removeUserAttribute(_context, REMOVAL_ID+DECENTRALIZED+SENDER_FIELD);
+                dm.removeUserAttribute(_context, REMOVAL_ID+DECENTRALIZED+LOCATION_FIELD);
+                dm.removeUserAttribute(_context, REMOVAL_ID+DECENTRALIZED+MESSAGE_FIELD);
+                dm.removeUserAttribute(_context, REMOVAL_ID+DECENTRALIZED+DATE_FIELD);
+                dm.removeUserAttribute(_context, REMOVAL_ID+DECENTRALIZED+STARTDATE);
+                dm.removeUserAttribute(_context, REMOVAL_ID+DECENTRALIZED+ENDDATE);
+                dm.removeUserAttribute(_context, REMOVAL_ID+DECENTRALIZED+WHITELISTED);
+                dm.removeUserAttribute(_context, REMOVAL_ID+DECENTRALIZED+RULES);
+            }
+
+            /*Build a new Ids Vector*/
+            messageHashes = "";
+            for(String hash : hashes){
+                if(!hash.equals(INVALID_ID)){
+                    messageHashes += hash + SEPARATOR;
+                }
+            }
+            messageHashes += m.getHash();
+
+            /*Store it*/
+            String HASH = m.getHash();
+            String interests = "";
+            for(String key : m.getRules().keySet()){
+                interests = interests + key + KEY_VALUE_SEPARATOR + m.getRules().get(key) + SEPARATOR;
+            }
+            interests = interests.replaceAll(SEPARATOR+"$", "");
+            dm.setUserAttribute(_context, DECENTRALIZED+MESSAGE_CACHE, messageHashes);
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+ID_FIELD, m.getId());
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+SENDER_FIELD, m.getSender());
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+LOCATION_FIELD, m.getLocation());
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+MESSAGE_FIELD, m.getMessage());
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+DATE_FIELD, m.getPublicationDate());
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+STARTDATE, m.getPublicationDate());
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+ENDDATE, m.getPublicationDate());
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+WHITELISTED, String.valueOf(m.getWhitelist()));
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+RULES, interests);
+
+
+
+        }catch (StorageException e){
+            //What should we do?
+            Log.e(MESSAGE_CACHE, "Storage error!");
+        }
     }
 
     /*----------------------LOCATIONS-------------------------------------------------------------*/

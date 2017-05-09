@@ -14,7 +14,6 @@ public class DeliverableMessage {
 
     private String sender;
     private String location;
-    private Map<String,String> rules;
     private String message;
 
     private String publicationDate;
@@ -39,10 +38,6 @@ public class DeliverableMessage {
 
     public String getLocation() {
         return location;
-    }
-
-    public Map<String, String> getRules() {
-        return rules;
     }
 
     public String getMessage() {

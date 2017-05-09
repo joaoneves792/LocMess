@@ -14,6 +14,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
+import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetLocationIntoCacheTask;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetLocationsTask;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetMessageServerLocationsTask;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.PostMessageTask;
@@ -49,6 +50,11 @@ public class PostMessageActivity extends AppCompatActivity {
         try {
             final int checkedId = radioGroup.getCheckedRadioButtonId();
             String location = ((RadioButton) radioGroup.getChildAt(checkedId)).getText().toString();
+
+            /*Get this location on the cache
+                Necessary for decentralized delivery
+             */
+            new GetLocationIntoCacheTask(this, _sessionId, location).execute();
 
             Intent intent = new Intent(this, PostMessageDateTime.class);
 

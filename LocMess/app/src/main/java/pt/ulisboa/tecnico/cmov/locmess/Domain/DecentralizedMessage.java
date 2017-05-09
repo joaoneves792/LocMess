@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import pt.ulisboa.tecnico.cmov.locmess.GPSLocationListener;
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
 
 /**
  * Created by joao on 3/25/17.
@@ -28,10 +29,7 @@ public class DecentralizedMessage {
 
     private String sender;
     private String location;
-    private List<String> ssids;
-    private double latitude;
-    private double longitude;
-    private double radius;
+    private boolean whitelisted;
     private Map<String,String> rules;
     private String message;
 
@@ -43,13 +41,15 @@ public class DecentralizedMessage {
 
     }
 
-    public DecentralizedMessage(String sender, String location, String message, String startDate, String endDate){
+    public DecentralizedMessage(String sender, String location, String message, String startDate, String endDate, boolean whitelisted, Map<String, String> rules){
         this.id = DECENTRALIZED_ID;
         this.sender = sender;
         this.location = location;
         this.message = message;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.whitelisted = whitelisted;
+        this.rules = rules;
 
         DateFormat df = new SimpleDateFormat("HH:mm MM/dd/yyyy");
         this.publicationDate = df.format(new Date());
@@ -66,6 +66,26 @@ public class DecentralizedMessage {
         }
     }
 
+    /*This constructor is meant to be used when reconstructing a message from storage*/
+    public DecentralizedMessage(String hash, String sender, String location, boolean whitelisted, Map<String, String> rules, String message, String publicationDate, String startdate, String endDate){
+        this.hash = hash;
+        this.sender = sender;
+        this.location = location;
+        this.whitelisted = whitelisted;
+        this.rules = rules;
+        this.message = message;
+        this.publicationDate = publicationDate;
+        this.startDate = startdate;
+        this.endDate = endDate;
+    }
+
+    public String getHash(){
+        return hash;
+    }
+
+    public boolean getWhitelist(){
+        return whitelisted;
+    }
 
     public String getSender() {
         return sender;
@@ -114,18 +134,16 @@ public class DecentralizedMessage {
             return false;
         }
 
-        boolean wiFiLocation = (ssids.size() > 0);
+        GPSLocation currentGPSLocation = new GPSLocation("bogus", gps.getLatitude(), gps.getLongitude(), 0);
+        WiFiLocation currentWifiLocation = new WiFiLocation("bogus", availableSSIDs);
 
-        if(!wiFiLocation){
-            GPSLocation messageGPSLocation = new GPSLocation("bogus", latitude, longitude, radius);
-            GPSLocation currentGPSLocation = new GPSLocation("bogus", gps.getLatitude(), gps.getLongitude(), 0);
-            if(!messageGPSLocation.equals(currentGPSLocation))
-                return false;
-        }else{
-            WiFiLocation currentWifiLocation = new WiFiLocation("bogus", availableSSIDs);
-            WiFiLocation messageWifiLocation = new WiFiLocation("bogus", ssids);
-            if(!messageWifiLocation.equals(currentWifiLocation))
-                return false;
+        List<Location> cachedLocations = LocalCache.getInstance().getLocations();
+        for(Location l : cachedLocations){
+            if(l.getName().equals(this.location)){
+                if(l.equals(currentGPSLocation) || l.equals(currentWifiLocation)){
+                    return true;
+                }
+            }
         }
 
         /* This must be decided on the receiving users device
@@ -153,6 +171,11 @@ public class DecentralizedMessage {
             }
         }*/
 
-        return true;
+        return false;
     }
+
+    public DeliverableMessage getDeliverableMessage(){
+        return new DeliverableMessage(this.id, this.sender, this.location, this.message, this.publicationDate, this.hash);
+    }
+
 }
