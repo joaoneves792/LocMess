@@ -1,15 +1,20 @@
 package pt.ulisboa.tecnico.cmov.locmess;
 
 import android.content.Context;
+import android.support.v4.util.SimpleArrayMap;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
+import pt.ulisboa.tecnico.cmov.locmess.Domain.Profile;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 
@@ -40,6 +45,9 @@ public class LocalCache {
     private static final String LAT_FIELD = "LATITUDE";
     private static final String LONG_FIELD = "LONGITUDE";
     private static final String RADIUS_FIELD = "RADIUS";
+
+    private static final String PROFILE = "PROFILE";
+    private static final String KEY_VALUE_SEPARATOR = ",";
 
     private static List<Location> _locations;
     private static List<DeliverableMessage> _messages;
@@ -264,5 +272,63 @@ public class LocalCache {
         }
     }
 
+    public void storeInterest(String key, String value){
+        Profile profile = retrieveStoredProfile();
+        if(profile.getInterests().containsKey(key)){
+            deleteInterest(key);
+        }
+        try {
+            DataManager dm = DataManager.getInstance();
+
+            String interests = dm.getUserAttributeString(_context, PROFILE);
+            interests = interests + SEPARATOR + key + KEY_VALUE_SEPARATOR + value;
+            dm.setUserAttribute(_context, PROFILE, interests);
+        }catch (StorageException e){
+            Log.e(PROFILE, "Storage error!");
+        }
+    }
+
+    public void deleteInterest(String key){
+        try {
+            DataManager dm = DataManager.getInstance();
+            String interests = dm.getUserAttributeString(_context, PROFILE);
+            String[] keyValuePairs = interests.split(SEPARATOR);
+            interests = "";
+            for(String keyValue : keyValuePairs) {
+                if(keyValue.equals(""))
+                    continue;
+                String[] splitInterest = keyValue.split(KEY_VALUE_SEPARATOR);
+                if(splitInterest[0].equals("") || splitInterest[1].equals(""))
+                    continue;
+                if(!splitInterest[0].equals(key)){
+                    interests = interests + SEPARATOR + splitInterest[0] + KEY_VALUE_SEPARATOR + splitInterest[1];
+                }
+            }
+            dm.setUserAttribute(_context, PROFILE, interests);
+        }catch (StorageException e){
+            Log.e(PROFILE, "Storage error!");
+        }
+    }
+
+    public Profile retrieveStoredProfile(){
+        Map<String, String> interestsMap = new HashMap<>();
+        try {
+            DataManager dm = DataManager.getInstance();
+            String interests = dm.getUserAttributeString(_context, PROFILE);
+            String[] keyValuePairs = interests.split(SEPARATOR);
+            for(String keyValue : keyValuePairs){
+                if(keyValue.equals(""))
+                    continue;
+                String[] splitInterest = keyValue.split(KEY_VALUE_SEPARATOR);
+                if(splitInterest[0].equals("") || splitInterest[1].equals(""))
+                    continue;
+                interestsMap.put(splitInterest[0], splitInterest[1]);
+            }
+        }catch (StorageException e){
+            Log.e(PROFILE, "Storage error!");
+        }
+
+        return new Profile(interestsMap);
+    }
 
 }

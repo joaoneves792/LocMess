@@ -25,7 +25,9 @@ import java.util.Map;
 import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
+import pt.ulisboa.tecnico.cmov.locmess.Domain.Profile;
 import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
 import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
 import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Cookie;
@@ -53,6 +55,8 @@ public class GetUserProfileTask extends RestTask{
     @Override
     protected String doInBackground(Void... params){
         String result;
+        _interests = LocalCache.getInstance(_context.getApplicationContext()).retrieveStoredProfile().getInterests();
+
         try {
             result =  _rest.getForObject(_url+"/profiles/"+_sessionId, String.class);
 
@@ -67,6 +71,18 @@ public class GetUserProfileTask extends RestTask{
             InterestsList interestsResponse = mapper.readValue(result, InterestsList.class);
             _interests = interestsResponse.getInterests();
             _successful = interestsResponse.getSuccessful();
+
+
+            /*Integrate results with local cache*/
+            Profile profile = LocalCache.getInstance(_context.getApplicationContext()).retrieveStoredProfile();
+            for(String key :profile.getInterests().keySet()){
+                if(_interests.containsKey(key) && _interests.get(key).equals(profile.getInterests().get(key))){
+                    continue;
+                }
+                _interests.put(key, profile.getInterests().get(key));
+                new AddInterestAndForgetTask(_context, _sessionId, key, _interests.get(key)).doInBackground(null);
+            }
+
             return interestsResponse.getMessage();
 
         }catch (IOException e){
@@ -84,27 +100,26 @@ public class GetUserProfileTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
-        Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
+        if(!_successful) {
+            Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
+        }
+        ListView list = (ListView) _context.findViewById(R.id.listViewInterests);
 
-        if(_successful) {
-            ListView list = (ListView) _context.findViewById(R.id.listViewInterests);
+        ListAdapter interestsAdapter = new GetUserProfileTask.InterestAdapter(_context, _interests);
 
-            ListAdapter interestsAdapter = new GetUserProfileTask.InterestAdapter(_context, _interests);
-
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(_context, "selected something", Toast.LENGTH_SHORT).show();
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(_context, "selected something", Toast.LENGTH_SHORT).show();
 //                    Intent intent = new Intent(_context, MessageViewActivity.class);
 //                    intent.putExtra("SESSIONID", _sessionId);
 //                    _context.startActivity(intent);
-                }
-            });
+            }
+        });
 
-            list.setAdapter(interestsAdapter);
+        list.setAdapter(interestsAdapter);
 
 
-        }
     }
 
     // class for the custom display of locations' list

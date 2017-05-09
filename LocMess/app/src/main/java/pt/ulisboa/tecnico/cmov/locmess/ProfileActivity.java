@@ -33,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         (new GetUserProfileTask(this, _sessionId)).execute();
+
     }
 
     public void addInterest(View view) {

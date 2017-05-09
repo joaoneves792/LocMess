@@ -32,6 +32,8 @@ public class AddInterestActivity extends AppCompatActivity {
         String value = ((EditText) findViewById(R.id.editTextValue)).getText().toString();
 
         (new AddInterestTask(this, _sessionId, key, value)).execute();
+
+
         finish();
     }
 

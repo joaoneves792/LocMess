@@ -16,6 +16,7 @@ import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 /**
@@ -40,6 +41,7 @@ public class AddInterestTask extends RestTask{
 
     @Override
     protected String doInBackground(Void... params){
+        LocalCache.getInstance(_context.getApplicationContext()).storeInterest(_key, _value);
         try {
             _rest.put(_url+"/profiles/"+_sessionId+"/"+_key+"?value="+_value, null);
             _successful = true;
