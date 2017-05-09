@@ -25,57 +25,40 @@
         android:layout_marginRight="8dp"
         android:id="@+id/constraintLayout"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="1.0">
 
         <EditText
             android:id="@+id/editTextMessage"
             android:layout_width="0dp"
             android:layout_height="112dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="@string/text"
-            android:inputType="textMultiLine"
+            android:inputType="text"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/editTextLocation"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/location"
-            android:inputType="textPersonName"
+            android:text="@string/locations"
+            android:textAppearance="@style/TextAppearance.AppCompat"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextMessage" />
 
-        <LinearLayout
-            android:layout_width="352dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="8dp"
+        <RadioGroup
+            android:id="@+id/radioGroupLocations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/editTextLocation">
-
-            <TextView
-                android:id="@+id/textViewChosenLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/location" />
-
-            <Button
-                android:id="@+id/buttonChooseLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.62"
-                android:text="@string/chooseLocation" />
-
-        </LinearLayout>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -84,7 +67,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:id="@+id/linearLayout4">
 
             <Button
                 android:id="@+id/buttonCancel"

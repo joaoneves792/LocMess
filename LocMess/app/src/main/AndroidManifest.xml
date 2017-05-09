@@ -48,13 +48,41 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MessagesActivity" />
         </activity>
+
         <activity
             android:name=".PostMessageActivity"
-            android:parentActivityName=".MessagesActivity">
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MessagesActivity" />
+                android:value=".HomeActivity" />
         </activity>
+
+        <activity
+            android:name=".PostMessageDateTime"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".PostMessageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PostMessageActivity" />
+        </activity>
+        <activity
+            android:name=".PostMessageRules"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".PostMessageDateTime">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PostMessageDateTime" />
+        </activity>
+        <activity
+            android:name=".AddMessageRuleActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".PostMessageRules">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PostMessageRules" />
+        </activity>
+
         <activity
             android:name=".LocationsActivity"
             android:parentActivityName=".HomeActivity">
@@ -90,9 +118,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ProfileActivity" />
         </activity>
-        <activity android:name=".PostMessageDateTime" />
-        <activity android:name=".PostMessageRules" />
-        <activity android:name=".AddMessageRuleActivity"/>
+
         <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesBroadcastReceiver"/>
         <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.WifiReceiver"/>
         <service android:enabled="true" android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesService" />
