@@ -20,6 +20,7 @@ import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,11 +46,13 @@ public class GetUserProfileTask extends RestTask{
 
     private long _sessionId;
     private Map<String, String> _interests;
+    private Map<String, String> _unsyncronizedInterests;
 
 
     public GetUserProfileTask(Activity appContext, long sessionId){
         super(appContext);
         _sessionId = sessionId;
+        _unsyncronizedInterests = new HashMap<>();
     }
 
     @Override
@@ -80,7 +83,7 @@ public class GetUserProfileTask extends RestTask{
                     continue;
                 }
                 _interests.put(key, profile.getInterests().get(key));
-                new AddInterestAndForgetTask(_context, _sessionId, key, _interests.get(key)).doInBackground(null);
+                _unsyncronizedInterests.put(key, profile.getInterests().get(key));
             }
 
             return interestsResponse.getMessage();
@@ -119,6 +122,10 @@ public class GetUserProfileTask extends RestTask{
 
         list.setAdapter(interestsAdapter);
 
+        /*Syncronhize the interests*/
+        for(String key : _unsyncronizedInterests.keySet()) {
+            new AddInterestAndForgetTask(_context, _sessionId, key, _unsyncronizedInterests.get(key)).execute();
+        }
 
     }
 

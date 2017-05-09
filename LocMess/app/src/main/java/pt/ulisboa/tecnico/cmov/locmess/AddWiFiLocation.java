@@ -46,8 +46,6 @@ public class AddWiFiLocation extends AppCompatActivity {
 
         (new UploadLocationTask(this, _sessionId, wiFiLocation)).execute();
 
-        LocalCache.getInstance(getApplicationContext()).storeLocation(wiFiLocation);
-
         finish();
     }
 }

@@ -36,6 +36,7 @@ import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
 import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
 import pt.ulisboa.tecnico.cmov.locmess.PostMessageRules;
 import pt.ulisboa.tecnico.cmov.locmess.R;
@@ -49,9 +50,10 @@ import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 public class GetLocationsTask extends RestTask{
 
-    private long _sessionId;
-    private List<Location> _locations = new LinkedList<>();
-    private boolean _successful;
+    protected long _sessionId;
+    protected List<Location> _locations = new LinkedList<>();
+    private List<Location> _unsyncronizedLocations = new LinkedList<>();
+    protected boolean _successful;
 
     public GetLocationsTask(Activity appContext, long sessionId){
         super(appContext);
@@ -85,43 +87,58 @@ public class GetLocationsTask extends RestTask{
                 }
             }
 
+            /*Syncronize cache and server*/
+            List<Location> cachedLocations = LocalCache.getInstance(_context.getApplicationContext()).getLocations();
+            for(Location l : cachedLocations){
+                boolean upload = true;
+                for(Location sl : _locations){
+                    if(sl.getName().equals(l.getName())){
+                        upload = false;
+                    }
+                }
+                if(upload){
+                    _locations.add(l);
+                    _unsyncronizedLocations.add(l);
+                }
+            }
+
             return json.getString("message");
 
         }catch (RestClientException e){
             Log.e("REST ERROR", e.getClass().toString()+" : "+e.getMessage());
+            _locations = LocalCache.getInstance(_context.getApplicationContext()).getLocations();
             return e.getMessage();
 
         }catch (JSONException |
                 IOException e){
             Log.e("JSON ERROR", e.getMessage());
             _successful = false;
+            _locations = LocalCache.getInstance(_context.getApplicationContext()).getLocations();
             return e.getMessage();
         }
     }
 
     @Override
     protected void onPostExecute(String result){
+        if(!_successful) {
+            Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
+        }
+        ListView list = (ListView) _context.findViewById(R.id.listViewLocations);
 
-        /*TODO
-        @PAULO Please see the comments on PostMessageActivity.java*/
-        Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
+        ListAdapter locationsAdapter = new LocationListAdapter(_context, _locations);
 
-        if(_successful) {
-            ListView list = (ListView) _context.findViewById(R.id.listViewLocations);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(_context, MessageViewActivity.class);
+                _context.startActivity(intent);
+            }
+        });
 
-            ListAdapter locationsAdapter = new LocationListAdapter(_context, _locations);
+        list.setAdapter(locationsAdapter);
 
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(_context, MessageViewActivity.class);
-                    _context.startActivity(intent);
-                }
-            });
-
-            list.setAdapter(locationsAdapter);
-
-
+        for(Location l: _unsyncronizedLocations) {
+            new UploadLocationAndForgetTask(_context, _sessionId, l).execute();
         }
     }
 

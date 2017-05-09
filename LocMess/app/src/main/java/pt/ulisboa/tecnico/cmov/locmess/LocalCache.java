@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.util.SimpleArrayMap;
 import android.util.ArrayMap;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,13 +182,14 @@ public class LocalCache {
             }
             locationNames = "";
             for(String locName: locations) {
-                if (!locName.equals(INVALID_ID)) {
+                if (!locName.equals(INVALID_ID) && !locName.equals(l.getName())) {
                     locationNames += locName + SEPARATOR;
                 }
             }
             locationNames += l.getName();
 
             /*Store it*/
+            dm.setUserAttribute(_context, LOCATION_CACHE, locationNames);
             dm.setUserAttribute(_context, l.getName()+TYPE_FIELD, l.getType());
             if(l.getType().equals(WiFiLocation.TYPE)){
                 WiFiLocation w = (WiFiLocation)l;
@@ -203,7 +205,6 @@ public class LocalCache {
                 dm.setUserAttribute(_context, l.getName()+LONG_FIELD, (float)g.getLongitude());
                 dm.setUserAttribute(_context, l.getName()+RADIUS_FIELD, (float)g.getRadius());
             }
-
 
         }catch (StorageException e){
             Log.e(LOCATION_CACHE, "Storage error!");

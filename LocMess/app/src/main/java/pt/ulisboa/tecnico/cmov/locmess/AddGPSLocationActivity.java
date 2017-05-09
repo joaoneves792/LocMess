@@ -79,10 +79,6 @@ public class AddGPSLocationActivity extends AppCompatActivity {
         GPSLocation gpsLocation = new GPSLocation(name, latitude, longitude, radius);
 
         (new UploadLocationTask(this, _sessionId, gpsLocation)).execute();
-
-        LocalCache lc = LocalCache.getInstance(getApplicationContext());
-        lc.storeLocation(gpsLocation);
-
         finish();
     }
 }

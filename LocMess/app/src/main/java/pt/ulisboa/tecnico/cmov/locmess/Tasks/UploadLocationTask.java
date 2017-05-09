@@ -17,6 +17,7 @@ import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Cookie;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
@@ -41,6 +42,7 @@ public class UploadLocationTask extends RestTask{
     protected String doInBackground(Void... params){
         String result;
 
+
         Map<String, String> vars = new HashMap<>();
         vars.put("id", Long.valueOf(_sessionId).toString());
         vars.put("name", _location.getName());
@@ -49,6 +51,7 @@ public class UploadLocationTask extends RestTask{
             vars.put("latitude", Double.valueOf(gps.getLatitude()).toString());
             vars.put("longitude", Double.valueOf(gps.getLongitude()).toString());
             vars.put("radius", Double.valueOf(gps.getRadius()).toString());
+            LocalCache.getInstance(_context.getApplicationContext()).insertIntoStorage(gps);
         }else{
             WiFiLocation wifi = (WiFiLocation)_location;
             String SSID = "ssid";
@@ -56,6 +59,7 @@ public class UploadLocationTask extends RestTask{
             for(String ssid : wifi.getWifiIds()){
                 vars.put(SSID+(i++), ssid);
             }
+            LocalCache.getInstance(_context.getApplicationContext()).insertIntoStorage(wifi);
         }
         try {
             result = _rest.postForObject(_url+"/locations", vars, String.class);
