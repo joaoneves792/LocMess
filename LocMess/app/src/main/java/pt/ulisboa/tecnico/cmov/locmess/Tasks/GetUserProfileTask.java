@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,17 +20,11 @@ import org.springframework.web.client.RestClientException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Profile;
-import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
 import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
-import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
 import pt.ulisboa.tecnico.cmov.locmess.R;
-import pt.ulisboa.tecnico.cmov.locmess.Responses.Cookie;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.InterestsList;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
@@ -58,7 +51,7 @@ public class GetUserProfileTask extends RestTask{
     @Override
     protected String doInBackground(Void... params){
         String result;
-        _interests = LocalCache.getInstance(_context.getApplicationContext()).retrieveStoredProfile().getInterests();
+        _interests = LocalCache.getInstance(_context.getApplicationContext()).getStoredProfile().getInterests();
 
         try {
             result =  _rest.getForObject(_url+"/profiles/"+_sessionId, String.class);
@@ -77,7 +70,7 @@ public class GetUserProfileTask extends RestTask{
 
 
             /*Integrate results with local cache*/
-            Profile profile = LocalCache.getInstance(_context.getApplicationContext()).retrieveStoredProfile();
+            Profile profile = LocalCache.getInstance(_context.getApplicationContext()).getStoredProfile();
             for(String key :profile.getInterests().keySet()){
                 if(_interests.containsKey(key) && _interests.get(key).equals(profile.getInterests().get(key))){
                     continue;

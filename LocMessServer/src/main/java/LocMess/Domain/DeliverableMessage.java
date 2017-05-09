@@ -18,6 +18,8 @@ public class DeliverableMessage {
 
     private Long _id;
 
+    private String _hash;
+
     private String _sender;
     private String _location;
     private Map<String,String> _rules;
@@ -31,6 +33,7 @@ public class DeliverableMessage {
         _rules = originalMessage.getRules();
         _message = originalMessage.getMessage();
         _id = originalMessage.getId();
+        _hash = originalMessage.getHash();
 
         DateFormat df = new SimpleDateFormat("HH:mm MM/dd/yyyy");
         _publicationDate = df.format(originalMessage.getPublicationDate());
@@ -59,6 +62,10 @@ public class DeliverableMessage {
 
     public String getPublicationDate(){
         return _publicationDate;
+    }
+
+    public String getHash(){
+        return _hash;
     }
 
 }

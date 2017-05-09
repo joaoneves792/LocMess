@@ -97,7 +97,7 @@ public class DecentralizedMessage {
 
     private String hash(byte[] message) throws NoSuchAlgorithmException {
         MessageDigest md;
-        md = MessageDigest.getInstance("SHA-256");
+        md = MessageDigest.getInstance("MD5");
         md.update(message);
         byte[] messageDigest = md.digest();
         return Base64.encodeToString(messageDigest, Base64.DEFAULT);

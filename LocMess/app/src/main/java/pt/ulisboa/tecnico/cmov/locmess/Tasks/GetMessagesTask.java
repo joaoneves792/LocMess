@@ -119,7 +119,7 @@ public class GetMessagesTask extends RestTask{
 //                    bundle.putLong(MessageViewActivity.MESSAGE_ID, m.getId());
 //                    resultIntent.putExtras(bundle);
                     Intent resultIntent = new Intent(_appContext, MessageViewActivity.class);
-                    resultIntent.putExtra(MessageViewActivity.MESSAGE_ID, Long.toString(m.getId()));
+                    resultIntent.putExtra(MessageViewActivity.MESSAGE_ID, m.getHash());
 
 
                     PendingIntent resultPendingIntent = PendingIntent.getActivity(_appContext,0,resultIntent,

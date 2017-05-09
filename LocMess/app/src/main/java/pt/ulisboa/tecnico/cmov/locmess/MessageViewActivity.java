@@ -23,8 +23,8 @@ public class MessageViewActivity extends AppCompatActivity {
 
         try {
             Intent previousIntent = getIntent();
-            long id = Long.parseLong(previousIntent.getStringExtra(MESSAGE_ID));
-            DeliverableMessage message = LocalCache.getInstance().getMessage(id);
+            String hash = previousIntent.getStringExtra(MESSAGE_ID);
+            DeliverableMessage message = LocalCache.getInstance().getMessage(hash);
 
             if (message != null) {
                 TextView sender = (TextView) findViewById(R.id.textViewSender);
@@ -40,7 +40,7 @@ public class MessageViewActivity extends AppCompatActivity {
                 text.setText(message.getMessage());
 
             } else {
-                Toast.makeText(this, "Failed to find message with id " + id, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Failed to find message with id " + hash, Toast.LENGTH_LONG).show();
             }
 
         } catch (NumberFormatException e) {

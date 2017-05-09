@@ -264,6 +264,7 @@ public class RequestController implements ErrorController{
                 rules = new HashMap<>(params);
             }
 
+
             Message m = new Message(messageId, profile, location, whitelisted, rules, startDate, endDate, message);
 
             _messages.put(messageId, m);

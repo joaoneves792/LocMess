@@ -10,6 +10,8 @@ public class DeliverableMessage {
 
     private Long id;
 
+    private String hash;
+
     private String sender;
     private String location;
     private Map<String,String> rules;
@@ -21,12 +23,13 @@ public class DeliverableMessage {
 
     }
 
-    public DeliverableMessage(long id, String sender, String location, String message, String publicationDate){
+    public DeliverableMessage(long id, String sender, String location, String message, String publicationDate, String hash){
         this.id = id;
         this.sender = sender;
         this.location = location;
         this.message = message;
         this.publicationDate = publicationDate;
+        this.hash = hash;
     }
 
 
@@ -58,5 +61,12 @@ public class DeliverableMessage {
         return publicationDate;
     }
 
+    public String getHash(){
+        return hash;
+    }
+
+    public boolean equals(DeliverableMessage otherMessage){
+        return (this.hash.equals(otherMessage.getHash()));
+    }
 
 }

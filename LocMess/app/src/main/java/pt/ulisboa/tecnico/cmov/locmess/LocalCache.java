@@ -1,10 +1,7 @@
 package pt.ulisboa.tecnico.cmov.locmess;
 
 import android.content.Context;
-import android.support.v4.util.SimpleArrayMap;
-import android.util.ArrayMap;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +34,8 @@ public class LocalCache {
     private static final String MESSAGE_FIELD = "MESSAGE";
     private static final String LOCATION_FIELD = "LOCATION";
     private static final String DATE_FIELD = "DATE";
+    private static final String HASH_FIELD = "HASH";
+    private static final String ID_FIELD = "ID";
 
     private static final String LOCATION_CACHE = "LOCATIONCACHE";
     private static final String LOCATION = "LOCATION";
@@ -70,11 +69,13 @@ public class LocalCache {
     }
 
 
+    /*--------------MESSAGES----------------------------------------------------------------------*/
+
     /*Warning: Returns null if message not found!*/
-    public DeliverableMessage getMessage(long id){
+    public DeliverableMessage getMessage(String hash){
         List<DeliverableMessage> cachedMessages = getMessages();
         for(DeliverableMessage m : cachedMessages){
-            if(m.getId().equals(id)){
+            if(m.getHash().equals(hash)){
                 return m;
             }
         }
@@ -89,10 +90,9 @@ public class LocalCache {
     public List<DeliverableMessage> storeMessages(List<DeliverableMessage> freshMessages){
         fetchMessagesFromStorage();
 
-
         for(DeliverableMessage m: _messages){
             for(DeliverableMessage freshM : freshMessages){
-                if(freshM.getId().equals(m.getId())){
+                if(freshM.equals(m)){
                     //Mark as old
                     freshM.setId(-1);
                 }
@@ -110,25 +110,17 @@ public class LocalCache {
         return newMessages;
     }
 
-    public List<Location> getLocations(){
-        fetchLocationsFromStorage();
-        return _locations;
-    }
-
-    public void storeLocation(Location l){
-        insertIntoStorage(l);
-    }
-
     private void insertIntoStorage(DeliverableMessage m){
         try {
             DataManager dm = DataManager.getInstance();
 
-            /*Get the stored Ids and trim them to CACHE_SIZE*/
-            String messageIds = dm.getUserAttributeString(_context, MESSAGE_CACHE);
-            String[] ids = messageIds.split(SEPARATOR);
-            if(ids.length >= CACHE_SIZE){
-                String REMOVAL_ID = ids[0];
-                ids[0]  = INVALID_ID;  /*We allways remove the first and append to the last*/
+            /*Get the stored Hashes and trim them to CACHE_SIZE*/
+            String messageHashes = dm.getUserAttributeString(_context, MESSAGE_CACHE);
+            String[] hashes = messageHashes.split(SEPARATOR);
+            if(hashes.length >= CACHE_SIZE){
+                String REMOVAL_ID = hashes[0];
+                hashes[0]  = INVALID_ID;  /*We allways remove the first and append to the last*/
+                dm.removeUserAttribute(_context, REMOVAL_ID+ID_FIELD);
                 dm.removeUserAttribute(_context, REMOVAL_ID+SENDER_FIELD);
                 dm.removeUserAttribute(_context, REMOVAL_ID+LOCATION_FIELD);
                 dm.removeUserAttribute(_context, REMOVAL_ID+MESSAGE_FIELD);
@@ -136,21 +128,22 @@ public class LocalCache {
             }
 
             /*Build a new Ids Vector*/
-            messageIds = "";
-            for(String id : ids){
-                if(!id.equals(INVALID_ID)){
-                    messageIds += id + SEPARATOR;
+            messageHashes = "";
+            for(String hash : hashes){
+                if(!hash.equals(INVALID_ID)){
+                    messageHashes += hash + SEPARATOR;
                 }
             }
-            messageIds += m.getId();
+            messageHashes += m.getHash();
 
             /*Store it*/
-            String ID = m.getId().toString();
-            dm.setUserAttribute(_context, MESSAGE_CACHE, messageIds);
-            dm.setUserAttribute(_context, ID+SENDER_FIELD, m.getSender());
-            dm.setUserAttribute(_context, ID+LOCATION_FIELD, m.getLocation());
-            dm.setUserAttribute(_context, ID+MESSAGE_FIELD, m.getMessage());
-            dm.setUserAttribute(_context, ID+DATE_FIELD, m.getPublicationDate());
+            String HASH = m.getHash();
+            dm.setUserAttribute(_context, MESSAGE_CACHE, messageHashes);
+            dm.setUserAttribute(_context, HASH+ID_FIELD, m.getId());
+            dm.setUserAttribute(_context, HASH+SENDER_FIELD, m.getSender());
+            dm.setUserAttribute(_context, HASH+LOCATION_FIELD, m.getLocation());
+            dm.setUserAttribute(_context, HASH+MESSAGE_FIELD, m.getMessage());
+            dm.setUserAttribute(_context, HASH+DATE_FIELD, m.getPublicationDate());
 
 
 
@@ -158,6 +151,37 @@ public class LocalCache {
             //What should we do?
             Log.e(MESSAGE_CACHE, "Storage error!");
         }
+    }
+
+    private void fetchMessagesFromStorage(){
+        try {
+            _messages = new LinkedList<>();
+            DataManager dm = DataManager.getInstance();
+            String messageHashes = dm.getUserAttributeString(_context, MESSAGE_CACHE);
+            String[] hashes = messageHashes.split(SEPARATOR);
+            for(String hash: hashes){
+                if(hash.equals("")){
+                    continue;
+                }
+                Long id = dm.getUserAttributeLong(_context, hash+ID_FIELD);
+                String sender = dm.getUserAttributeString(_context, hash+SENDER_FIELD);
+                String location = dm.getUserAttributeString(_context, hash+LOCATION_FIELD);
+                String message = dm.getUserAttributeString(_context, hash+MESSAGE_FIELD);
+                String date = dm.getUserAttributeString(_context, hash+DATE_FIELD);
+                DeliverableMessage m = new DeliverableMessage(id, sender, location, message, date, hash);
+                _messages.add(m);
+            }
+        }catch (StorageException e){
+            //What should we do?
+            Log.e(MESSAGE_CACHE, "Storage error!");
+        }
+
+    }
+
+    /*----------------------LOCATIONS-------------------------------------------------------------*/
+    public List<Location> getLocations(){
+        fetchLocationsFromStorage();
+        return _locations;
     }
 
     public void insertIntoStorage(Location l){
@@ -212,30 +236,6 @@ public class LocalCache {
 
     }
 
-    private void fetchMessagesFromStorage(){
-        try {
-            _messages = new LinkedList<>();
-            DataManager dm = DataManager.getInstance();
-            String messageIds = dm.getUserAttributeString(_context, MESSAGE_CACHE);
-            String[] ids = messageIds.split(SEPARATOR);
-            for(String id: ids){
-                if(id.equals("")){
-                    continue;
-                }
-                String sender = dm.getUserAttributeString(_context, id+SENDER_FIELD);
-                String location = dm.getUserAttributeString(_context, id+LOCATION_FIELD);
-                String message = dm.getUserAttributeString(_context, id+MESSAGE_FIELD);
-                String date = dm.getUserAttributeString(_context, id+DATE_FIELD);
-                DeliverableMessage m = new DeliverableMessage(Long.parseLong(id), sender, location, message, date);
-                _messages.add(m);
-            }
-        }catch (StorageException e){
-            //What should we do?
-            Log.e(MESSAGE_CACHE, "Storage error!");
-        }
-
-    }
-
     private void fetchLocationsFromStorage(){
         try{
             _locations = new LinkedList<>();
@@ -273,8 +273,10 @@ public class LocalCache {
         }
     }
 
+
+    /*---------------------------PROFILES---------------------------------------------------------*/
     public void storeInterest(String key, String value){
-        Profile profile = retrieveStoredProfile();
+        Profile profile = getStoredProfile();
         if(profile.getInterests().containsKey(key)){
             deleteInterest(key);
         }
@@ -311,7 +313,7 @@ public class LocalCache {
         }
     }
 
-    public Profile retrieveStoredProfile(){
+    public Profile getStoredProfile(){
         Map<String, String> interestsMap = new HashMap<>();
         try {
             DataManager dm = DataManager.getInstance();

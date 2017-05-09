@@ -5,6 +5,9 @@ import LocMess.Domain.Locations.GPSLocation;
 import LocMess.Domain.Locations.Location;
 import LocMess.Domain.Locations.WiFiLocation;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
@@ -14,6 +17,8 @@ import java.util.Map;
 public class Message {
 
     private Long _id;
+
+    private String _hash;
 
     private Profile _sender;
     private Location _location;
@@ -37,6 +42,18 @@ public class Message {
         _message = message;
         _id = id;
         _publicationDate = new Date();
+
+        byte[] concatMessage = new byte[sender.getUsername().getBytes().length+location.getName().getBytes().length+message.getBytes().length];
+        System.arraycopy(sender.getUsername().getBytes(), 0, concatMessage, 0, sender.getUsername().getBytes().length);
+        System.arraycopy(location.getName().getBytes(), 0, concatMessage, sender.getUsername().getBytes().length, location.getName().getBytes().length);
+        System.arraycopy(message.getBytes(), 0, concatMessage, sender.getUsername().getBytes().length+location.getName().getBytes().length, message.getBytes().length);
+
+        try {
+            _hash = hash(concatMessage);
+        }catch (NoSuchAlgorithmException e){
+            //fail
+        }
+
     }
 
     public boolean canDeliver(Profile user, GPSLocation GPSLocation, WiFiLocation wiFiLocation){
@@ -114,6 +131,18 @@ public class Message {
 
     public Date getPublicationDate(){
         return _publicationDate;
+    }
+
+    public String getHash(){
+        return _hash;
+    }
+
+    private String hash(byte[] message) throws NoSuchAlgorithmException {
+        MessageDigest md;
+        md = MessageDigest.getInstance("MD5");
+        md.update(message);
+        byte[] messageDigest = md.digest();
+        return Base64.getEncoder().encodeToString(messageDigest);
     }
 
 }

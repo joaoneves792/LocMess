@@ -34,12 +34,6 @@ public class PostMessageActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_post_message);
 
-//        FIXME
-//        @Paulo if you get the locations from the server dont forget to include these: (from local cache)
-//        And also if the one the user selects is not on the list provided by the server the we have to upload it
-//        You might want to consider moving this to the Task
-        List<Location> cachedLocations = LocalCache.getInstance(getApplicationContext()).getLocations();
-
         (new GetMessageServerLocationsTask(this, _sessionId)).execute();
 
     }
