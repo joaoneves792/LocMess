@@ -10,9 +10,14 @@ dependencies {
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    compile(name:'Termite-WifiP2P-API', ext:'aar')
     testCompile 'junit:junit:4.12'
 }
-
+repositories{
+    flatDir{
+        dirs 'libs'
+    }
+}
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'

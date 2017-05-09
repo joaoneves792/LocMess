@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.locmess;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,6 +25,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
+import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
+import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.LocationException;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
@@ -42,6 +46,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     FetchMessagesBroadcastReceiver _fetchMessagesReceiver;
+    SimWifiP2pBroadcastReceiver _wifiDirectReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +141,24 @@ public class HomeActivity extends AppCompatActivity {
             _fetchMessagesReceiver.SetAlarm(context);
         } catch (LocationException e) {
             Toast.makeText(this, "Failed initialize GPS", Toast.LENGTH_LONG).show();
+        }
+
+        if(_wifiDirectReceiver == null){
+            // initialize the WDSim API
+            SimWifiP2pSocketManager.Init(getApplicationContext());
+
+            // register broadcast receiver
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION);
+            filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
+            filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
+            filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
+            _wifiDirectReceiver = new SimWifiP2pBroadcastReceiver(context);
+            registerReceiver(_wifiDirectReceiver, filter);
+
+            //Enable Wifi Direct
+            /*Intent intent = new Intent(this, SimWifiP2pService.class);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);*/
         }
 
 
