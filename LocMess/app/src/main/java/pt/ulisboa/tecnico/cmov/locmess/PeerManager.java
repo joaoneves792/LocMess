@@ -36,10 +36,7 @@ public class PeerManager implements SimWifiP2pManager.PeerListListener {
     public void onPeersAvailable(SimWifiP2pDeviceList devices){
         for(SimWifiP2pDevice device : devices.getDeviceList()){
             String ip = device.getVirtIp();
-            //ip = "192.168.0.2";
             new OutgoingCommTask().execute(ip);
-            Log.e("IP", ip);
-
         }
 
     }

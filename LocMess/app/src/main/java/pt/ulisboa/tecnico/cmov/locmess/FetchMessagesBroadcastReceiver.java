@@ -19,8 +19,6 @@ import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetDecentralizedMessagesTask;
 
 public class FetchMessagesBroadcastReceiver extends BroadcastReceiver{
     private static WifiReceiver wifiReceiver;
-    private static SimWifiP2pManager p2pManager;
-    private static SimWifiP2pManager.Channel p2pChannel;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -37,30 +35,12 @@ public class FetchMessagesBroadcastReceiver extends BroadcastReceiver{
         /* DO NOT USE THIS CODE it will blow up with a null pointer exception on the SimWifi code
         if(null != p2pChannel && null != p2pChannel) {
             p2pManager.discoverPeers(p2pChannel, new SimWifiP2pManager.ActionListener() {
-
-                @Override
-                public void onSuccess() {
-                    // Code for when the discovery initiation is successful goes here.
-                    // No services have actually been discovered yet, so this method
-                    // can often be left blank.  Code for peer discovery goes in the
-                    // onReceive method, detailed below.
-                }
-
-                @Override
-                public void onFailure(int reasonCode) {
-                    // Code for when the discovery initiation fails goes here.
-                    // Alert the user that something went wrong.
-                }
+                (...)
             });
         }*/
 
     }
 
-
-    public void setP2PConnection(SimWifiP2pManager.Channel channel, SimWifiP2pManager manager){
-        p2pChannel = channel;
-        p2pManager = manager;
-    }
 
     public void SetAlarm(Context context)throws LocationException{
         /*Initialize the GPS listener*/

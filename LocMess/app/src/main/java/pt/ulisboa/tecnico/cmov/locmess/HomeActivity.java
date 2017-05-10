@@ -57,10 +57,6 @@ public class HomeActivity extends AppCompatActivity {
     FetchMessagesBroadcastReceiver _fetchMessagesReceiver;
     SimWifiP2pBroadcastReceiver _wifiDirectReceiver;
 
-    SimWifiP2pManager mManager;
-    SimWifiP2pManager.Channel mChannel;
-    boolean mBound;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,11 +120,6 @@ public class HomeActivity extends AppCompatActivity {
         _drawerLayout.setDrawerListener(_drawerToggle);
 
     }
-    @Override
-    protected void onPause(){
-        super.onPause();
-        //unregisterReceiver(_wifiDirectReceiver);
-    }
 
     @Override
     protected void onResume(){
@@ -170,14 +161,14 @@ public class HomeActivity extends AppCompatActivity {
             filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
             filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
             filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
-            _wifiDirectReceiver = new SimWifiP2pBroadcastReceiver(this, _fetchMessagesReceiver);
+            _wifiDirectReceiver = new SimWifiP2pBroadcastReceiver(this);
             getApplicationContext().registerReceiver(_wifiDirectReceiver, filter);
 
-        }
 
-        /*Initialize the wifiDirect server*/
-        Executor ex = Executors.newSingleThreadExecutor();
-        new GetDecentralizedMessagesTask(this).executeOnExecutor(ex);
+            /*Initialize the wifiDirect server*/
+            Executor ex = Executors.newSingleThreadExecutor();
+            new GetDecentralizedMessagesTask(this).executeOnExecutor(ex);
+        }
 
         // display messages on home
         ListView list = (ListView) findViewById(R.id.listViewMessages);

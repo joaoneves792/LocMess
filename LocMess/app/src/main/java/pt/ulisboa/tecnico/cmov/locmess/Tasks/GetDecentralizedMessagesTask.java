@@ -51,7 +51,6 @@ public class GetDecentralizedMessagesTask extends GetMessagesTask {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 SimWifiP2pSocket sock = mSrvSocket.accept();
-                Log.e("SERVER", "GOT SOMETHING2");
                 try {
                     BufferedReader sockIn = new BufferedReader(
                             new InputStreamReader(sock.getInputStream()));
@@ -75,7 +74,6 @@ public class GetDecentralizedMessagesTask extends GetMessagesTask {
 
     @Override
     protected void onProgressUpdate(String... values) {
-        Log.e("SERVER", "GOT SOMETHING");
         Toast.makeText(_appContext, values[0], Toast.LENGTH_LONG).show();
         //Eventually call handleMessages()
     }

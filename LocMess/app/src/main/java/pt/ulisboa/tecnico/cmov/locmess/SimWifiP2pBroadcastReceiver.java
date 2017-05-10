@@ -28,13 +28,11 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
     PeerManager _peerManager;
 
 
-    FetchMessagesBroadcastReceiver _messageReceiver = null;
-
     public SimWifiP2pBroadcastReceiver(){
 
     }
 
-    public SimWifiP2pBroadcastReceiver(Activity activity, FetchMessagesBroadcastReceiver messageReceiver) {
+    public SimWifiP2pBroadcastReceiver(Activity activity) {
         super();
         _homeActivity = activity;
         _appContext = _homeActivity.getApplicationContext();
@@ -44,7 +42,6 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
         _appContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         mBound = true;
 
-        _messageReceiver = messageReceiver;
 
     }
 
@@ -59,7 +56,6 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
             _peerManager = new PeerManager(mManager, mChannel);
             mBound = true;
 
-            _messageReceiver.setP2PConnection(mChannel, mManager);
         }
 
         @Override
@@ -74,42 +70,34 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-
-        	// This action is triggered when the Termite service changes state:
-        	// - creating the service generates the WIFI_P2P_STATE_ENABLED event
-        	// - destroying the service generates the WIFI_P2P_STATE_DISABLED event
-
+            /*
             int state = intent.getIntExtra(SimWifiP2pBroadcast.EXTRA_WIFI_STATE, -1);
             if (state == SimWifiP2pBroadcast.WIFI_P2P_STATE_ENABLED) {
         		Toast.makeText(_appContext, "WiFi Direct enabled",Toast.LENGTH_SHORT).show();
             } else {
         		//Toast.makeText(mActivity, "WiFi Direct disabled",Toast.LENGTH_SHORT).show();
             }
-
+            */
         } else if (SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-
-            // Request available peers from the wifi p2p manager. This is an
-            // asynchronous call and the calling activity is notified with a
-            // callback on PeerListListener.onPeersAvailable()
-
-        	Toast.makeText(_appContext, "Peer list changed",Toast.LENGTH_SHORT).show();
+        	//Toast.makeText(_appContext, "Peer list changed",Toast.LENGTH_SHORT).show();
             if(mManager != null){
                 mManager.requestPeers(mChannel, _peerManager);
             }
 
         } else if (SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION.equals(action)) {
-
+            /*
         	SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
         			SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
         	ginfo.print();
     		Toast.makeText(_appContext, "Network membership changed", Toast.LENGTH_SHORT).show();
-
+            */
         } else if (SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION.equals(action)) {
-
+            /*
         	SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
         			SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
         	ginfo.print();
     		Toast.makeText(_appContext, "Group ownership changed", Toast.LENGTH_SHORT).show();
+            */
         }
     }
 }
