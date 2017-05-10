@@ -70,7 +70,7 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="@string/latitude"
-            android:inputType="number|numberDecimal"
+            android:inputType="number|numberSigned|numberDecimal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextSSID" />
@@ -82,7 +82,7 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="@string/longitude"
-            android:inputType="number|numberDecimal"
+            android:inputType="number|numberSigned|numberDecimal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextLatitude" />
@@ -94,10 +94,10 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="@string/radius"
-            android:inputType="number"
-            app:layout_constraintTop_toBottomOf="@+id/editTextLongitude"
+            android:inputType="number|numberDecimal"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextLongitude" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -88,6 +88,10 @@
     <string name="whitelist">Whitelist</string>
     <string name="blacklist">Blacklist</string>
 
+    <string name="deliveryMode">Delivery Mode</string>
+    <string name="centralized">Centralized (via server)</string>
+    <string name="decentralized">Decentralized (via WiFiDirect)</string>
+
 
     <string name="settings">Settings</string>
     <string name="appConfig">App Configuration</string>

@@ -27,6 +27,43 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="1.0">
 
+        <TextView
+            android:id="@+id/titleDeliveryMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/deliveryMode"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroupLocations"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupDeliveryModes"
+            android:layout_width="352dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleDeliveryMode">
+
+            <RadioButton
+                android:id="@+id/radioButtonCentralized"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/centralized" />
+
+            <RadioButton
+                android:id="@+id/radioButtonDecentralized"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/decentralized" />
+        </RadioGroup>
+
         <EditText
             android:id="@+id/editTextMessage"
             android:layout_width="0dp"
@@ -41,7 +78,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/titleLocations"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -49,7 +86,8 @@
             android:text="@string/locations"
             android:textAppearance="@style/TextAppearance.AppCompat"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextMessage" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextMessage"
+            android:layout_marginStart="8dp" />
 
         <RadioGroup
             android:id="@+id/radioGroupLocations"
@@ -58,7 +96,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/titleLocations" />
 
         <LinearLayout
             android:layout_width="0dp"

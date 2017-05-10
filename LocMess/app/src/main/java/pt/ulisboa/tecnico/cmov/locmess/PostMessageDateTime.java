@@ -163,6 +163,7 @@ public class PostMessageDateTime extends AppCompatActivity
 
 //        intent.putExtra("TITLE", previousIntent.getStringExtra("TITLE"));
         intent.putExtra("TEXT", previousIntent.getStringExtra("TEXT"));
+        intent.putExtra("DELIVERY_MODE", previousIntent.getStringExtra("DELIVERY_MODE"));
         intent.putExtra("LOCATION", previousIntent.getStringExtra("LOCATION"));
         intent.putExtra("STARTDATETIME", startDateTime);
         intent.putExtra("ENDDATETIME", endDateTime);

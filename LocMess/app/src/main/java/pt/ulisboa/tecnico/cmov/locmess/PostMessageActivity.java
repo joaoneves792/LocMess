@@ -39,30 +39,54 @@ public class PostMessageActivity extends AppCompatActivity {
 
     public void selectDateTimes(View view) {
 
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroupLocations);
+        Intent intent = new Intent(this, PostMessageDateTime.class);
 
+
+        // get selected location
+        String location;
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroupLocations);
         try {
             final int checkedId = radioGroup.getCheckedRadioButtonId();
-            String location = ((RadioButton) radioGroup.getChildAt(checkedId)).getText().toString();
+            location = ((RadioButton) radioGroup.getChildAt(checkedId)).getText().toString();
 
-            /*Get this location on the cache
+            /* Get this location on the cache
                 Necessary for decentralized delivery
-             */
+            */
             new GetLocationIntoCacheTask(this, _sessionId, location).execute();
-
-            Intent intent = new Intent(this, PostMessageDateTime.class);
-
-            intent.putExtra("TEXT", ((TextView) findViewById(R.id.editTextMessage)).getText().toString());
             intent.putExtra("LOCATION", location);
-            startActivity(intent);
-
-            finish();
 
         } catch (Exception e) {
             radioGroup.clearCheck();
             Toast.makeText(this, "Please select a location.", Toast.LENGTH_LONG).show();
+            return;
         }
 
+        // get selected delivery mode (centralised default)
+        String deliveryMode = "centralized";
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroupDeliveryModes);
+        try {
+            final int checkedId = radioGroup.getCheckedRadioButtonId();
+            switch(checkedId) {
+                case R.id.radioButtonCentralized:
+                    deliveryMode = "centralized";
+                    break;
+                case R.id.radioButtonDecentralized:
+                    deliveryMode = "decentralized";
+                    break;
+            }
+
+            intent.putExtra("DELIVERY_MODE", deliveryMode);
+
+        } catch (Exception e) {
+            radioGroup.clearCheck();
+            Toast.makeText(this, "Please select a delivery mode.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        intent.putExtra("TEXT", ((TextView) findViewById(R.id.editTextMessage)).getText().toString());
+        startActivity(intent);
+
+        finish();
     }
 
 }

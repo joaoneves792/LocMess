@@ -33,7 +33,7 @@ public class PostMessageRules extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             _sessionId = DataManager.getInstance().getSessionId(getApplicationContext());
-        }catch (StorageException e){
+        } catch (StorageException e) {
             Toast.makeText(this, R.string.sessionFailed, Toast.LENGTH_SHORT).show();
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
@@ -42,6 +42,7 @@ public class PostMessageRules extends AppCompatActivity {
         _ruleList = new ArrayList<>();
 
         setContentView(R.layout.activity_post_message_rules);
+
     }
 
 
@@ -51,6 +52,7 @@ public class PostMessageRules extends AppCompatActivity {
 
     public void postMessage(View view) {
 
+        // get message distribution policy (blacklist default)
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         final int checkedId = radioGroup.getCheckedRadioButtonId();
         boolean whitelist = false;
@@ -64,13 +66,22 @@ public class PostMessageRules extends AppCompatActivity {
         }
 
         Intent previousIntent = getIntent();
-
         String text = previousIntent.getStringExtra("TEXT");
         String location = previousIntent.getStringExtra("LOCATION");
         String startDateTime = previousIntent.getStringExtra("STARTDATETIME");
         String endDateTime = previousIntent.getStringExtra("ENDDATETIME");
+        String decentralized = previousIntent.getStringExtra("DELIVERY_MODE");
 
-        (new PostMessageTask(this, _sessionId, location, null, whitelist, startDateTime, endDateTime, text)).execute();
+        if (decentralized.equals("centralized")) {
+            // send message to server
+            (new PostMessageTask(this, _sessionId, location, null, whitelist, startDateTime, endDateTime, text)).execute();
+
+        } else {
+//            FIXME decentralized distribution
+            Toast.makeText(this, "FIXME descentralized", Toast.LENGTH_SHORT).show();
+
+        }
+
 
         finish();
     }
