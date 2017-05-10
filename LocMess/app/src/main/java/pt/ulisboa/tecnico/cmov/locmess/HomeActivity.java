@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,6 +28,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -180,9 +183,35 @@ public class HomeActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), MessageViewActivity.class);
-                intent.putExtra(MessageViewActivity.MESSAGE_ID, position); /*FIXME use the message.getHash()*/
-                startActivity(intent);
+
+                String sender = ((TextView) view.findViewById(R.id.textViewSender)).getText().toString();
+                String location = ((TextView) view.findViewById(R.id.textViewLocation)).getText().toString();
+                String message = ((TextView) view.findViewById(R.id.textViewMessageBody)).getText().toString();
+
+                int senderLength = sender.getBytes().length;
+                int locationLength = location.getBytes().length;
+                int messageLength = message.getBytes().length;
+
+                byte[] concatMessage = new byte[senderLength + locationLength + messageLength];
+                System.arraycopy(sender.getBytes(), 0, concatMessage, 0, senderLength);
+                System.arraycopy(location.getBytes(), 0, concatMessage, senderLength, locationLength);
+                System.arraycopy(message.getBytes(), 0, concatMessage, senderLength + locationLength, messageLength);
+
+                try {
+                    MessageDigest md;
+                    md = MessageDigest.getInstance("MD5");
+                    md.update(concatMessage);
+                    byte[] messageDigest = md.digest();
+                    String hash = Base64.encodeToString(messageDigest, Base64.DEFAULT);
+
+                    Intent intent = new Intent(getApplicationContext(), MessageViewActivity.class);
+                    intent.putExtra(MessageViewActivity.MESSAGE_ID, hash);
+                    startActivity(intent);
+
+                } catch (NoSuchAlgorithmException e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 

@@ -45,7 +45,7 @@ public class DeliverableMessage {
     public String getLocation() {
         return _location;
     }
-
+    
     public String getMessage() {
         return _message;
     }

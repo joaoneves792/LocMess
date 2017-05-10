@@ -42,13 +42,15 @@ public class UploadLocationTask extends RestTask{
         Map<String, String> vars = new HashMap<>();
         vars.put("id", Long.valueOf(_sessionId).toString());
         vars.put("name", _location.getName());
-        if(_location.getType().equals("GPS")){
+
+        if(_location.getType().equals("GPS")) {
             GPSLocation gps = (GPSLocation) _location;
             vars.put("latitude", Double.valueOf(gps.getLatitude()).toString());
             vars.put("longitude", Double.valueOf(gps.getLongitude()).toString());
             vars.put("radius", Double.valueOf(gps.getRadius()).toString());
             LocalCache.getInstance(_context.getApplicationContext()).insertIntoStorage(gps);
-        }else{
+
+        } else {
             WiFiLocation wifi = (WiFiLocation)_location;
             String SSID = "ssid";
             int i = 1;
@@ -57,6 +59,7 @@ public class UploadLocationTask extends RestTask{
             }
             LocalCache.getInstance(_context.getApplicationContext()).insertIntoStorage(wifi);
         }
+
         try {
             result = _rest.postForObject(_url+"/locations", vars, String.class);
 
@@ -66,15 +69,17 @@ public class UploadLocationTask extends RestTask{
             _successful = response.getSuccessful();
              return response.getMessage();
 
-        }catch (RestClientException e) {
+        } catch (RestClientException e) {
             Log.e("REST ERROR", e.getClass().toString() + " : " + e.getMessage());
             _successful = false;
             return e.getMessage();
-        }catch (IOException e){
+
+        } catch (IOException e) {
             _successful = false;
             return e.getMessage();
         }
     }
+
 
     @Override
     protected void onPostExecute(String result){

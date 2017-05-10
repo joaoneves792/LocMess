@@ -20,7 +20,8 @@ public class MessageViewActivity extends AppCompatActivity {
 
         try {
             Intent previousIntent = getIntent();
-            String hash = previousIntent.getStringExtra(MESSAGE_ID);
+            String hash = previousIntent.getStringExtra(MESSAGE_ID).trim();
+
             DeliverableMessage message = LocalCache.getInstance().getMessage(hash);
 
             if (message != null) {
@@ -41,7 +42,7 @@ public class MessageViewActivity extends AppCompatActivity {
             }
 
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "message id from intent = " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "id from intent = " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         // FIXME change message to seen

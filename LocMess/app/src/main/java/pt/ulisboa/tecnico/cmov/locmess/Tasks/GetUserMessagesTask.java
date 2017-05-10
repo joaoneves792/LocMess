@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -80,7 +83,8 @@ public class GetUserMessagesTask extends RestTask{
 
     @Override
     protected void onPostExecute(String result){
-        Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(_context, result, Toast.LENGTH_LONG).show();
         Log.e("ERRROR", result);
 
         if(_successful) {
@@ -91,8 +95,33 @@ public class GetUserMessagesTask extends RestTask{
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(_context, MessageViewActivity.class);
-                    _context.startActivity(intent);
+                    String sender = ((TextView) view.findViewById(R.id.textViewSender)).getText().toString();
+                    String location = ((TextView) view.findViewById(R.id.textViewLocation)).getText().toString();
+                    String message = ((TextView) view.findViewById(R.id.textViewMessageBody)).getText().toString();
+
+                    int senderLength = sender.getBytes().length;
+                    int locationLength = location.getBytes().length;
+                    int messageLength = message.getBytes().length;
+
+                    byte[] concatMessage = new byte[senderLength + locationLength + messageLength];
+                    System.arraycopy(sender.getBytes(), 0, concatMessage, 0, senderLength);
+                    System.arraycopy(location.getBytes(), 0, concatMessage, senderLength, locationLength);
+                    System.arraycopy(message.getBytes(), 0, concatMessage, senderLength + locationLength, messageLength);
+
+                    try {
+                        MessageDigest md;
+                        md = MessageDigest.getInstance("MD5");
+                        md.update(concatMessage);
+                        byte[] messageDigest = md.digest();
+                        String hash = Base64.encodeToString(messageDigest, Base64.DEFAULT);
+
+                        Intent intent = new Intent(_context, MessageViewActivity.class);
+                        intent.putExtra(MessageViewActivity.MESSAGE_ID, hash);
+                        _context.startActivity(intent);
+
+                    } catch (NoSuchAlgorithmException e) {
+                        Toast.makeText(_context, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 

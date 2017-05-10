@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import org.springframework.web.client.RestClientException;
 
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
+
 /**
  * Created by joao on 3/29/17.
  */
@@ -25,15 +27,23 @@ public class DeleteLocationTask extends RestTask{
 
     @Override
     protected String doInBackground(Void... params){
+
+//         FIXME delete from cache
+//        Toast.makeText(_context, "ping", Toast.LENGTH_SHORT).show();
+        LocalCache.getInstance(_context.getApplicationContext()).deleteLocation(_locationName);
+//        Toast.makeText(_context, "pong", Toast.LENGTH_SHORT).show();
+
         try {
             _rest.delete(_url+"/locations/"+_locationName+"?id="+_sessionId);
             _successful = true;
             return "Location Deleted.";
-        }catch (RestClientException e){
+
+        } catch (RestClientException e) {
             Log.e("REST ERROR", e.getClass().toString()+" : "+e.getMessage());
             _successful = false;
             return e.getMessage();
         }
+
     }
 
     @Override

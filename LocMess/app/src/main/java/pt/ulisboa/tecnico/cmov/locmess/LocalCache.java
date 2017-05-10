@@ -365,6 +365,7 @@ public class LocalCache {
                     }
                     WiFiLocation wiFiLocation = new WiFiLocation(locName, ssidsList);
                     _locations.add(wiFiLocation);
+
                 }else{
                     double longitude = dm.getUserAttributeFloat(_context, locName+LONG_FIELD);
                     double latitude = dm.getUserAttributeFloat(_context, locName+LAT_FIELD);
@@ -379,6 +380,46 @@ public class LocalCache {
         }
     }
 
+
+    public void deleteLocation(String name) {
+        try{
+            DataManager dm = DataManager.getInstance();
+            String locationNames = dm.getUserAttributeString(_context, LOCATION_CACHE);
+            String[] locationNamesSplit = locationNames.split(SEPARATOR);
+
+            String type;
+            String locations = "";
+            for (String locationName : locationNamesSplit) {
+
+                if (locationName.equals("")) {
+                    continue;
+
+                } else if (name.equals(locationName)) {
+                    type = dm.getUserAttributeString(_context, locationName + TYPE_FIELD);
+
+                    if (type.equals(GPSLocation.TYPE)) {
+                        dm.removeUserAttribute(_context, locationName + LAT_FIELD);
+                        dm.removeUserAttribute(_context, locationName + LONG_FIELD);
+                        dm.removeUserAttribute(_context, locationName + RADIUS_FIELD);
+
+                    } else if (type.equals(WiFiLocation.TYPE)) {
+                        dm.removeUserAttribute(_context, locationName + SSIDS_FIELD);
+                    }
+
+                    dm.removeUserAttribute(_context, locationName + TYPE_FIELD);
+
+                } else {
+                    locations += locationName + SEPARATOR;
+                }
+
+            }
+
+            dm.setUserAttribute(_context, LOCATION_CACHE, locations);
+
+        } catch (StorageException e) {
+            Log.e(LOCATION_CACHE, "Storage error : " + e.getMessage());
+        }
+    }
 
     /*---------------------------PROFILES---------------------------------------------------------*/
     public void storeInterest(String key, String value){

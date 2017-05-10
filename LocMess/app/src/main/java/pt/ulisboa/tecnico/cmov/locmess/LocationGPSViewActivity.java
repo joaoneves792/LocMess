@@ -35,8 +35,9 @@ public class LocationGPSViewActivity extends AppCompatActivity {
 
         Intent previousIntent = getIntent();
 
-        TextView _locationName = (TextView) findViewById(R.id.textViewLocationName);
-        _locationName.setText(previousIntent.getStringExtra("LOCATIONNAME"));
+        _locationName = previousIntent.getStringExtra("LOCATIONNAME");
+        TextView locationName = (TextView) findViewById(R.id.textViewLocationName);
+        locationName.setText(_locationName);
 
         TextView type = (TextView) findViewById(R.id.textViewLocationType);
         type.setText("GPS");

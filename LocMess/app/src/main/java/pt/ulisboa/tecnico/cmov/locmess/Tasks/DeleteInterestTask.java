@@ -27,9 +27,13 @@ public class DeleteInterestTask extends RestTask{
     protected String doInBackground(Void... params){
         try {
             _rest.delete(_url+"/profiles/"+_sessionId+"/"+_key);
+
+//            FIXME delete interest from cache
+
             _successful = true;
             return "Location Deleted.";
-        }catch (RestClientException e){
+
+        } catch (RestClientException e) {
             Log.e("REST ERROR", e.getClass().toString()+" : "+e.getMessage());
             _successful = false;
             return e.getMessage();
