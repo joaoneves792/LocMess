@@ -42,19 +42,8 @@ public class FetchMessagesBroadcastReceiver extends BroadcastReceiver{
     }
 
 
-    public void SetAlarm(Context context)throws LocationException{
-        /*Initialize the GPS listener*/
-        GPSLocationListener.getInstance(context);
-
-        /*Set Wifi receiver*/
-        WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifiReceiver = new WifiReceiver();
-        context.getApplicationContext().registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        if(!wifi.isWifiEnabled())
-        {
-            wifi.setWifiEnabled(true);
-        }
-
+    public void SetAlarm(Context context, WifiReceiver wifi){
+        wifiReceiver = wifi;
 
         /*Set up the Intent for this class periodicaly*/
         AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);

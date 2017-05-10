@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.IntentFilter;
@@ -58,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     FetchMessagesBroadcastReceiver _fetchMessagesReceiver;
+    WifiReceiver _wifiReceiver;
     SimWifiP2pBroadcastReceiver _wifiDirectReceiver;
 
     @Override
@@ -142,18 +144,31 @@ public class HomeActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.userName)).setText(_username);
         //Toast.makeText(this, new Long(getIntent().getLongExtra("SESSIONID", -1)).toString(), Toast.LENGTH_LONG).show();
 
-
+        //setup the wifi scanner
+        if(null == _wifiReceiver) {
+            WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            _wifiReceiver = new WifiReceiver();
+            getApplicationContext().registerReceiver(_wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            if (!wifi.isWifiEnabled()) {
+                wifi.setWifiEnabled(true);
+            }
+        }
         // setup message fetching service
-        Context context = getApplicationContext();
         if (_fetchMessagesReceiver == null){
+            try{
+                /*Initialize the GPS listener*/
+                GPSLocationListener.getInstance(getApplicationContext());
+
+            } catch (LocationException e) {
+                Toast.makeText(this, "Failed initialize GPS", Toast.LENGTH_LONG).show();
+            }
+            /*Set Wifi receiver*/
             _fetchMessagesReceiver = new FetchMessagesBroadcastReceiver();
+
+            _fetchMessagesReceiver.SetAlarm(getApplicationContext(), _wifiReceiver);
         }
 
-        try {
-            _fetchMessagesReceiver.SetAlarm(context);
-        } catch (LocationException e) {
-            Toast.makeText(this, "Failed initialize GPS", Toast.LENGTH_LONG).show();
-        }
+        //Setup the decentralized message system
         if(_wifiDirectReceiver == null){
             // initialize the WDSim API
             SimWifiP2pSocketManager.Init(getApplicationContext());
@@ -164,13 +179,10 @@ public class HomeActivity extends AppCompatActivity {
             filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
             filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
             filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
-            _wifiDirectReceiver = new SimWifiP2pBroadcastReceiver(this);
+            _wifiDirectReceiver = new SimWifiP2pBroadcastReceiver(this, _wifiReceiver);
             getApplicationContext().registerReceiver(_wifiDirectReceiver, filter);
 
 
-            /*Initialize the wifiDirect server*/
-            Executor ex = Executors.newSingleThreadExecutor();
-            new GetDecentralizedMessagesTask(this).executeOnExecutor(ex);
         }
 
         // display messages on home

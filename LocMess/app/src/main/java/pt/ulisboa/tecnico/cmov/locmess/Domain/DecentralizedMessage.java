@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -22,6 +23,13 @@ import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
 public class DecentralizedMessage {
     public static final long DECENTRALIZED_ID = -2;
 
+    private static final String SEPARATOR = "!-!";
+    private static final String KEY_VALUE_SEPARATOR = ",";
+    private static final String WHITELIST = "w";
+    private static final String BLACKLIST = "b";
+    private static final String TERMINATION = "\n";
+    private static final String ACCEPT = "ACCEPT" + TERMINATION;
+    private static final String REJECT = "REJECT" + TERMINATION;
 
     private Long id;
 
@@ -146,36 +154,65 @@ public class DecentralizedMessage {
             }
         }
 
-        /* This must be decided on the receiving users device
-
-        if(_whitelisted){
-            if(null == _rules) //if there are no rules then deliver to nobody
-                return false;
-
-            for(String key : _rules.keySet()){
-                if(!user.getInterests().containsKey(key))
-                    return false;
-                if(!user.getInterests().get(key).equals(_rules.get(key)))
-                    return false;
-            }
-
-        }else{ //Blacklisted
-            if(null == _rules) //if there are no rules then deliver to everybody
-                return true;
-
-            for(String key : _rules.keySet()){
-                if(user.getInterests().containsKey(key)){
-                    if(user.getInterests().get(key).equals(_rules.get(key)))
-                        return false;
-                }
-            }
-        }*/
 
         return false;
     }
 
     public DeliverableMessage getDeliverableMessage(){
         return new DeliverableMessage(this.id, this.sender, this.location, this.message, this.publicationDate, this.hash);
+    }
+
+    public byte[] getRequest(){
+        String request = (whitelisted)? (WHITELIST+SEPARATOR):(BLACKLIST+SEPARATOR);
+        for(String key: rules.keySet()){
+            request = request + key + KEY_VALUE_SEPARATOR + rules.get(key) + SEPARATOR;
+        }
+        request = request.replaceAll(SEPARATOR+"$", "");
+        request += TERMINATION;
+        return request.getBytes();
+    }
+
+    public static byte[] getReply(byte[] request, Profile myProfile){
+        Map<String, String> interests = myProfile.getInterests();
+
+        String[] splitRequest = (new String(request)).split(SEPARATOR);
+        boolean whitelist = (splitRequest[0].equals(WHITELIST));
+
+        Map<String,String> rules = new HashMap<>();
+        for(int i = 1; i<splitRequest.length; i++){
+            if(splitRequest[i].equals(""))
+                continue;
+            String[] splitInterest = splitRequest[i].split(KEY_VALUE_SEPARATOR);
+            if(splitInterest[0].equals("") || splitInterest[1].equals(""))
+                continue;
+            rules.put(splitInterest[0], splitInterest[1]);
+        }
+
+
+        if(whitelist){
+            if(rules.size() == 0) //if there are no rules then deliver to nobody
+                return REJECT.getBytes();
+
+            for(String key : rules.keySet()){
+                if(!interests.containsKey(key))
+                    return REJECT.getBytes();
+                if(!interests.get(key).equals(rules.get(key)))
+                    return REJECT.getBytes();
+            }
+
+        }else{ //Blacklisted
+            if(rules.size() == 0) //if there are no rules then deliver to everybody
+                return ACCEPT.getBytes();
+
+            for(String key : rules.keySet()){
+                if(interests.containsKey(key)){
+                    if(interests.get(key).equals(rules.get(key)))
+                        return REJECT.getBytes();
+                }
+            }
+        }
+
+        return ACCEPT.getBytes();
     }
 
 }

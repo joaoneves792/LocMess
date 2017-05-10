@@ -6,43 +6,69 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Messenger;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
-import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
+import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
+import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager;
 import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
+import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
+import pt.ulisboa.tecnico.cmov.locmess.Domain.DecentralizedMessage;
+import pt.ulisboa.tecnico.cmov.locmess.Exceptions.LocationException;
+import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetDecentralizedMessagesTask;
 
-public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
+public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver implements SimWifiP2pManager.PeerListListener {
+
+    public static final int PORT = 10001;
+    public static final String TAG = "WiFiDirect";
 
     Activity _homeActivity;
     Context _appContext;
 
-    SimWifiP2pManager mManager;
-    boolean mBound;
-    SimWifiP2pManager.Channel mChannel;
-    PeerManager _peerManager;
+    WifiReceiver _wifiScanReceiver;
+
+    SimWifiP2pManager _manager;
+    SimWifiP2pManager.Channel _channel;
+
+    List<DecentralizedMessage> _pendingMessages;
+
 
 
     public SimWifiP2pBroadcastReceiver(){
 
     }
 
-    public SimWifiP2pBroadcastReceiver(Activity activity) {
+    public SimWifiP2pBroadcastReceiver(Activity activity, WifiReceiver wifi) {
         super();
         _homeActivity = activity;
         _appContext = _homeActivity.getApplicationContext();
 
+        _wifiScanReceiver = wifi;
+
         //Enable Wifi Direct
         Intent intent = new Intent(_appContext, SimWifiP2pService.class);
         _appContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        mBound = true;
 
 
+        /*Initialize the wifiDirect server*/
+        Executor ex = Executors.newSingleThreadExecutor();
+        new GetDecentralizedMessagesTask(_appContext).executeOnExecutor(ex);
     }
 
 
@@ -51,18 +77,14 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
-            mManager = new SimWifiP2pManager(new Messenger(service));
-            mChannel = mManager.initialize(_homeActivity.getApplication(), Looper.getMainLooper(), null);
-            _peerManager = new PeerManager(mManager, mChannel);
-            mBound = true;
-
+            _manager = new SimWifiP2pManager(new Messenger(service));
+            _channel = _manager.initialize(_homeActivity.getApplication(), Looper.getMainLooper(), null);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            mManager = null;
-            mChannel = null;
-            mBound = false;
+            _manager = null;
+            _channel = null;
         }
     };
 
@@ -80,10 +102,7 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
             */
         } else if (SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
         	//Toast.makeText(_appContext, "Peer list changed",Toast.LENGTH_SHORT).show();
-            if(mManager != null){
-                mManager.requestPeers(mChannel, _peerManager);
-            }
-
+            deliverMessages();
         } else if (SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION.equals(action)) {
             /*
         	SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
@@ -98,6 +117,81 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
         	ginfo.print();
     		Toast.makeText(_appContext, "Group ownership changed", Toast.LENGTH_SHORT).show();
             */
+        }
+    }
+
+    private void deliverMessages(){
+        LocalCache cache = LocalCache.getInstance(_appContext);
+        List<DecentralizedMessage> myMessages = cache.getMyDecentralizedMessages();
+        List<DecentralizedMessage> pendingMessages = new ArrayList<>();
+        for(DecentralizedMessage m : myMessages){
+            try {
+                if (m.canDeliver(_wifiScanReceiver.getSSIDs(), GPSLocationListener.getInstance(_appContext))) {
+                    pendingMessages.add(m);
+                }
+            }catch (LocationException e){
+                Toast.makeText(_appContext, "Failed to retrieve GPS coordinates", Toast.LENGTH_SHORT).show();
+            }catch (ParseException e){
+                Toast.makeText(_appContext, "Corrupted message!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(pendingMessages.size() == 0)
+            return;
+
+        if(_manager != null){
+            _manager.requestPeers(_channel, this);
+        }
+    }
+
+    public void onPeersAvailable(SimWifiP2pDeviceList devices){
+        for(SimWifiP2pDevice device : devices.getDeviceList()){
+            String ip = device.getVirtIp();
+            for(DecentralizedMessage message: _pendingMessages) {
+                new OutgoingCommTask().execute(new MessageIPPair(ip, message));
+            }
+        }
+
+    }
+
+    private class MessageIPPair{
+        public String ip;
+        public DecentralizedMessage decentralizedMessage;
+
+        MessageIPPair(String ip, DecentralizedMessage message){
+            this.ip=ip;
+            this.decentralizedMessage = message;
+        }
+    }
+
+    public class OutgoingCommTask extends AsyncTask<MessageIPPair, String, String> {
+
+        @Override
+        protected String doInBackground(MessageIPPair... params) {
+            try {
+                SimWifiP2pSocket cliSocket = new SimWifiP2pSocket(params[0].ip, PORT);
+
+                byte[] message = params[0].decentralizedMessage.getRequest();
+
+                cliSocket.getOutputStream().write(message, 0, message.length);
+
+                BufferedReader input = new BufferedReader(new InputStreamReader(cliSocket.getInputStream()));
+
+                String response = input.readLine();
+                publishProgress(response);
+
+                cliSocket.close();
+                cliSocket = null;
+            } catch (UnknownHostException e) {
+                Log.e(TAG, "Unknown Host:" + e.getMessage());
+            } catch (IOException e) {
+                Log.e(TAG, "IO error:" + e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... response){
+            Toast.makeText(_appContext, response[0], Toast.LENGTH_SHORT).show();
         }
     }
 }

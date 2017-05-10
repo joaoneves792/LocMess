@@ -1,31 +1,18 @@
 package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-
-import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.web.client.RestClientException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
 import java.util.List;
 
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
-import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
-import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
-import pt.ulisboa.tecnico.cmov.locmess.PeerManager;
-import pt.ulisboa.tecnico.cmov.locmess.R;
-import pt.ulisboa.tecnico.cmov.locmess.Responses.MessagesList;
-import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
+import pt.ulisboa.tecnico.cmov.locmess.SimWifiP2pBroadcastReceiver;
 
 /**
  * Created by joao on 3/29/17.
@@ -44,12 +31,16 @@ public class GetDecentralizedMessagesTask extends GetMessagesTask {
     @Override
     protected String doInBackground(Void... params) {
         try {
-            mSrvSocket = new SimWifiP2pSocketServer(PeerManager.PORT);
+            mSrvSocket = new SimWifiP2pSocketServer(SimWifiP2pBroadcastReceiver.PORT);
         } catch (IOException e) {
             e.printStackTrace();
         }
         while (!Thread.currentThread().isInterrupted()) {
             try {
+                if(null == mSrvSocket) {
+                    Log.e("WifiDirect Server", "Failed to initialize server");
+                    return null;
+                }
                 SimWifiP2pSocket sock = mSrvSocket.accept();
                 try {
                     BufferedReader sockIn = new BufferedReader(

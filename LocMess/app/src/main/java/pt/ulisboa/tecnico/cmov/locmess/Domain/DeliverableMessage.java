@@ -6,6 +6,16 @@ package pt.ulisboa.tecnico.cmov.locmess.Domain;
  */
 public class DeliverableMessage {
 
+    private static final String SEPARATOR = "!--!";
+    private static final int ID = 0;
+    private static final int HASH = 1;
+    private static final int SENDER = 2;
+    private static final int LOCATION = 3;
+    private static final int MESSAGE = 4;
+    private static final int PUBLICATION_DATE = 5;
+
+    private static final String TERMINATION = "\n";
+
     private Long id;
 
     private String hash;
@@ -62,4 +72,16 @@ public class DeliverableMessage {
         return (this.hash.equals(otherMessage.getHash()));
     }
 
+    public byte[] serialize(){
+        String serialized = id + SEPARATOR + hash + SEPARATOR + sender + SEPARATOR +
+                location + SEPARATOR + message + SEPARATOR + publicationDate + TERMINATION;
+        return serialized.getBytes();
+    }
+
+    public static DeliverableMessage deserialize(byte[] serializedMessage){
+        String[] splitMessage = (new String(serializedMessage)).split(SEPARATOR);
+        return new DeliverableMessage(Long.parseLong(splitMessage[ID]), splitMessage[SENDER],
+                splitMessage[LOCATION], splitMessage[MESSAGE], splitMessage[PUBLICATION_DATE],
+                splitMessage[HASH]);
+    }
 }
