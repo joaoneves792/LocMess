@@ -1,9 +1,14 @@
 package pt.ulisboa.tecnico.cmov.locmess;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.IntentFilter;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,13 +29,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager;
 import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.LocationException;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
+import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetDecentralizedMessagesTask;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.LogoutTask;
 
 public class HomeActivity extends AppCompatActivity {
@@ -47,6 +56,10 @@ public class HomeActivity extends AppCompatActivity {
 
     FetchMessagesBroadcastReceiver _fetchMessagesReceiver;
     SimWifiP2pBroadcastReceiver _wifiDirectReceiver;
+
+    SimWifiP2pManager mManager;
+    SimWifiP2pManager.Channel mChannel;
+    boolean mBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +124,11 @@ public class HomeActivity extends AppCompatActivity {
         _drawerLayout.setDrawerListener(_drawerToggle);
 
     }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        //unregisterReceiver(_wifiDirectReceiver);
+    }
 
     @Override
     protected void onResume(){
@@ -142,7 +160,6 @@ public class HomeActivity extends AppCompatActivity {
         } catch (LocationException e) {
             Toast.makeText(this, "Failed initialize GPS", Toast.LENGTH_LONG).show();
         }
-
         if(_wifiDirectReceiver == null){
             // initialize the WDSim API
             SimWifiP2pSocketManager.Init(getApplicationContext());
@@ -153,14 +170,14 @@ public class HomeActivity extends AppCompatActivity {
             filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
             filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
             filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
-            _wifiDirectReceiver = new SimWifiP2pBroadcastReceiver(context);
-            registerReceiver(_wifiDirectReceiver, filter);
+            _wifiDirectReceiver = new SimWifiP2pBroadcastReceiver(this, _fetchMessagesReceiver);
+            getApplicationContext().registerReceiver(_wifiDirectReceiver, filter);
 
-            //Enable Wifi Direct
-            /*Intent intent = new Intent(this, SimWifiP2pService.class);
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);*/
         }
 
+        /*Initialize the wifiDirect server*/
+        Executor ex = Executors.newSingleThreadExecutor();
+        new GetDecentralizedMessagesTask(this).executeOnExecutor(ex);
 
         // display messages on home
         ListView list = (ListView) findViewById(R.id.listViewMessages);

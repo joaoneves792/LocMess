@@ -81,6 +81,7 @@ public class GetUserMessagesTask extends RestTask{
     @Override
     protected void onPostExecute(String result){
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
+        Log.e("ERRROR", result);
 
         if(_successful) {
             ListView list = (ListView) _context.findViewById(R.id.listViewMessages);

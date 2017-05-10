@@ -22,7 +22,6 @@ public class DeliverableMessage {
 
     private String _sender;
     private String _location;
-    private Map<String,String> _rules;
     private String _message;
     private String _publicationDate;
 
@@ -30,7 +29,6 @@ public class DeliverableMessage {
     public DeliverableMessage(Message originalMessage){
         _sender = originalMessage.getSender().getUsername();
         _location = originalMessage.getLocation().getName();
-        _rules = originalMessage.getRules();
         _message = originalMessage.getMessage();
         _id = originalMessage.getId();
         _hash = originalMessage.getHash();
@@ -46,10 +44,6 @@ public class DeliverableMessage {
 
     public String getLocation() {
         return _location;
-    }
-
-    public Map<String, String> getRules() {
-        return _rules;
     }
 
     public String getMessage() {

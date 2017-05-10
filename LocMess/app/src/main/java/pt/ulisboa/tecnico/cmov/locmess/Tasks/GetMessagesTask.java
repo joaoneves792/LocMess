@@ -92,38 +92,42 @@ public class GetMessagesTask extends RestTask{
         }
 
         if(_successful) {
-            LocalCache cache = LocalCache.getInstance();
-            List<DeliverableMessage> newMessages = cache.storeMessages(_receivedMessages);
-            if(newMessages.size() > 0){
-                Toast.makeText(_appContext, "Got new Messages!" + _receivedMessages.size(), Toast.LENGTH_SHORT).show();
-                int notifyID = 1;
-                for(DeliverableMessage m : newMessages) {
+            handleMessage();
+        }
+    }
 
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(_appContext)
-                                    .setSmallIcon(R.mipmap.ic_launcher_round)
-                                    .setContentTitle(m.getSender())
-                                    .setContentText(m.getMessage())
-                                    .setAutoCancel(true);
+    protected void handleMessage() {
+        LocalCache cache = LocalCache.getInstance();
+        List<DeliverableMessage> newMessages = cache.storeMessages(_receivedMessages);
+        if(newMessages.size() > 0){
+            Toast.makeText(_appContext, "Got new Messages!" + _receivedMessages.size(), Toast.LENGTH_SHORT).show();
+            int notifyID = 1;
+            for(DeliverableMessage m : newMessages) {
+
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(_appContext)
+                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                .setContentTitle(m.getSender())
+                                .setContentText(m.getMessage())
+                                .setAutoCancel(true);
 
 
 //                    Intent resultIntent = new Intent(_appContext, MessageViewActivity.class);
 //                    Bundle bundle = new Bundle();
 //                    bundle.putLong(MessageViewActivity.MESSAGE_ID, m.getId());
 //                    resultIntent.putExtras(bundle);
-                    Intent resultIntent = new Intent(_appContext, MessageViewActivity.class);
-                    resultIntent.putExtra(MessageViewActivity.MESSAGE_ID, m.getHash());
+                Intent resultIntent = new Intent(_appContext, MessageViewActivity.class);
+                resultIntent.putExtra(MessageViewActivity.MESSAGE_ID, m.getHash());
 
 
-                    PendingIntent resultPendingIntent = PendingIntent.getActivity(_appContext,0,resultIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent resultPendingIntent = PendingIntent.getActivity(_appContext,0,resultIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-                    mBuilder.setContentIntent(resultPendingIntent);
-                    NotificationManager mNotificationManager =
-                            (NotificationManager) _appContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                    mNotificationManager.notify(notifyID++, mBuilder.build());
-                }
+                mBuilder.setContentIntent(resultPendingIntent);
+                NotificationManager mNotificationManager =
+                        (NotificationManager) _appContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(notifyID++, mBuilder.build());
             }
         }
     }

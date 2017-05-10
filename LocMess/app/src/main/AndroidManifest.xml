@@ -120,9 +120,10 @@
         <activity android:name=".LocationGPSViewActivity"></activity>
 	
 	<receiver android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesBroadcastReceiver"/>
-        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.SimWifiP2pBroadcastReceiver"/>
-        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.WifiReceiver"/>
+        <!--<receiver android:name="pt.ulisboa.tecnico.cmov.locmess.SimWifiP2pBroadcastReceiver"/>
+        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.WifiReceiver"/>-->
         <service android:enabled="true" android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesService" />
+        <service android:enabled="true" android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
 
     </application>
 

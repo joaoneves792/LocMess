@@ -19,7 +19,7 @@ import pt.ulisboa.tecnico.cmov.locmess.R;
  * Created by joao on 3/29/17.
  */
 
-public abstract class RestTask extends AsyncTask<Void, Void, String> {
+public abstract class RestTask extends AsyncTask<Void, String, String> {
 
     protected Activity _context;
     protected RestTemplate _rest;
