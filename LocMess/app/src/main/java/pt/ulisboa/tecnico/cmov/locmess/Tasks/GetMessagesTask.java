@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.web.client.RestClientException;
@@ -17,7 +16,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
-import pt.ulisboa.tecnico.cmov.locmess.MessageViewActivity;
+import pt.ulisboa.tecnico.cmov.locmess.UI.MessageViewActivity;
 import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.MessagesList;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;

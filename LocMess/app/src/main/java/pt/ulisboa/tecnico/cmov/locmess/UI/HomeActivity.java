@@ -1,15 +1,10 @@
-package pt.ulisboa.tecnico.cmov.locmess;
+package pt.ulisboa.tecnico.cmov.locmess.UI;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.IntentFilter;
-import android.os.IBinder;
-import android.os.Messenger;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -33,18 +28,20 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
-import pt.inesc.termite.wifidirect.SimWifiP2pManager;
-import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
+import pt.ulisboa.tecnico.cmov.locmess.DataManager;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.LocationException;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
-import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetDecentralizedMessagesTask;
+import pt.ulisboa.tecnico.cmov.locmess.FetchMessagesBroadcastReceiver;
+import pt.ulisboa.tecnico.cmov.locmess.GPSLocationListener;
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
+import pt.ulisboa.tecnico.cmov.locmess.R;
+import pt.ulisboa.tecnico.cmov.locmess.SimWifiP2pBroadcastReceiver;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.LogoutTask;
+import pt.ulisboa.tecnico.cmov.locmess.WifiReceiver;
 
 public class HomeActivity extends AppCompatActivity {
 

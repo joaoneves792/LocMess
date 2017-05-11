@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.locmess;
+package pt.ulisboa.tecnico.cmov.locmess.UI;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -14,7 +14,9 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import pt.ulisboa.tecnico.cmov.locmess.DataManager;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
+import pt.ulisboa.tecnico.cmov.locmess.R;
 
 public class PostMessageDateTime extends AppCompatActivity
 //        implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener

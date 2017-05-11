@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.locmess;
+package pt.ulisboa.tecnico.cmov.locmess.UI;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +18,15 @@ import android.widget.Toast;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import pt.ulisboa.tecnico.cmov.locmess.DataManager;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DecentralizedMessage;
+import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
+import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.PostMessageTask;
 
 public class PostMessageRules extends AppCompatActivity {
@@ -91,6 +96,9 @@ public class PostMessageRules extends AppCompatActivity {
                 String sender = DataManager.getInstance().getUsername(getApplicationContext());
                 DecentralizedMessage decentralizedMessage = new DecentralizedMessage(sender, location, text, startDateTime, endDateTime, whitelist, rules);
                 LocalCache.getInstance(getApplicationContext()).insertIntoStorage(decentralizedMessage);
+                List<DeliverableMessage> messages = new ArrayList<>();
+                messages.add(decentralizedMessage.getDeliverableMessage());
+                LocalCache.getInstance(getApplicationContext()).storeMessages(messages);
             }catch (StorageException e){
                 Toast.makeText(this, "Failed to create Decentralized message.", Toast.LENGTH_SHORT).show();
             }

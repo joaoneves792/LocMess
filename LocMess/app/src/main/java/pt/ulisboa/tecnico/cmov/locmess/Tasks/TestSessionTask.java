@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import pt.ulisboa.tecnico.cmov.locmess.DataManager;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
-import pt.ulisboa.tecnico.cmov.locmess.HomeActivity;
+import pt.ulisboa.tecnico.cmov.locmess.UI.HomeActivity;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 /**

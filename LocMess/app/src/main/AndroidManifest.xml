@@ -19,109 +19,109 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
 
-        <activity android:name=".HomeActivity">
+        <activity android:name=".UI.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".UI.LoginActivity">
 
         </activity>
         <activity
-            android:name=".SignupActivity"
-            android:parentActivityName=".LoginActivity">
+            android:name=".UI.SignupActivity"
+            android:parentActivityName=".UI.LoginActivity">
 
             <!-- The meta-data tag is required to support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginActivity" />
+                android:value=".UI.LoginActivity" />
         </activity>
 
         <activity
-            android:name=".MessagesActivity"
-            android:parentActivityName=".HomeActivity">
+            android:name=".UI.MessagesActivity"
+            android:parentActivityName=".UI.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value=".UI.HomeActivity" />
         </activity>
         <activity
-            android:name=".MessageViewActivity"
-            android:parentActivityName=".MessagesActivity">
+            android:name=".UI.MessageViewActivity"
+            android:parentActivityName=".UI.MessagesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MessagesActivity" />
+                android:value=".UI.MessagesActivity" />
         </activity>
         <activity
-            android:name=".PostMessageActivity"
-            android:parentActivityName=".HomeActivity"
+            android:name=".UI.PostMessageActivity"
+            android:parentActivityName=".UI.HomeActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value=".UI.HomeActivity" />
         </activity>
         <activity
-            android:name=".PostMessageDateTime"
-            android:parentActivityName=".PostMessageActivity"
+            android:name=".UI.PostMessageDateTime"
+            android:parentActivityName=".UI.PostMessageActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PostMessageActivity" />
+                android:value=".UI.PostMessageActivity" />
         </activity>
         <activity
-            android:name=".PostMessageRules"
-            android:parentActivityName=".PostMessageDateTime"
+            android:name=".UI.PostMessageRules"
+            android:parentActivityName=".UI.PostMessageDateTime"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PostMessageDateTime" />
+                android:value=".UI.PostMessageDateTime" />
         </activity>
         <activity
-            android:name=".AddMessageRuleActivity"
-            android:parentActivityName=".PostMessageRules"
+            android:name=".UI.AddMessageRuleActivity"
+            android:parentActivityName=".UI.PostMessageRules"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PostMessageRules" />
+                android:value=".UI.PostMessageRules" />
         </activity>
         <activity
-            android:name=".LocationsActivity"
-            android:parentActivityName=".HomeActivity">
+            android:name=".UI.LocationsActivity"
+            android:parentActivityName=".UI.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value=".UI.HomeActivity" />
         </activity>
         <activity
-            android:name=".AddGPSLocationActivity"
-            android:parentActivityName=".LocationsActivity">
+            android:name=".UI.AddGPSLocationActivity"
+            android:parentActivityName=".UI.LocationsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LocationsActivity" />
+                android:value=".UI.LocationsActivity" />
         </activity>
         <activity
-            android:name=".AddWiFiLocation"
-            android:parentActivityName=".LocationsActivity">
+            android:name=".UI.AddWiFiLocation"
+            android:parentActivityName=".UI.LocationsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LocationsActivity" />
+                android:value=".UI.LocationsActivity" />
         </activity>
         <activity
-            android:name=".ProfileActivity"
-            android:parentActivityName=".HomeActivity">
+            android:name=".UI.ProfileActivity"
+            android:parentActivityName=".UI.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value=".UI.HomeActivity" />
         </activity>
         <activity
-            android:name=".AddInterestActivity"
-            android:parentActivityName=".ProfileActivity">
+            android:name=".UI.AddInterestActivity"
+            android:parentActivityName=".UI.ProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ProfileActivity" />
+                android:value=".UI.ProfileActivity" />
         </activity>
 
-        <activity android:name=".LocationGPSViewActivity"></activity>
+        <activity android:name=".UI.LocationGPSViewActivity"></activity>
 	
 	<receiver android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesBroadcastReceiver"/>
         <!--<receiver android:name="pt.ulisboa.tecnico.cmov.locmess.SimWifiP2pBroadcastReceiver"/>

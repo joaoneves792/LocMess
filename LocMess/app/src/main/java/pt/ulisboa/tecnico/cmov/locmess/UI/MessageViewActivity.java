@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.locmess;
+package pt.ulisboa.tecnico.cmov.locmess.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import pt.ulisboa.tecnico.cmov.locmess.Domain.DeliverableMessage;
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
+import pt.ulisboa.tecnico.cmov.locmess.R;
 
 public class MessageViewActivity extends AppCompatActivity {
 

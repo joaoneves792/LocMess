@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.locmess;
+package pt.ulisboa.tecnico.cmov.locmess.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import pt.ulisboa.tecnico.cmov.locmess.DataManager;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
+import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.GetLocationsTask;
 
 public class LocationsActivity extends AppCompatActivity {

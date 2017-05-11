@@ -29,7 +29,7 @@ import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
-import pt.ulisboa.tecnico.cmov.locmess.LocationGPSViewActivity;
+import pt.ulisboa.tecnico.cmov.locmess.UI.LocationGPSViewActivity;
 import pt.ulisboa.tecnico.cmov.locmess.R;
 
 /**

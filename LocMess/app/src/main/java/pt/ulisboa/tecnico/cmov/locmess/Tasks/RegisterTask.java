@@ -10,7 +10,7 @@ import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 
-import pt.ulisboa.tecnico.cmov.locmess.LoginActivity;
+import pt.ulisboa.tecnico.cmov.locmess.UI.LoginActivity;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 /**
