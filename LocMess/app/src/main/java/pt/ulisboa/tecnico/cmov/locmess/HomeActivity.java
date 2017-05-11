@@ -214,7 +214,7 @@ public class HomeActivity extends AppCompatActivity {
                     md = MessageDigest.getInstance("MD5");
                     md.update(concatMessage);
                     byte[] messageDigest = md.digest();
-                    String hash = Base64.encodeToString(messageDigest, Base64.URL_SAFE | Base64.NO_WRAP);
+                    String hash = Base64.encodeToString(messageDigest, Base64.URL_SAFE | Base64.NO_WRAP | Base64.DEFAULT);
 
                     Intent intent = new Intent(getApplicationContext(), MessageViewActivity.class);
                     intent.putExtra(MessageViewActivity.MESSAGE_ID, hash);

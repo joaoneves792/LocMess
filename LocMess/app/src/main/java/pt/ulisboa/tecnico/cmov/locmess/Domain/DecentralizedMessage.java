@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +32,7 @@ public class DecentralizedMessage {
     private static final String TERMINATION = "\n";
     private static final String ACCEPT = "ACCEPT" + TERMINATION;
     private static final String REJECT = "REJECT" + TERMINATION;
+    private static final String ACCEPTED = "ACCEPT";
 
     private Long id;
 
@@ -133,12 +135,11 @@ public class DecentralizedMessage {
         md = MessageDigest.getInstance("MD5");
         md.update(message);
         byte[] messageDigest = md.digest();
-        return Base64.encodeToString(messageDigest, Base64.URL_SAFE | Base64.NO_WRAP);
+        return Base64.encodeToString(messageDigest, Base64.URL_SAFE | Base64.NO_WRAP | Base64.DEFAULT);
     }
 
     public boolean canDeliver(List<String> availableSSIDs, GPSLocationListener gps)throws ParseException{
 
-        Log.e("CANDELIVER", this.startDate + " " + this.endDate);
         Date currentDate = new Date();
         DateFormat format = new SimpleDateFormat("HH:mm-MM/dd/yyyy", Locale.ENGLISH); //Example 14:30-12/24/2017
         Date startDate = format.parse(this.startDate);
@@ -148,7 +149,6 @@ public class DecentralizedMessage {
         }
 
 
-        Log.e("CANDELIVER", "DAtes true");
         GPSLocation currentGPSLocation = new GPSLocation("bogus", gps.getLatitude(), gps.getLongitude(), 0);
         WiFiLocation currentWifiLocation = new WiFiLocation("bogus", availableSSIDs);
 
@@ -161,13 +161,11 @@ public class DecentralizedMessage {
             }
         }
 
-        Log.e("CANDELIVER", "Location mismatch");
-
         return false;
     }
 
     public DeliverableMessage getDeliverableMessage(){
-        return new DeliverableMessage(this.id, this.sender, this.location, this.message, this.publicationDate, this.hash);
+        return new DeliverableMessage(DECENTRALIZED_ID, this.sender, this.location, this.message, this.publicationDate, this.hash);
     }
 
     public byte[] getRequest(){
@@ -182,10 +180,10 @@ public class DecentralizedMessage {
         return request.getBytes();
     }
 
-    public static byte[] getReply(byte[] request, Profile myProfile){
+    public static String getReply(String request, Profile myProfile){
         Map<String, String> interests = myProfile.getInterests();
 
-        String[] splitRequest = (new String(request)).split(SEPARATOR);
+        String[] splitRequest = request.split(SEPARATOR);
         boolean whitelist = (splitRequest[0].equals(WHITELIST));
 
         Map<String,String> rules = new HashMap<>();
@@ -201,28 +199,31 @@ public class DecentralizedMessage {
 
         if(whitelist){
             if(rules.size() == 0) //if there are no rules then deliver to nobody
-                return REJECT.getBytes();
+                return REJECT;
 
             for(String key : rules.keySet()){
                 if(!interests.containsKey(key))
-                    return REJECT.getBytes();
+                    return REJECT;
                 if(!interests.get(key).equals(rules.get(key)))
-                    return REJECT.getBytes();
+                    return REJECT;
             }
 
         }else{ //Blacklisted
             if(rules.size() == 0) //if there are no rules then deliver to everybody
-                return ACCEPT.getBytes();
+                return ACCEPT;
 
             for(String key : rules.keySet()){
                 if(interests.containsKey(key)){
                     if(interests.get(key).equals(rules.get(key)))
-                        return REJECT.getBytes();
+                        return REJECT;
                 }
             }
         }
 
-        return ACCEPT.getBytes();
+        return ACCEPT;
     }
+    public static boolean canSend(String response){
+        return (response.contains(ACCEPTED));
+   }
 
 }

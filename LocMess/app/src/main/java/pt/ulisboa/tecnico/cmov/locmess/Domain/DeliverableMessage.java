@@ -81,7 +81,7 @@ public class DeliverableMessage {
     }
 
     public boolean equals(DeliverableMessage otherMessage){
-        return (this.hash.equals(otherMessage.getHash()));
+        return (this.getHash().equals(otherMessage.getHash()));
     }
 
     public byte[] serialize(){
@@ -90,8 +90,8 @@ public class DeliverableMessage {
         return serialized.getBytes();
     }
 
-    public static DeliverableMessage deserialize(byte[] serializedMessage){
-        String[] splitMessage = (new String(serializedMessage)).split(SEPARATOR);
+    public static DeliverableMessage deserialize(String serializedMessage){
+        String[] splitMessage = serializedMessage.split(SEPARATOR);
         return new DeliverableMessage(Long.parseLong(splitMessage[ID]), splitMessage[SENDER],
                 splitMessage[LOCATION], splitMessage[MESSAGE], splitMessage[PUBLICATION_DATE],
                 splitMessage[HASH]);

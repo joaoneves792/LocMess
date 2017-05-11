@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -176,12 +177,17 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver implements Si
 
                 byte[] message = params[0].decentralizedMessage.getRequest();
 
-                cliSocket.getOutputStream().write(message, 0, message.length);
+                OutputStream output = cliSocket.getOutputStream();
+                output.write(message, 0, message.length);
 
                 BufferedReader input = new BufferedReader(new InputStreamReader(cliSocket.getInputStream()));
 
                 String response = input.readLine();
-                publishProgress(response);
+                //publishProgress(response);
+
+                if(DecentralizedMessage.canSend(response)){
+                    output.write(params[0].decentralizedMessage.getDeliverableMessage().serialize());
+                }
 
                 cliSocket.close();
                 cliSocket = null;
@@ -195,7 +201,6 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver implements Si
 
         @Override
         protected void onProgressUpdate(String... response){
-            Toast.makeText(_appContext, response[0], Toast.LENGTH_SHORT).show();
         }
     }
 }
