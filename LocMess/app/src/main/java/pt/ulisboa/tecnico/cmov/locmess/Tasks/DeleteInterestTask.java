@@ -30,7 +30,7 @@ public class DeleteInterestTask extends RestTask{
         try {
             _rest.delete(_url+"/profiles/"+_sessionId+"/"+_key);
             LocalCache.getInstance(_context.getApplicationContext()).deleteInterest(_key);
-            
+
             _successful = true;
             return "Location Deleted.";
 

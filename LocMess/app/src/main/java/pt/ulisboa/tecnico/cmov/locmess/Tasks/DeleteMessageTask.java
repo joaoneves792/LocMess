@@ -17,6 +17,7 @@ public class DeleteMessageTask extends RestTask{
 
     private boolean _successful;
 
+    // FIXME message ID should be a hash
     public DeleteMessageTask(Activity appContext, long sessionId, long messageId){
         super(appContext);
         _sessionId = sessionId;
