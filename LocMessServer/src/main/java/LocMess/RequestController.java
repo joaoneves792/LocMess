@@ -28,6 +28,19 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @RestController
 public class RequestController implements ErrorController{
+	
+	// terminal color
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_BLUE = "\u001B[34m";
+	public static final String ANSI_RED = "\u001B[31m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_RESET = "\u001B[0m";
+	
+	public String green(String str) { return ANSI_GREEN + str + ANSI_RESET; }
+	public String blue(String str) { return ANSI_BLUE + str + ANSI_RESET; }
+	public String red(String str) { return ANSI_RED + str + ANSI_RESET; }
+	public String purple(String str) { return ANSI_PURPLE + str + ANSI_RESET; }
+	
 
     private ConcurrentHashMap<Long, Session> _sessions = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Profile> _registeredUsers = new ConcurrentHashMap<>();
@@ -46,12 +59,23 @@ public class RequestController implements ErrorController{
 
     @RequestMapping("/register")
     public Response register(@RequestParam(value="username")String username, @RequestParam(value="password") String password){
+		
+		String str = ANSI_GREEN + "[register]" + ANSI_RESET + " : ";
+		
         try {
-            if(_registeredUsers.containsKey(username))
+            if(_registeredUsers.containsKey(username)) {
+				str = red("[register]") + " : ";
+				str += "failed to register : (" + purple(username) + ") already in use.";
+				System.out.println(str);
                 throw new AuthenticationException("User already exists.");
-
+			}
+			
             String passwordToStore = Cryptography.encodeForStorage(Cryptography.hash(password.getBytes()));
             _registeredUsers.put(username, new Profile(username, passwordToStore));
+            
+            str = green("[register]") + " : ";
+            str += "registered (" + blue(username) + " , " + blue(passwordToStore) + ")";
+            System.out.println(str);
 
             return new Response(true);
 
