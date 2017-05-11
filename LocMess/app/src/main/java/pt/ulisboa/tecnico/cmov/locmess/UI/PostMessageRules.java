@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.locmess.UI;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.PostMessageTask;
 
 public class PostMessageRules extends AppCompatActivity {
+
+    static final int ADD_RULE_REQUEST_CODE = 42;
 
     private long _sessionId = 0;
 
@@ -80,26 +83,26 @@ public class PostMessageRules extends AppCompatActivity {
         String decentralized = previousIntent.getStringExtra("DELIVERY_MODE");
 
         Map<String, String> rules = new HashMap<>();
-        for(Map.Entry<String, String> entry : _ruleList){
+        for(Map.Entry<String, String> entry : _ruleList) {
             rules.put(entry.getKey(), entry.getValue());
         }
-        if(rules.size() == 0){
+        if(rules.size() == 0) {
             rules = null;
         }
 
         if (decentralized.equals("centralized")) {
             // send message to server
-            (new PostMessageTask(this, _sessionId, location, null, whitelist, startDateTime, endDateTime, text)).execute();
+            (new PostMessageTask(this, _sessionId, location, rules, whitelist, startDateTime, endDateTime, text)).execute();
 
         } else {
-            try{
+            try {
                 String sender = DataManager.getInstance().getUsername(getApplicationContext());
                 DecentralizedMessage decentralizedMessage = new DecentralizedMessage(sender, location, text, startDateTime, endDateTime, whitelist, rules);
                 LocalCache.getInstance(getApplicationContext()).insertIntoStorage(decentralizedMessage);
                 List<DeliverableMessage> messages = new ArrayList<>();
                 messages.add(decentralizedMessage.getDeliverableMessage());
                 LocalCache.getInstance(getApplicationContext()).storeMessages(messages);
-            }catch (StorageException e){
+            } catch (StorageException e){
                 Toast.makeText(this, "Failed to create Decentralized message.", Toast.LENGTH_SHORT).show();
             }
         }
@@ -110,22 +113,29 @@ public class PostMessageRules extends AppCompatActivity {
 
 
     public void addRule(View view){
+        Intent intent = new Intent(this, AddMessageRuleActivity.class);
+        startActivityForResult(intent, ADD_RULE_REQUEST_CODE);
 
-        _ruleList.add(new AbstractMap.SimpleEntry<>("", ""));
-
-        ListView list = (ListView) findViewById(R.id.listViewRules);
-        ListAdapter locationsAdapter = new RuleListAdapter(this, _ruleList);
-
-//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(this, InterestViewActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
-        list.setAdapter(locationsAdapter);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_RULE_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                String key = data.getStringExtra("NEW_RULE_KEY");
+                String value = data.getStringExtra("NEW_RULE_VALUE");
+                _ruleList.add(new AbstractMap.SimpleEntry<>(key, value));
+
+                // FIXME just update instead of creating a new one
+                ListView list = (ListView) findViewById(R.id.listViewRules);
+                ListAdapter locationsAdapter = new RuleListAdapter(this, _ruleList);
+                list.setAdapter(locationsAdapter);
+            }
+        }
+    }
+
 
     // class for the custom display of message rules' list
     protected class RuleListAdapter extends ArrayAdapter<Map.Entry<String,String>> {
@@ -137,7 +147,7 @@ public class PostMessageRules extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater interestInflater = LayoutInflater.from(getContext());
-            View rowView = interestInflater.inflate(R.layout.rule_item, parent, false);
+            View rowView = interestInflater.inflate(R.layout.interest_item, parent, false);
 
             Map.Entry<String,String> rule = getItem(position);
             TextView key = (TextView) rowView.findViewById(R.id.textViewKey);
@@ -149,8 +159,41 @@ public class PostMessageRules extends AppCompatActivity {
             return rowView;
         }
 
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            LayoutInflater interestInflater = LayoutInflater.from(getContext());
+//            View rowView = interestInflater.inflate(R.layout.rule_item, parent, false);
+//
+//            Map.Entry<String,String> rule = getItem(position);
+//            TextView key = (TextView) rowView.findViewById(R.id.textViewKey);
+//            TextView value = (TextView) rowView.findViewById(R.id.textViewValue);
+//
+//            key.setText(rule.getKey());
+//            value.setText(rule.getValue());
+//
+//            return rowView;
+//        }
+
     }
+
+//    public void addRule(View view) {
+//        _ruleList.add(new AbstractMap.SimpleEntry<>("", ""));
+//
+//        ListView list = (ListView) findViewById(R.id.listViewRules);
+//        ListAdapter locationsAdapter = new RuleListAdapter(this, _ruleList);
+//
+////        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+////            @Override
+////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////                Intent intent = new Intent(this, InterestViewActivity.class);
+////                startActivity(intent);
+////            }
+////        });
+//
+//        list.setAdapter(locationsAdapter);
+//    }
 
 
 
 }
+

@@ -259,7 +259,9 @@ public class RequestController implements ErrorController{
     @RequestMapping(value="/messages/{id}", method= RequestMethod.POST)
     public Response createMessage(@PathVariable("id")long id, @RequestBody Map<String, String> params){
         try{
-
+            System.out.println(green("[message]") + " : ");
+        
+        
             Profile profile = getSession(id).getProfile();
 
             Long messageId = _messageId.incrementAndGet();
