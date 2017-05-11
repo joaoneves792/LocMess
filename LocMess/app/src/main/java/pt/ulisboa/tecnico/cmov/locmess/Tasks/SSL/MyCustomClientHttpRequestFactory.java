@@ -5,6 +5,7 @@ import android.util.Log;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 import java.net.HttpURLConnection;
+import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
@@ -21,6 +22,7 @@ import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
  */
 
 public class MyCustomClientHttpRequestFactory extends SimpleClientHttpRequestFactory {
+
     @Override
     protected void prepareConnection(HttpURLConnection connection, String httpMethod) {
         try {
