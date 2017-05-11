@@ -62,9 +62,13 @@ public class MessageViewActivity extends AppCompatActivity {
                 text.setText(message.getMessage());
 
                 // if message not from the user remove delete button
-                if (!message.getSender().equals(DataManager.getInstance().getUsername(getApplicationContext()))) {
-                    View toRemove = findViewById(R.id.buttonDeleteMessage);
-                    ((ViewManager) toRemove.getParent()).removeView(toRemove);
+                if (message.getSender().equals(DataManager.getInstance().getUsername(getApplicationContext()))) {
+                    View deleteButton = findViewById(R.id.buttonDeleteMessage);
+//                    ((ViewManager) deleteButton.getParent()).removeView(toRemove);
+                    deleteButton.setVisibility(View.VISIBLE);
+                } else {
+                    View deleteButton = findViewById(R.id.buttonDeleteMessage);
+                    deleteButton.setVisibility(View.GONE);
                 }
 
             } else {
@@ -80,12 +84,10 @@ public class MessageViewActivity extends AppCompatActivity {
 
     }
 
-
-
     public void deleteMessage(View view) {
-        String sender = ((TextView) view.findViewById(R.id.textViewSender)).getText().toString();
-        String location = ((TextView) view.findViewById(R.id.textViewLocation)).getText().toString();
-        String message = ((TextView) view.findViewById(R.id.textViewMessageBody)).getText().toString();
+        String sender = ((TextView) findViewById(R.id.textViewSender)).getText().toString();
+        String location = ((TextView) findViewById(R.id.textViewLocation)).getText().toString();
+        String message = ((TextView) findViewById(R.id.textViewText)).getText().toString();
 
         int senderLength = sender.getBytes().length;
         int locationLength = location.getBytes().length;
@@ -103,8 +105,8 @@ public class MessageViewActivity extends AppCompatActivity {
             byte[] messageDigest = md.digest();
             String hash = Base64.encodeToString(messageDigest, Base64.URL_SAFE | Base64.NO_WRAP | Base64.DEFAULT);
 
-            // FIXME DeleteMessageTask to work with hashes
-//            (new DeleteMessageTask(this, _sessionId, hash)).execute();
+            (new DeleteMessageTask(this, _sessionId, hash)).execute();
+            finish();
 
         } catch (NoSuchAlgorithmException e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
