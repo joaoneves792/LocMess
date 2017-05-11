@@ -106,6 +106,7 @@ public class DataManager {
 
         editor.putString(attributeName, value);
         editor.apply();
+        editor.commit();
     }
 
     private void setAttribute(Context context, String spFilename, String attributeName, long value) {

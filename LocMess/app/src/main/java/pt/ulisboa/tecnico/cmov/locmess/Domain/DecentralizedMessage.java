@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.locmess.Domain;
 
 
 import android.util.Base64;
+import android.util.Log;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -123,25 +124,31 @@ public class DecentralizedMessage {
         return publicationDate;
     }
 
-    private String hash(byte[] message) throws NoSuchAlgorithmException {
+    public String getStartDate(){return startDate;}
+
+    public String getEndDate(){return endDate;}
+
+    public static String hash(byte[] message) throws NoSuchAlgorithmException {
         MessageDigest md;
         md = MessageDigest.getInstance("MD5");
         md.update(message);
         byte[] messageDigest = md.digest();
-        return Base64.encodeToString(messageDigest, Base64.DEFAULT);
+        return Base64.encodeToString(messageDigest, Base64.URL_SAFE | Base64.NO_WRAP);
     }
 
     public boolean canDeliver(List<String> availableSSIDs, GPSLocationListener gps)throws ParseException{
 
+        Log.e("CANDELIVER", this.startDate + " " + this.endDate);
         Date currentDate = new Date();
         DateFormat format = new SimpleDateFormat("HH:mm-MM/dd/yyyy", Locale.ENGLISH); //Example 14:30-12/24/2017
         Date startDate = format.parse(this.startDate);
         Date endDate = format.parse(this.endDate);
-
         if(currentDate.before(startDate) || currentDate.after(endDate)){
             return false;
         }
 
+
+        Log.e("CANDELIVER", "DAtes true");
         GPSLocation currentGPSLocation = new GPSLocation("bogus", gps.getLatitude(), gps.getLongitude(), 0);
         WiFiLocation currentWifiLocation = new WiFiLocation("bogus", availableSSIDs);
 
@@ -154,6 +161,7 @@ public class DecentralizedMessage {
             }
         }
 
+        Log.e("CANDELIVER", "Location mismatch");
 
         return false;
     }
@@ -164,8 +172,10 @@ public class DecentralizedMessage {
 
     public byte[] getRequest(){
         String request = (whitelisted)? (WHITELIST+SEPARATOR):(BLACKLIST+SEPARATOR);
-        for(String key: rules.keySet()){
-            request = request + key + KEY_VALUE_SEPARATOR + rules.get(key) + SEPARATOR;
+        if(rules != null) {
+            for (String key : rules.keySet()) {
+                request = request + key + KEY_VALUE_SEPARATOR + rules.get(key) + SEPARATOR;
+            }
         }
         request = request.replaceAll(SEPARATOR+"$", "");
         request += TERMINATION;

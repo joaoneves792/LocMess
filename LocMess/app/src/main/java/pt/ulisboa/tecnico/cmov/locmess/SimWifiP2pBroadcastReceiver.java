@@ -123,21 +123,22 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver implements Si
     private void deliverMessages(){
         LocalCache cache = LocalCache.getInstance(_appContext);
         List<DecentralizedMessage> myMessages = cache.getMyDecentralizedMessages();
-        List<DecentralizedMessage> pendingMessages = new ArrayList<>();
+        _pendingMessages = new ArrayList<>();
         for(DecentralizedMessage m : myMessages){
             try {
                 if (m.canDeliver(_wifiScanReceiver.getSSIDs(), GPSLocationListener.getInstance(_appContext))) {
-                    pendingMessages.add(m);
+                    _pendingMessages.add(m);
                 }
             }catch (LocationException e){
                 Toast.makeText(_appContext, "Failed to retrieve GPS coordinates", Toast.LENGTH_SHORT).show();
             }catch (ParseException e){
+                Log.e("DECENTRALIZEDMESSAGE", "Corrupted message!" + e.getMessage());
                 Toast.makeText(_appContext, "Corrupted message!", Toast.LENGTH_SHORT).show();
             }
         }
-        if(pendingMessages.size() == 0)
+        if(_pendingMessages.size() == 0)
             return;
-
+        Log.e("DECENTRALIZEDMESSAGE", _pendingMessages.size()+ " ");
         if(_manager != null){
             _manager.requestPeers(_channel, this);
         }
@@ -146,8 +147,11 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver implements Si
     public void onPeersAvailable(SimWifiP2pDeviceList devices){
         for(SimWifiP2pDevice device : devices.getDeviceList()){
             String ip = device.getVirtIp();
-            for(DecentralizedMessage message: _pendingMessages) {
-                new OutgoingCommTask().execute(new MessageIPPair(ip, message));
+            if(null != _pendingMessages) {
+                for (DecentralizedMessage message : _pendingMessages) {
+                    Log.e("DECENTRALIZEDMESSAGE", "Sending a message to " + ip);
+                    new OutgoingCommTask().execute(new MessageIPPair(ip, message));
+                }
             }
         }
 

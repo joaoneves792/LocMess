@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.cmov.locmess.Domain;
 
 
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Created by joao on 3/25/17.
  */
@@ -65,7 +67,17 @@ public class DeliverableMessage {
     }
 
     public String getHash(){
-        return hash;
+        byte[] concatMessage = new byte[sender.getBytes().length+location.getBytes().length+message.getBytes().length];
+        System.arraycopy(sender.getBytes(), 0, concatMessage, 0, sender.getBytes().length);
+        System.arraycopy(location.getBytes(), 0, concatMessage, sender.getBytes().length, location.getBytes().length);
+        System.arraycopy(message.getBytes(), 0, concatMessage, sender.getBytes().length+location.getBytes().length, message.getBytes().length);
+
+        try {
+            this.hash = DecentralizedMessage.hash(concatMessage);
+        }catch (NoSuchAlgorithmException e){
+            //fail
+        }
+        return this.hash;
     }
 
     public boolean equals(DeliverableMessage otherMessage){

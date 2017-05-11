@@ -113,7 +113,7 @@ public class GetUserMessagesTask extends RestTask{
                         md = MessageDigest.getInstance("MD5");
                         md.update(concatMessage);
                         byte[] messageDigest = md.digest();
-                        String hash = Base64.encodeToString(messageDigest, Base64.DEFAULT);
+                        String hash = Base64.encodeToString(messageDigest, Base64.URL_SAFE | Base64.NO_WRAP);
 
                         Intent intent = new Intent(_context, MessageViewActivity.class);
                         intent.putExtra(MessageViewActivity.MESSAGE_ID, hash);

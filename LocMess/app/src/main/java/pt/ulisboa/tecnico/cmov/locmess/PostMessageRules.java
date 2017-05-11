@@ -17,8 +17,10 @@ import android.widget.Toast;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
+import pt.ulisboa.tecnico.cmov.locmess.Domain.DecentralizedMessage;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
 import pt.ulisboa.tecnico.cmov.locmess.Tasks.PostMessageTask;
 
@@ -72,14 +74,26 @@ public class PostMessageRules extends AppCompatActivity {
         String endDateTime = previousIntent.getStringExtra("ENDDATETIME");
         String decentralized = previousIntent.getStringExtra("DELIVERY_MODE");
 
+        Map<String, String> rules = new HashMap<>();
+        for(Map.Entry<String, String> entry : _ruleList){
+            rules.put(entry.getKey(), entry.getValue());
+        }
+        if(rules.size() == 0){
+            rules = null;
+        }
+
         if (decentralized.equals("centralized")) {
             // send message to server
             (new PostMessageTask(this, _sessionId, location, null, whitelist, startDateTime, endDateTime, text)).execute();
 
         } else {
-//            FIXME decentralized distribution
-            Toast.makeText(this, "FIXME descentralized", Toast.LENGTH_SHORT).show();
-
+            try{
+                String sender = DataManager.getInstance().getUsername(getApplicationContext());
+                DecentralizedMessage decentralizedMessage = new DecentralizedMessage(sender, location, text, startDateTime, endDateTime, whitelist, rules);
+                LocalCache.getInstance(getApplicationContext()).insertIntoStorage(decentralizedMessage);
+            }catch (StorageException e){
+                Toast.makeText(this, "Failed to create Decentralized message.", Toast.LENGTH_SHORT).show();
+            }
         }
 
 

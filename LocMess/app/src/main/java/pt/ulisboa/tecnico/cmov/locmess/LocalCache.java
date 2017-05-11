@@ -207,6 +207,7 @@ public class LocalCache {
                 String rules = dm.getUserAttributeString(_context, hash+DECENTRALIZED+RULES);
 
 
+                Log.e("RECOVER", hash + SEPARATOR + sender + SEPARATOR + location + SEPARATOR + whitelist + SEPARATOR + message + SEPARATOR + date+ SEPARATOR + startDate + SEPARATOR + endDate);
                 Map<String,String> rulesMap = new HashMap<>();
                 String[] keyValuePairs = rules.split(SEPARATOR);
                 for(String keyValue : keyValuePairs){
@@ -217,7 +218,9 @@ public class LocalCache {
                         continue;
                     rulesMap.put(splitInterest[0], splitInterest[1]);
                 }
-
+                if(rulesMap.size() == 0)
+                    rulesMap = null;
+                Log.e("RECOVER", hash + SEPARATOR + sender + SEPARATOR + location + SEPARATOR + whitelist + SEPARATOR + message + SEPARATOR + date+ SEPARATOR + startDate + SEPARATOR + endDate);
                 DecentralizedMessage m = new DecentralizedMessage(hash, sender, location, whitelist, rulesMap, message, date, startDate, endDate);
                 messages.add(m);
             }
@@ -261,9 +264,13 @@ public class LocalCache {
             /*Store it*/
             String HASH = m.getHash();
             String interests = "";
-            for(String key : m.getRules().keySet()){
-                interests = interests + key + KEY_VALUE_SEPARATOR + m.getRules().get(key) + SEPARATOR;
+            if(m.getRules() != null) {
+                for (String key : m.getRules().keySet()) {
+                    interests = interests + key + KEY_VALUE_SEPARATOR + m.getRules().get(key) + SEPARATOR;
+                }
             }
+
+
             interests = interests.replaceAll(SEPARATOR+"$", "");
             dm.setUserAttribute(_context, DECENTRALIZED+MESSAGE_CACHE, messageHashes);
             dm.setUserAttribute(_context, HASH+DECENTRALIZED+ID_FIELD, m.getId());
@@ -271,12 +278,13 @@ public class LocalCache {
             dm.setUserAttribute(_context, HASH+DECENTRALIZED+LOCATION_FIELD, m.getLocation());
             dm.setUserAttribute(_context, HASH+DECENTRALIZED+MESSAGE_FIELD, m.getMessage());
             dm.setUserAttribute(_context, HASH+DECENTRALIZED+DATE_FIELD, m.getPublicationDate());
-            dm.setUserAttribute(_context, HASH+DECENTRALIZED+STARTDATE, m.getPublicationDate());
-            dm.setUserAttribute(_context, HASH+DECENTRALIZED+ENDDATE, m.getPublicationDate());
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+STARTDATE, m.getStartDate());
+            dm.setUserAttribute(_context, HASH+DECENTRALIZED+ENDDATE, m.getEndDate());
             dm.setUserAttribute(_context, HASH+DECENTRALIZED+WHITELISTED, String.valueOf(m.getWhitelist()));
             dm.setUserAttribute(_context, HASH+DECENTRALIZED+RULES, interests);
 
 
+            Log.e("STORE", m.getSender() + SEPARATOR + m.getLocation() + SEPARATOR + m.getWhitelist() + SEPARATOR + m.getMessage() + SEPARATOR + m.getPublicationDate() + SEPARATOR + m.getEndDate() + SEPARATOR + m.getEndDate());
 
         }catch (StorageException e){
             //What should we do?
