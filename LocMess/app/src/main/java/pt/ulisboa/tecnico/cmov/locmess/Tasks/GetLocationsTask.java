@@ -55,12 +55,16 @@ public class GetLocationsTask extends RestTask{
         _successful = false;
         ObjectMapper mapper = new ObjectMapper();
 
+        _locations = LocalCache.getInstance(_context.getApplicationContext()).getLocations();
+
         try {
             result = _rest.getForObject(_url+"/locations?id=" + _sessionId, String.class);
             json = new JSONObject(result);
             _successful = json.getBoolean("successful");
             if(!_successful){
                 return json.getString("message");
+            }else{
+                _locations = new LinkedList<>();
             }
 
             JSONArray locArray = json.getJSONArray("locations");
@@ -85,8 +89,7 @@ public class GetLocationsTask extends RestTask{
                     }
                 }
                 if(!found){
-                    _locations.add(l);
-                    //_unsyncronizedLocations.add(l);
+                    LocalCache.getInstance(_context.getApplicationContext()).deleteLocation(l.getName());
                 }
             }
 
