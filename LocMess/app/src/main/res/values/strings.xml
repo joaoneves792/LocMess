@@ -65,7 +65,6 @@
     <string name="title">Title</string>
     <string name="text">Text</string>
     <string name="chooseLocation">Choose Location</string>
-    <string name="addRule">Add Rule</string>
 
     <string name="poster">Poster</string>
     <string name="publishDate">Posted on (mm/dd/yyyy)</string>
@@ -87,6 +86,11 @@
 
     <string name="whitelist">Whitelist</string>
     <string name="blacklist">Blacklist</string>
+
+    <string name="addRule">Add Rule</string>
+    <string name="updateRule">Update Rule</string>
+    <string name="deleteRule">Delete Rule</string>
+
 
     <string name="deliveryMode">Delivery Mode</string>
     <string name="centralized">Centralized (via server)</string>

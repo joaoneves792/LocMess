@@ -18,17 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-
         <activity android:name=".UI.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".UI.LoginActivity">
-
-        </activity>
+        <activity android:name=".UI.LoginActivity" />
         <activity
             android:name=".UI.SignupActivity"
             android:parentActivityName=".UI.LoginActivity">
@@ -38,7 +35,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.LoginActivity" />
         </activity>
-
         <activity
             android:name=".UI.MessagesActivity"
             android:parentActivityName=".UI.HomeActivity">
@@ -120,15 +116,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.ProfileActivity" />
         </activity>
+        <activity android:name=".UI.LocationGPSViewActivity" />
 
-        <activity android:name=".UI.LocationGPSViewActivity"></activity>
-	
-	<receiver android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesBroadcastReceiver"/>
-        <!--<receiver android:name="pt.ulisboa.tecnico.cmov.locmess.SimWifiP2pBroadcastReceiver"/>
-        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.WifiReceiver"/>-->
-        <service android:enabled="true" android:name="pt.ulisboa.tecnico.cmov.locmess.FetchMessagesService" />
-        <service android:enabled="true" android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
+        <receiver android:name=".FetchMessagesBroadcastReceiver" />
+        <!--
+        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.SimWifiP2pBroadcastReceiver"/>
+        <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.WifiReceiver"/>
+        -->
+        <service
+            android:name=".FetchMessagesService"
+            android:enabled="true" />
+        <service
+            android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService"
+            android:enabled="true" />
 
+        <activity android:name=".UI.RuleViewActivity" />
+        <activity android:name=".UI.InterestViewActivity"></activity>
     </application>
 
 </manifest>

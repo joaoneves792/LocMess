@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Contacts;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -32,11 +34,14 @@ import pt.ulisboa.tecnico.cmov.locmess.Tasks.PostMessageTask;
 
 public class PostMessageRules extends AppCompatActivity {
 
-    static final int ADD_RULE_REQUEST_CODE = 42;
+    static final int ADD_RULE_REQUEST_CODE = 1;
+    static final int UPDATE_RULE_REQUEST_CODE = 2;
+    static final int REMOVE_RULE_REQUEST_CODE = 3;
 
     private long _sessionId = 0;
 
-    private ArrayList<Map.Entry<String,String>> _ruleList;
+    private List<Map.Entry<String,String>> _ruleList;
+//    private ArrayList<Map.Entry<String,String>> _ruleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,29 @@ public class PostMessageRules extends AppCompatActivity {
         _ruleList = new ArrayList<>();
 
         setContentView(R.layout.activity_post_message_rules);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // rules list
+        ListView list = (ListView) findViewById(R.id.listViewRules);
+        ListAdapter rulesAdapter = new RuleListAdapter(this, _ruleList);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String key = ((TextView) view.findViewById(R.id.textViewKey)).getText().toString();
+                String value = ((TextView) view.findViewById(R.id.textViewValue)).getText().toString();
+
+                Intent intent = new Intent(getApplicationContext(), RuleViewActivity.class);
+                intent.putExtra("RULE_KEY", key);
+                intent.putExtra("RULE_VALUE", value);
+                startActivityForResult(intent, UPDATE_RULE_REQUEST_CODE);
+            }
+        });
+        list.setAdapter(rulesAdapter);
     }
 
 
@@ -107,7 +134,6 @@ public class PostMessageRules extends AppCompatActivity {
             }
         }
 
-
         finish();
     }
 
@@ -122,16 +148,29 @@ public class PostMessageRules extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ADD_RULE_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                String key = data.getStringExtra("NEW_RULE_KEY");
-                String value = data.getStringExtra("NEW_RULE_VALUE");
+        if (resultCode == Activity.RESULT_OK) {
+            String key = data.getStringExtra("NEW_RULE_KEY");
+            String value = data.getStringExtra("NEW_RULE_VALUE");
+
+            if (requestCode == ADD_RULE_REQUEST_CODE) {
                 _ruleList.add(new AbstractMap.SimpleEntry<>(key, value));
 
-                // FIXME just update instead of creating a new one
-                ListView list = (ListView) findViewById(R.id.listViewRules);
-                ListAdapter locationsAdapter = new RuleListAdapter(this, _ruleList);
-                list.setAdapter(locationsAdapter);
+            } else if (requestCode == UPDATE_RULE_REQUEST_CODE) {
+//                String value = data.getStringExtra("NEW_RULE_VALUE");
+
+                int i = 0;
+                for (Map.Entry<String,String> rule : _ruleList) {
+                    if (rule.getKey().equals(key)) {
+                        _ruleList.remove(i);
+
+                        if (value != null)
+                            _ruleList.add(new AbstractMap.SimpleEntry<>(key, value));
+
+                        break;
+
+                    } else
+                        i++;
+                }
             }
         }
     }
@@ -140,7 +179,8 @@ public class PostMessageRules extends AppCompatActivity {
     // class for the custom display of message rules' list
     protected class RuleListAdapter extends ArrayAdapter<Map.Entry<String,String>> {
 
-        public RuleListAdapter(@NonNull Context context, ArrayList<Map.Entry<String,String>> rules) {
+        public RuleListAdapter(@NonNull Context context, List<Map.Entry<String,String>> rules) {
+//        public RuleListAdapter(@NonNull Context context, ArrayList<Map.Entry<String,String>> rules) {
             super(context, R.layout.rule_item, rules);
         }
 
@@ -158,21 +198,6 @@ public class PostMessageRules extends AppCompatActivity {
 
             return rowView;
         }
-
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            LayoutInflater interestInflater = LayoutInflater.from(getContext());
-//            View rowView = interestInflater.inflate(R.layout.rule_item, parent, false);
-//
-//            Map.Entry<String,String> rule = getItem(position);
-//            TextView key = (TextView) rowView.findViewById(R.id.textViewKey);
-//            TextView value = (TextView) rowView.findViewById(R.id.textViewValue);
-//
-//            key.setText(rule.getKey());
-//            value.setText(rule.getValue());
-//
-//            return rowView;
-//        }
 
     }
 
