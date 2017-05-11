@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import org.springframework.web.client.RestClientException;
 
+import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
+
 /**
  * Created by joao on 3/29/17.
  */
@@ -27,9 +29,8 @@ public class DeleteInterestTask extends RestTask{
     protected String doInBackground(Void... params){
         try {
             _rest.delete(_url+"/profiles/"+_sessionId+"/"+_key);
-
-//            FIXME delete interest from cache
-
+            LocalCache.getInstance(_context.getApplicationContext()).deleteInterest(_key);
+            
             _successful = true;
             return "Location Deleted.";
 

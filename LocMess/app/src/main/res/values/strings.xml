@@ -53,6 +53,7 @@
     <string name="viewProfile">View Profile</string>
     <string name="manageInterests">Manage Interest</string>
     <string name="addInterest">Add Interest</string>
+    <string name="updateInterest">Update Interest</string>
     <string name="deleteInterest">Delete Interest</string>
 
     <string name="messages">Messages</string>

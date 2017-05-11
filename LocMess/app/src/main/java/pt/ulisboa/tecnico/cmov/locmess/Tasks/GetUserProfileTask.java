@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.locmess.Tasks;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,6 +29,8 @@ import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
 import pt.ulisboa.tecnico.cmov.locmess.R;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.InterestsList;
 import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
+import pt.ulisboa.tecnico.cmov.locmess.UI.InterestViewActivity;
+import pt.ulisboa.tecnico.cmov.locmess.UI.RuleViewActivity;
 
 /**
  * Created by joao on 3/29/17.
@@ -34,6 +38,8 @@ import pt.ulisboa.tecnico.cmov.locmess.Responses.Response;
 
 public class GetUserProfileTask extends RestTask{
 
+//    static final int ADD_RULE_REQUEST_CODE = 1;
+    static final int UPDATE_INTEREST_REQUEST_CODE = 2;
 
     private boolean _successful = false;
 
@@ -106,10 +112,13 @@ public class GetUserProfileTask extends RestTask{
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(_context, "selected something", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(_context, MessageViewActivity.class);
-//                    intent.putExtra("SESSIONID", _sessionId);
-//                    _context.startActivity(intent);
+                String key = ((TextView) view.findViewById(R.id.textViewKey)).getText().toString();
+                String value = ((TextView) view.findViewById(R.id.textViewValue)).getText().toString();
+
+                Intent intent = new Intent(_context, InterestViewActivity.class);
+                intent.putExtra("INTEREST_KEY", key);
+                intent.putExtra("INTEREST_VALUE", value);
+                _context.startActivityForResult(intent, UPDATE_INTEREST_REQUEST_CODE);
             }
         });
 

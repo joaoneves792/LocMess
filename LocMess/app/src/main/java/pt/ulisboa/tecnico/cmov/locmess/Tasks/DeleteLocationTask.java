@@ -28,10 +28,7 @@ public class DeleteLocationTask extends RestTask{
     @Override
     protected String doInBackground(Void... params){
 
-//         FIXME delete from cache
-//        Toast.makeText(_context, "ping", Toast.LENGTH_SHORT).show();
         LocalCache.getInstance(_context.getApplicationContext()).deleteLocation(_locationName);
-//        Toast.makeText(_context, "pong", Toast.LENGTH_SHORT).show();
 
         try {
             _rest.delete(_url+"/locations/"+_locationName+"?id="+_sessionId);

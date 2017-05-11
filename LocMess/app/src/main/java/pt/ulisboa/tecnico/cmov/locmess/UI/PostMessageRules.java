@@ -36,7 +36,6 @@ public class PostMessageRules extends AppCompatActivity {
 
     static final int ADD_RULE_REQUEST_CODE = 1;
     static final int UPDATE_RULE_REQUEST_CODE = 2;
-    static final int REMOVE_RULE_REQUEST_CODE = 3;
 
     private long _sessionId = 0;
 

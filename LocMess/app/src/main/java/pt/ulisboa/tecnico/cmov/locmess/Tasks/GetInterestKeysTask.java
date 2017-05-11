@@ -65,11 +65,11 @@ public class GetInterestKeysTask extends RestTask{
     protected void onPostExecute(String result){
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
         if(_successful) {
-            /*TextView text = (TextView) _context.findViewById(R.id.debugText);
-            text.setText("");
-            for(String key : _interests){
-                text.setText(text.getText() + key + "\n");
-            }*/
+//            TextView text = (TextView) _context.findViewById(R.id.debugText);
+//            text.setText("");
+//            for(String key : _interests){
+//                text.setText(text.getText() + key + "\n");
+//            }
         }
     }
 
