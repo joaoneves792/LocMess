@@ -78,15 +78,15 @@ public class GetLocationsTask extends RestTask{
             /*Syncronize cache and server*/
             List<Location> cachedLocations = LocalCache.getInstance(_context.getApplicationContext()).getLocations();
             for(Location l : cachedLocations){
-                boolean upload = true;
+                boolean found = false;
                 for(Location sl : _locations){
                     if(sl.getName().equals(l.getName())){
-                        upload = false;
+                        found = true;
                     }
                 }
-                if(upload){
+                if(!found){
                     _locations.add(l);
-                    _unsyncronizedLocations.add(l);
+                    //_unsyncronizedLocations.add(l);
                 }
             }
 
@@ -140,9 +140,9 @@ public class GetLocationsTask extends RestTask{
 
         list.setAdapter(locationsAdapter);
 
-        for(Location l: _unsyncronizedLocations) {
-            new UploadLocationAndForgetTask(_context, _sessionId, l).execute();
-        }
+        //for(Location l: _unsyncronizedLocations) {
+        //    new UploadLocationAndForgetTask(_context, _sessionId, l).execute();
+        //}
     }
 
     // class for the custom display of locations' list

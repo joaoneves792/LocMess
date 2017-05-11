@@ -64,7 +64,7 @@ public class MyCustomSSLSocketFactory extends SSLSocketFactory {
             throw new RuntimeException("An instance of SSLSocket is expected");
         }
         //((SSLSocket) socket).setEnabledProtocols(new String[] {"SSLv3"});
-        ((SSLSocket) socket).setEnabledProtocols(((SSLSocket) socket).getEnabledProtocols());
+        ((SSLSocket) socket).setEnabledProtocols(((SSLSocket) socket).getSupportedProtocols());
         return socket;
     }
 }
