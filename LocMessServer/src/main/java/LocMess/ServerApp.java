@@ -13,7 +13,7 @@ public class ServerApp {
         System.setProperty("server.ssl.key-store", "classpath:keystore.jks");
         System.setProperty("server.ssl.key-store-password", "123456");
         System.setProperty("server.ssl.key-password", "123456");
-        System.setProperty("server.ssl.enabled", "false");
+        System.setProperty("server.ssl.enabled", "true");
 
         SpringApplication.run(ServerApp.class, args);
     }
