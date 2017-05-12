@@ -131,7 +131,8 @@
             android:enabled="true" />
 
         <activity android:name=".UI.RuleViewActivity" />
-        <activity android:name=".UI.InterestViewActivity"></activity>
+        <activity android:name=".UI.InterestViewActivity" />
+        <activity android:name=".UI.LocationWiFiViewActivity"></activity>
     </application>
 
 </manifest>

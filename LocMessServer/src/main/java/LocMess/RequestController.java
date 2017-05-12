@@ -130,16 +130,17 @@ public class RequestController implements ErrorController{
     @RequestMapping(value="/locations", method= RequestMethod.POST)
     public Response createLocation(@RequestBody Map<String, String> params){
         try{
-            if(params.containsKey("id")) {
+            if (params.containsKey("id")) {
                 getSession(new Long(params.get("id")));
-            }else{
+            } else {
+				System.out.println(red("\n[new_location_GPS] ") + "invalid session.");
                 throw new AuthenticationException();
             }
 
             String locationName;
             Location location;
 
-            if(params.containsKey("name") &&
+            if (params.containsKey("name") &&
                     params.containsKey("latitude") &&
                     params.containsKey("longitude") &&
                     params.containsKey("radius")) {
@@ -159,16 +160,19 @@ public class RequestController implements ErrorController{
 				printAttribute("longitude", ""+longitude);
 				printAttribute("latitude", ""+radius);
 
-            }else if(params.containsKey("name")){
+            } else if(params.containsKey("name")) {
                 locationName = params.get("name");
-
                 params.remove("name");
+                
+                String id = params.get("id");
                 params.remove("id");
+                
                 Collection<String> ssids = params.values();
                 location = new WiFiLocation(locationName, ssids);
                 
 				System.out.println(green("\n[new_location_WiFi]"));
-				printAttribute("session ID", ""+params.get("id"));
+				printAttribute("session ID", id);
+				printAttribute("name", locationName);
 				
 				int i=0;
 				for (String ssid : ssids) {
@@ -176,12 +180,14 @@ public class RequestController implements ErrorController{
 				}
 				
             } else {
+				System.out.println(red("\n[new_location_GPS] ") + "insufficient arguments.");
                 throw new InsufficientArgumentsException();
             }
 
             if (_locations.containsKey(locationName)) {
                 _locations.remove(locationName);
             }
+            
             _locations.put(locationName, location);
             
             return new Response(true, "Location successfully added.");
@@ -203,7 +209,8 @@ public class RequestController implements ErrorController{
             return new LocationsList(_locations.elements());
             
         } catch (AuthenticationException e) {
-            return new Response(e);
+			System.out.println(red("\n[list_locations] ") + "invalid session.");
+			return new Response(e);
         }
     }
 
@@ -222,7 +229,8 @@ public class RequestController implements ErrorController{
             return new Response(true);
             
         } catch (AuthenticationException e) {
-            return new Response(e);
+          	System.out.println(red("\n[delete_location] ") + "invalid session.");
+			return new Response(e);
         }
     }
 
@@ -237,7 +245,8 @@ public class RequestController implements ErrorController{
             return new InterestsList(profile.getInterests());
             
         } catch (AuthenticationException e) {
-            return new Response(e);
+			System.out.println(red("\n[list_interests] ") + "invalid session.");
+			return new Response(e);
         }
     }
 
@@ -266,8 +275,9 @@ public class RequestController implements ErrorController{
             return new Response(true, "Successfully added a new interest.");
 
         } catch (AuthenticationException e) {
-            return new Response(e);
-        }
+			System.out.println(red("\n[add_interest] ") + "invalid session.");
+			return new Response(e);
+		}
     }
 
     @RequestMapping(value = "/profiles/{id}/{key}", method = RequestMethod.DELETE)
@@ -284,6 +294,7 @@ public class RequestController implements ErrorController{
                     _interestKeys.put(key, count);
                 }
             } else {
+				System.out.println(red("\n[delete_interest] ") + "invalid interest key.");
                 return new Response(false, "There is no interest with this key.");
             }
             
@@ -294,8 +305,9 @@ public class RequestController implements ErrorController{
             return new Response(true, "Successfully deleted this interest.");
 
         }catch (AuthenticationException e){
-            return new Response(e);
-        }
+			System.out.println(red("\n[delete_interest] ") + "invalid session.");
+			return new Response(e);
+		}
     }
 
     @RequestMapping(value = "/interests", method = RequestMethod.GET)
@@ -305,8 +317,9 @@ public class RequestController implements ErrorController{
             return new PossibleKeysList(_interestKeys.keys());
 
         }catch (AuthenticationException e){
-            return new Response(e);
-        }
+			System.out.println(red("\n[list_global_intersts] ") + "invalid session.");
+			return new Response(e);
+		}
     }
 
     @RequestMapping(value="/messages/{id}", method= RequestMethod.POST)
@@ -364,8 +377,9 @@ public class RequestController implements ErrorController{
 
         }catch (AuthenticationException |
                 ParseException e){
-            return new Response(e);
-        }
+			System.out.println(red("\n[new_message] ") + "invalid session.");
+			return new Response(e);
+		}
 
     }
 
@@ -390,20 +404,21 @@ public class RequestController implements ErrorController{
             return new MessagesList(messages);
 
         }catch (AuthenticationException e){
+			System.out.println(red("\n[list_user_messages] ") + "invalid session.");
             return new Response(e);
         }
     }
 
     @RequestMapping(value = "/messages/{id}/{messageId}", method = RequestMethod.DELETE)
-    public Response deleteMessage(@PathVariable(value = "id")long id, @PathVariable(value = "messageId")long messageId){
+    public Response deleteMessage(@PathVariable(value = "id")long id, @PathVariable(value = "messageId")long messageId) {
         try {
             Profile profile = getSession(id).getProfile();
 
-            if(!_messages.containsKey(messageId)){
+            if(!_messages.containsKey(messageId)) {
                 return new Response(false, "There is no such message on the server!");
             }
             Message m = _messages.get(messageId);
-            if(!m.getSender().equals(profile)){
+            if(!m.getSender().equals(profile)) {
                 return new Response(false, "The message that you are trying to delete doesn't belong to you!");
             }
             _messages.remove(messageId);
@@ -416,7 +431,8 @@ public class RequestController implements ErrorController{
             return new Response(true, "Message successfully deleted.");
 
         }catch (AuthenticationException e){
-            return new Response(e);
+			System.out.println(red("\n[delete_message] ") + "invalid session.");
+			return new Response(e);
         }
     }
 
@@ -445,6 +461,7 @@ public class RequestController implements ErrorController{
             return new MessagesList(messages);
 
         }catch (AuthenticationException e){
+			System.out.println(red("\n[list_messages] ") + "invalid session.");
             return new Response(e);
         }
     }

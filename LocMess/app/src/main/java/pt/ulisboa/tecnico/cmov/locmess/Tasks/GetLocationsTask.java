@@ -31,6 +31,7 @@ import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.LocalCache;
 import pt.ulisboa.tecnico.cmov.locmess.UI.LocationGPSViewActivity;
 import pt.ulisboa.tecnico.cmov.locmess.R;
+import pt.ulisboa.tecnico.cmov.locmess.UI.LocationWiFiViewActivity;
 
 /**
  * Created by joao on 3/29/17.
@@ -118,17 +119,9 @@ public class GetLocationsTask extends RestTask{
 
         ListAdapter locationsAdapter = new LocationListAdapter(_context, _locations);
 
-//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(_context, MessageViewActivity.class);
-//                _context.startActivity(intent);
-//            }
-//        });
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 // start GPS view activity
                 if (( (TextView) view.findViewById(R.id.textViewLocationType)).getText().toString().equals("GPS")) {
                     Intent intent = new Intent(_context, LocationGPSViewActivity.class);
@@ -136,10 +129,14 @@ public class GetLocationsTask extends RestTask{
                     _context.startActivity(intent);
                 }
 
+                // start WiFi view activity
+                if (( (TextView) view.findViewById(R.id.textViewLocationType)).getText().toString().equals("Wifi")) {
+                    Intent intent = new Intent(_context, LocationWiFiViewActivity.class);
+                    intent.putExtra("LOCATIONNAME", ((TextView) view.findViewById(R.id.textViewLocationName)).getText().toString());
+                    _context.startActivity(intent);
+                }
             }
         });
-
-//            list.setAdapter(locationsAdapter);
 
         list.setAdapter(locationsAdapter);
 

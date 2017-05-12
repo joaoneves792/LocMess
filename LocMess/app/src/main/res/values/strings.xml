@@ -42,6 +42,7 @@
     <string name="deleteLocation">Delete Location</string>
 
     <string name="ssid">Network SSIDs</string>
+    <string name="separatorNotice">(Separate with \'\\n\')</string>
     <string name="locationName">Location name</string>
     <string name="locationType">Location type</string>
     <string name="latitude">Latitude</string>
