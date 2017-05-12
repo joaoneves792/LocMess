@@ -26,7 +26,7 @@
 
         <Button
             android:id="@+id/buttonAddInterest"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:onClick="addInterest"
@@ -39,7 +39,7 @@
 
         <ListView
             android:id="@+id/listViewInterests"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:layout_constraintHorizontal_bias="0.0"
@@ -47,7 +47,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintRight_creator="1"
-            tools:layout_editor_absoluteY="21dp" />
+            tools:layout_constraintRight_creator="1" />
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

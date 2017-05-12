@@ -19,29 +19,30 @@ public class DeleteMessageTask extends RestTask{
 
     private long _sessionId;
     private long _messageId;
+    private String _hash;
 
     private boolean _successful;
 
-    // FIXME message ID should be a hash
-    public DeleteMessageTask(Activity appContext, long sessionId, String hash){
+    public DeleteMessageTask(Activity appContext, long sessionId, String hash) {
         super(appContext);
 
         _sessionId = sessionId;
         _messageId = LocalCache.getInstance().getMessage(hash).getId();
-
-        Toast.makeText(_context, ""+_messageId, Toast.LENGTH_LONG).show();
+        _hash = hash;
     }
 
     @Override
-    protected String doInBackground(Void... params){
+    protected String doInBackground(Void... params) {
         try {
 
-            // FIXME delete from cache
+            // FIXME delete from cache?
 
-            _rest.delete(_url+"/messages/"+_sessionId+"/"+_messageId);
+            _rest.delete(_url+"/messages/"+_sessionId+"/"+LocalCache.getInstance().getMessage(_hash).getId());
+//            _rest.delete(_url+"/messages/"+_sessionId+"/"+_messageId);
             _successful = true;
-            return "Location Deleted.";
-        }catch (RestClientException e){
+            return "Message Deleted.";
+
+        } catch (RestClientException e) {
             Log.e("REST ERROR", e.getClass().toString()+" : "+e.getMessage());
             _successful = false;
             return e.getMessage();
@@ -49,7 +50,7 @@ public class DeleteMessageTask extends RestTask{
     }
 
     @Override
-    protected void onPostExecute(String result){
+    protected void onPostExecute(String result) {
         Toast.makeText(_context, result, Toast.LENGTH_SHORT).show();
     }
 

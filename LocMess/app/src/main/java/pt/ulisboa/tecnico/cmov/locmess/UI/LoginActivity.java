@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        //Test the session of the last logged in user
+        // Test the session of the last logged in user
         DataManager dm = DataManager.getInstance();
         try {
             String username = dm.getLastLoggedInUsername(getApplicationContext());

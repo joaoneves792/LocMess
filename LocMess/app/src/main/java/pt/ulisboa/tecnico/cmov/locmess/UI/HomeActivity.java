@@ -192,7 +192,6 @@ public class HomeActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 String sender = ((TextView) view.findViewById(R.id.textViewSender)).getText().toString();
                 String location = ((TextView) view.findViewById(R.id.textViewLocation)).getText().toString();
                 String message = ((TextView) view.findViewById(R.id.textViewMessageBody)).getText().toString();
@@ -348,9 +347,9 @@ public class HomeActivity extends AppCompatActivity {
 
             DeliverableMessage message = getItem(position);
             TextView sender = (TextView) rowView.findViewById(R.id.textViewSender);
-            TextView messageBody = (TextView) rowView.findViewById(R.id.textViewMessageBody);
             TextView location = (TextView) rowView.findViewById(R.id.textViewLocation);
             TextView publishDate = (TextView) rowView.findViewById(R.id.textViewPublishDate);
+            TextView messageBody = (TextView) rowView.findViewById(R.id.textViewMessageBody);
 
             sender.setText(message.getSender());
             location.setText(message.getLocation());

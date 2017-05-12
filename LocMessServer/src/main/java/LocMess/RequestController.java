@@ -31,15 +31,19 @@ public class RequestController implements ErrorController{
 	
 	// terminal color
 	public static final String ANSI_GREEN = "\u001B[32m";
-	public static final String ANSI_BLUE = "\u001B[34m";
+	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_RED = "\u001B[31m";
 	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_ITALIC = "\u001B[3m";
 	public static final String ANSI_RESET = "\u001B[0m";
 	
 	public String green(String str) { return ANSI_GREEN + str + ANSI_RESET; }
-	public String blue(String str) { return ANSI_BLUE + str + ANSI_RESET; }
+	public String cyan(String str) { return ANSI_CYAN + str + ANSI_RESET; }
 	public String red(String str) { return ANSI_RED + str + ANSI_RESET; }
 	public String purple(String str) { return ANSI_PURPLE + str + ANSI_RESET; }
+	public String italic(String str) { return ANSI_ITALIC + str + ANSI_RESET; }
+	
+	public void printAttribute(String key, String value) { System.out.println("\t" + cyan(key) + " : " + italic(value)); }
 	
 
     private ConcurrentHashMap<Long, Session> _sessions = new ConcurrentHashMap<>();
@@ -59,28 +63,23 @@ public class RequestController implements ErrorController{
 
     @RequestMapping("/register")
     public Response register(@RequestParam(value="username")String username, @RequestParam(value="password") String password){
-		
-		String str = ANSI_GREEN + "[register]" + ANSI_RESET + " : ";
-		
+				
         try {
             if(_registeredUsers.containsKey(username)) {
-				str = red("[register]") + " : ";
-				str += "failed to register : (" + purple(username) + ") already in use.";
-				System.out.println(str);
+				System.out.println(red("\n[register]") + " username '" + italic(username) + "' already in use.");
                 throw new AuthenticationException("User already exists.");
 			}
 			
             String passwordToStore = Cryptography.encodeForStorage(Cryptography.hash(password.getBytes()));
             _registeredUsers.put(username, new Profile(username, passwordToStore));
             
-            str = green("[register]") + " : ";
-            str += "registered (" + blue(username) + " , " + blue(passwordToStore) + ")";
-            System.out.println(str);
-
+            System.out.println(green("\n[register]"));
+			printAttribute("username", username);
+			printAttribute("password", passwordToStore);
+			
             return new Response(true);
-
-        }catch (FailedToHashException |
-                AuthenticationException e){
+            
+        } catch (FailedToHashException | AuthenticationException e) {
             return new Response(e);
         }
     }
@@ -88,22 +87,30 @@ public class RequestController implements ErrorController{
     @RequestMapping("/login")
     public Response login(@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
         try{
-            if(!_registeredUsers.containsKey(username))
+            if(!_registeredUsers.containsKey(username)) {
+				System.out.println(red("\n[login] ") + "User '" + italic(username) + "' not registered.");
                 throw new AuthenticationException("User not registered.");
-
-
+			}
+			
             String hashedPassword = Cryptography.encodeForStorage(Cryptography.hash(password.getBytes()));
-            if(_registeredUsers.get(username).getPassword().equals(hashedPassword)){
+            if(_registeredUsers.get(username).getPassword().equals(hashedPassword)) {
                 Cookie sessionCookie;
                 do {
                     sessionCookie = new Cookie(true);
-                }while (_sessions.containsKey(sessionCookie.getSessionId()));
+                } while (_sessions.containsKey(sessionCookie.getSessionId()));
                 Session session = new Session(sessionCookie.getSessionId(), _registeredUsers.get(username));
                 _sessions.put(sessionCookie.getSessionId(), session);
+                
+                System.out.println(green("\n[login]"));
+				printAttribute("username", username);
+				
                 return sessionCookie;
-            }else
+                
+            } else {
+				System.out.println(red("\n[login] ") + "Failed to login" + italic(username) + ". Username and password don't match.");
                 throw new AuthenticationException("Failed to login. Username and password don't match.");
-
+			}
+			
         }catch (FailedToHashException |
                 AuthenticationException e){
             return new Response(e);
@@ -114,6 +121,8 @@ public class RequestController implements ErrorController{
     public Response logout(@RequestParam(value="id")long sessionId){
         if(_sessions.containsKey(sessionId)){
             _sessions.remove(sessionId);
+            System.out.println(green("\n[logout]"));
+			printAttribute("session", ""+sessionId);
         }
         return new Response(true);
     }
@@ -142,6 +151,13 @@ public class RequestController implements ErrorController{
                 Double radius = new Double(params.get("radius"));
 
                 location = new GPSLocation(locationName, latitude, longitude, radius);
+                
+                System.out.println(green("\n[new_location_GPS]"));
+				printAttribute("session ID", ""+params.get("id"));
+				printAttribute("name", locationName);
+				printAttribute("latitude", ""+latitude);
+				printAttribute("longitude", ""+longitude);
+				printAttribute("latitude", ""+radius);
 
             }else if(params.containsKey("name")){
                 locationName = params.get("name");
@@ -150,8 +166,16 @@ public class RequestController implements ErrorController{
                 params.remove("id");
                 Collection<String> ssids = params.values();
                 location = new WiFiLocation(locationName, ssids);
-
-            }else{
+                
+				System.out.println(green("\n[new_location_WiFi]"));
+				printAttribute("session ID", ""+params.get("id"));
+				
+				int i=0;
+				for (String ssid : ssids) {
+					printAttribute("SSID."+(i++), ssid);
+				}
+				
+            } else {
                 throw new InsufficientArgumentsException();
             }
 
@@ -159,6 +183,7 @@ public class RequestController implements ErrorController{
                 _locations.remove(locationName);
             }
             _locations.put(locationName, location);
+            
             return new Response(true, "Location successfully added.");
 
         }catch (InsufficientArgumentsException |
@@ -171,8 +196,13 @@ public class RequestController implements ErrorController{
     public Response listLocations(@RequestParam(value = "id")long sessionId){
         try {
             getSession(sessionId);
+            
+			System.out.println(green("\n[list_locations]"));
+			printAttribute("session ID", ""+sessionId);
+            
             return new LocationsList(_locations.elements());
-        }catch (AuthenticationException e){
+            
+        } catch (AuthenticationException e) {
             return new Response(e);
         }
     }
@@ -183,10 +213,15 @@ public class RequestController implements ErrorController{
             getSession(sessionId);
             if(_locations.containsKey(locationName)){
                 _locations.remove(locationName);
+				
+				System.out.println(green("\n[delete_location]"));
+				printAttribute("session ID", ""+sessionId);
+				printAttribute("name", locationName);
             }
+            
             return new Response(true);
-
-        }catch (AuthenticationException e){
+            
+        } catch (AuthenticationException e) {
             return new Response(e);
         }
     }
@@ -195,8 +230,13 @@ public class RequestController implements ErrorController{
     public Response listInterests(@PathVariable(value = "id")long id){
         try {
             Profile profile = getSession(id).getProfile();
+				
+				System.out.println(green("\n[list_interests]"));
+				printAttribute("session ID", ""+id);
+            
             return new InterestsList(profile.getInterests());
-        }catch (AuthenticationException e){
+            
+        } catch (AuthenticationException e) {
             return new Response(e);
         }
     }
@@ -205,19 +245,27 @@ public class RequestController implements ErrorController{
     public Response addInterest(@PathVariable("id")long id, @PathVariable(value ="key")String key, @RequestParam(value="value")String value){
         try {
             Profile profile = getSession(id).getProfile();
-            if(!profile.getInterests().containsKey(key)){
-                if(_interestKeys.containsKey(key)){
+            
+            if(!profile.getInterests().containsKey(key)) {
+                if(_interestKeys.containsKey(key)) {
                     int count = _interestKeys.get(key);
                     _interestKeys.put(key, ++count);
-                }else{
+                    
+                } else {
                     _interestKeys.put(key, 1);
                 }
             }
+            
+            System.out.println(green("\n[add_interest]"));
+			printAttribute("session ID", ""+id);
+			printAttribute("key", key);
+			printAttribute("value", value);
+            
             profile.addInterest(key, value);
 
             return new Response(true, "Successfully added a new interest.");
 
-        }catch (AuthenticationException e){
+        } catch (AuthenticationException e) {
             return new Response(e);
         }
     }
@@ -235,9 +283,14 @@ public class RequestController implements ErrorController{
                 }else{
                     _interestKeys.put(key, count);
                 }
-            }else{
+            } else {
                 return new Response(false, "There is no interest with this key.");
             }
+            
+			System.out.println(green("\n[delete_interest]"));
+			printAttribute("session ID", ""+id);
+			printAttribute("key", key);
+			
             return new Response(true, "Successfully deleted this interest.");
 
         }catch (AuthenticationException e){
@@ -258,9 +311,7 @@ public class RequestController implements ErrorController{
 
     @RequestMapping(value="/messages/{id}", method= RequestMethod.POST)
     public Response createMessage(@PathVariable("id")long id, @RequestBody Map<String, String> params){
-        try{
-            System.out.println(green("[message]") + " : ");
-        
+        try{        
         
             Profile profile = getSession(id).getProfile();
 
@@ -269,6 +320,7 @@ public class RequestController implements ErrorController{
             String desiredLocation = params.get("location");
             if(!_locations.containsKey(desiredLocation))
                 return new Response(false, "Invalid location.");
+                
             Location location = _locations.get(desiredLocation);
             params.remove("location");
 
@@ -294,6 +346,20 @@ public class RequestController implements ErrorController{
             Message m = new Message(messageId, profile, location, whitelisted, rules, startDate, endDate, message);
 
             _messages.put(messageId, m);
+            
+			System.out.println(green("\n[new_message]"));
+			printAttribute("session ID", ""+id);
+			printAttribute("poster", profile.getUsername());
+			printAttribute("location", location.getName());
+			printAttribute("whitelisted", ""+whitelisted);
+			int i=0;
+			for (Map.Entry<String,String> rule : rules.entrySet()) {
+				printAttribute("rule."+(i++), rule.toString());
+			}
+			printAttribute("startDate", startDate.toString());
+			printAttribute("endDate", endDate.toString());
+			printAttribute("message", message.replaceAll("[\\t\\n\\r]"," "));
+            
             return new Response(true, "Message successfully posted.");
 
         }catch (AuthenticationException |
@@ -313,7 +379,14 @@ public class RequestController implements ErrorController{
                 if(profile.equals(m.getSender()))
                     messages.add(new DeliverableMessage(m));
             }
-
+            
+			System.out.println(green("\n[list_user_messages]"));
+			printAttribute("session ID", ""+id);
+			int i=0;
+			for(Message m : _messages.values()){
+				printAttribute("messageID."+(i++), ""+m.getId());
+			}
+			
             return new MessagesList(messages);
 
         }catch (AuthenticationException e){
@@ -334,6 +407,11 @@ public class RequestController implements ErrorController{
                 return new Response(false, "The message that you are trying to delete doesn't belong to you!");
             }
             _messages.remove(messageId);
+            
+			System.out.println(green("\n[delete_message]"));
+			printAttribute("session ID", ""+id);
+			printAttribute("messageID", ""+messageId);
+
 
             return new Response(true, "Message successfully deleted.");
 
@@ -356,6 +434,13 @@ public class RequestController implements ErrorController{
                     messages.add(new DeliverableMessage(m));
                 }
             }
+            
+			System.out.println(green("\n[list_messages]"));
+			printAttribute("sessionID", ""+id);
+			int i=0;
+			for(Message m : _messages.values()){
+				printAttribute("messageID."+(i++), ""+m.getId());
+			}
 
             return new MessagesList(messages);
 
@@ -369,6 +454,7 @@ public class RequestController implements ErrorController{
      ---------------------------------------------*/
     @RequestMapping("/error")
     public Response error(){
+		System.out.println(red("\n[404]"));
         return new Response(false, "404 Resource not found!");
     }
 

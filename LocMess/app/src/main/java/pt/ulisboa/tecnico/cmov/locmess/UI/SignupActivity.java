@@ -32,10 +32,18 @@ public class SignupActivity extends AppCompatActivity {
         String username = ((EditText)findViewById(R.id.editTextUsername)).getText().toString();
         String password = ((EditText)findViewById(R.id.editTextPassword)).getText().toString();
         String retypePassword = ((EditText)findViewById(R.id.editTextPasswordRetype)).getText().toString();
-        if(password.equals(retypePassword)) {
-            (new RegisterTask(this, username, password)).execute();
-        }else{
+
+        if (username.equals("")) {
+            Toast.makeText(this, "Empty username.", Toast.LENGTH_SHORT).show();
+
+        } else if (password.equals("")) {
+            Toast.makeText(this, "Empty password.", Toast.LENGTH_SHORT).show();
+
+        } else if (!password.equals(retypePassword)) {
             Toast.makeText(this, getResources().getString(R.string.badPasswordMatch), Toast.LENGTH_SHORT).show();
+
+        } else {
+            (new RegisterTask(this, username, password)).execute();
         }
     }
 
