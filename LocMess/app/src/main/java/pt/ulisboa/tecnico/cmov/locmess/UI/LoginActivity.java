@@ -1,11 +1,13 @@
 package pt.ulisboa.tecnico.cmov.locmess.UI;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import pt.ulisboa.tecnico.cmov.locmess.DataManager;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
@@ -21,6 +23,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        try {
+            getActionBar().setTitle("Login");
+            getSupportActionBar().setTitle("Login");
+        } catch (NullPointerException e) {
+            Toast.makeText(this, "null", Toast.LENGTH_LONG);
+        }
     }
 
 

@@ -18,105 +18,162 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+
         <activity android:name=".UI.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.LoginActivity" />
+
+        <activity
+            android:name=".UI.LoginActivity"
+            android:label="@string/login" />
+
         <activity
             android:name=".UI.SignupActivity"
-            android:parentActivityName=".UI.LoginActivity">
-
-            <!-- The meta-data tag is required to support API level 15 and lower -->
+            android:parentActivityName=".UI.LoginActivity"
+            android:label="@string/signup">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.LoginActivity" />
         </activity>
+
         <activity
             android:name=".UI.MessagesActivity"
-            android:parentActivityName=".UI.HomeActivity">
+            android:parentActivityName=".UI.HomeActivity"
+            android:label="@string/myMessages">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.HomeActivity" />
         </activity>
+
         <activity
             android:name=".UI.MessageViewActivity"
-            android:parentActivityName=".UI.MessagesActivity">
+            android:parentActivityName=".UI.MessagesActivity"
+            android:label="@string/message">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.MessagesActivity" />
         </activity>
+
         <activity
             android:name=".UI.PostMessageActivity"
             android:parentActivityName=".UI.HomeActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/postMessage">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.HomeActivity" />
         </activity>
+
         <activity
             android:name=".UI.PostMessageDateTime"
             android:parentActivityName=".UI.PostMessageActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/postMessage">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.PostMessageActivity" />
         </activity>
+
         <activity
             android:name=".UI.PostMessageRules"
             android:parentActivityName=".UI.PostMessageDateTime"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/postMessage">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.PostMessageDateTime" />
         </activity>
+
         <activity
             android:name=".UI.AddMessageRuleActivity"
             android:parentActivityName=".UI.PostMessageRules"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/postMessage">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.PostMessageRules" />
         </activity>
+
         <activity
             android:name=".UI.LocationsActivity"
-            android:parentActivityName=".UI.HomeActivity">
+            android:parentActivityName=".UI.HomeActivity"
+            android:label="@string/locations">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.HomeActivity" />
         </activity>
+
         <activity
             android:name=".UI.AddGPSLocationActivity"
-            android:parentActivityName=".UI.LocationsActivity">
-            <meta-data
+            android:parentActivityName=".UI.LocationsActivity"
+            android:label="@string/addGPSLocation">
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.LocationsActivity" />
         </activity>
+
         <activity
             android:name=".UI.AddWiFiLocation"
-            android:parentActivityName=".UI.LocationsActivity">
-            <meta-data
+            android:parentActivityName=".UI.LocationsActivity"
+            android:label="@string/addWiFiLocation">
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.LocationsActivity" />
         </activity>
+
         <activity
             android:name=".UI.ProfileActivity"
-            android:parentActivityName=".UI.HomeActivity">
-            <meta-data
+            android:parentActivityName=".UI.HomeActivity"
+            android:label="@string/profile">
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.HomeActivity" />
         </activity>
+
         <activity
             android:name=".UI.AddInterestActivity"
+            android:parentActivityName=".UI.ProfileActivity"
+            android:label="@string/addInterest">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UI.ProfileActivity" />
+        </activity>
+
+        <activity android:name=".UI.LocationGPSViewActivity"
+            android:label="@string/location"
+            android:parentActivityName=".UI.LocationsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UI.LocationsActivity" />
+        </activity>
+
+        <activity android:name=".UI.LocationWiFiViewActivity"
+            android:label="@string/location"
+            android:parentActivityName=".UI.LocationsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UI.LocationsActivity" />
+        </activity>
+
+        <activity android:name=".UI.RuleViewActivity"
+            android:label="@string/rule"
+            android:parentActivityName=".UI.PostMessageRules">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UI.PostMessageRules" />
+        </activity>
+
+        <activity android:name=".UI.InterestViewActivity"
+            android:label="@string/interest"
             android:parentActivityName=".UI.ProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UI.ProfileActivity" />
         </activity>
-        <activity android:name=".UI.LocationGPSViewActivity" />
+
 
         <receiver android:name=".FetchMessagesBroadcastReceiver" />
         <!--
@@ -124,15 +181,13 @@
         <receiver android:name="pt.ulisboa.tecnico.cmov.locmess.WifiReceiver"/>
         -->
         <service
-            android:name=".FetchMessagesService"
-            android:enabled="true" />
-        <service
-            android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService"
-            android:enabled="true" />
+        android:name=".FetchMessagesService"
+        android:enabled="true" />
 
-        <activity android:name=".UI.RuleViewActivity" />
-        <activity android:name=".UI.InterestViewActivity" />
-        <activity android:name=".UI.LocationWiFiViewActivity"></activity>
+        <service
+        android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService"
+        android:enabled="true" />
+
     </application>
 
 </manifest>

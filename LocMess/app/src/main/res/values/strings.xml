@@ -52,12 +52,14 @@
 
     <string name="profile">Profile</string>
     <string name="viewProfile">View Profile</string>
-    <string name="manageInterests">Manage Interest</string>
+    <string name="interest">Interest</string>
+    <string name="manageInterests">Manage Interests</string>
     <string name="addInterest">Add Interest</string>
     <string name="updateInterest">Update Interest</string>
     <string name="deleteInterest">Delete Interest</string>
 
     <string name="messages">Messages</string>
+    <string name="myMessages">My Messages</string>
     <string name="postMessage">Post New Message</string>
     <string name="saveMessage">Save Message</string>
     <string name="savedMessages">Saved Messages</string>
@@ -89,6 +91,7 @@
     <string name="whitelist">Whitelist</string>
     <string name="blacklist">Blacklist</string>
 
+    <string name="rule">Message Rule</string>
     <string name="addRule">Add Rule</string>
     <string name="updateRule">Update Rule</string>
     <string name="deleteRule">Delete Rule</string>
