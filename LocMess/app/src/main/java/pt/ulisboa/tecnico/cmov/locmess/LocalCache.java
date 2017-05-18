@@ -489,4 +489,18 @@ public class LocalCache {
         return new Profile(interestsMap);
     }
 
+
+
+
+
+
+//    private static WifiReceiver _wifiReceiver;
+//    public WifiReceiver getWifiReceiver() { return _wifiReceiver; }
+//    public void setWifiReceiver(WifiReceiver receiver) { _wifiReceiver = receiver; }
+
+
+    private static ArrayList<String> _peersList;
+    public ArrayList<String> getPeerList() { return _peersList; }
+    public void setPeerList(ArrayList<String> list) { _peersList = list; }
+
 }

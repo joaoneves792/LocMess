@@ -69,10 +69,19 @@ public class AddGPSLocationActivity extends AppCompatActivity {
     }
 
     public void uploadLocation(View view) {
-        String name = ((EditText) findViewById(R.id.editTextSSID)).getText().toString();
-        double latitude = Double.parseDouble(((EditText) findViewById(R.id.editTextLatitude)).getText().toString());
-        double longitude = Double.parseDouble(((EditText) findViewById(R.id.editTextLongitude)).getText().toString());
-        double radius = Double.parseDouble(((EditText) findViewById(R.id.editTextRadius)).getText().toString());
+        String name =           ((EditText) findViewById(R.id.editTextName)).getText().toString();
+        String latitudeText =   ((EditText) findViewById(R.id.editTextLatitude)).getText().toString();
+        String longitudeText =  ((EditText) findViewById(R.id.editTextLongitude)).getText().toString();
+        String radiusText =     ((EditText) findViewById(R.id.editTextRadius)).getText().toString();
+
+        if(name.equals("") || latitudeText.equals("") || longitudeText.equals("") || radiusText.equals("")) {
+            Toast.makeText(this, "Please provide all required information.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double latitude = Double.parseDouble(latitudeText);
+        double longitude = Double.parseDouble(longitudeText);
+        double radius = Double.parseDouble(radiusText);
 
         GPSLocation gpsLocation = new GPSLocation(name, latitude, longitude, radius);
 

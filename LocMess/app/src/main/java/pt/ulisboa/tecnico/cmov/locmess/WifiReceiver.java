@@ -13,7 +13,7 @@ import java.util.List;
  * Created by joao on 5/7/17.
  */
 
-public class WifiReceiver extends BroadcastReceiver{
+public class WifiReceiver extends BroadcastReceiver {
     private ArrayList<String> _ssids;
 
     @Override

@@ -26,16 +26,16 @@
         android:id="@+id/constraintLayout2">
 
         <EditText
-            android:id="@+id/editTextRadius"
+            android:id="@+id/editTextName"
             android:layout_width="352dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="@string/radius"
-            android:inputType="number|numberDecimal"
+            android:hint="@string/locationName"
+            android:inputType="textPersonName"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextLongitude" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/editTextLatitude"
@@ -47,7 +47,7 @@
             android:inputType="number|numberSigned|numberDecimal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextSSID" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
         <EditText
             android:id="@+id/editTextLongitude"
@@ -62,16 +62,16 @@
             app:layout_constraintTop_toBottomOf="@+id/editTextLatitude" />
 
         <EditText
-            android:id="@+id/editTextSSID"
+            android:id="@+id/editTextRadius"
             android:layout_width="352dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="@string/locationName"
-            android:inputType="textPersonName"
+            android:hint="@string/radius"
+            android:inputType="number|numberDecimal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextLongitude" />
 
         <Button
             android:id="@+id/buttonCurrentLocation"

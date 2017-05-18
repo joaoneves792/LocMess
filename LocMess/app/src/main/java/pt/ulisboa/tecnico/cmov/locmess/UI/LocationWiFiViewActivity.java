@@ -5,14 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
 
 import pt.ulisboa.tecnico.cmov.locmess.DataManager;
-import pt.ulisboa.tecnico.cmov.locmess.Domain.GPSLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.Location;
 import pt.ulisboa.tecnico.cmov.locmess.Domain.WiFiLocation;
 import pt.ulisboa.tecnico.cmov.locmess.Exceptions.StorageException;
@@ -60,7 +58,7 @@ public class LocationWiFiViewActivity extends AppCompatActivity {
                     ssids += ssid + "\n";
                 }
 
-                ((EditText) findViewById(R.id.editTextSSID)).setText(ssids);
+                ((EditText) findViewById(R.id.editTextName)).setText(ssids);
 
                 break;
             }
@@ -75,7 +73,7 @@ public class LocationWiFiViewActivity extends AppCompatActivity {
 
     public void update(View view) {
         String name = ((TextView) findViewById(R.id.textViewLocationName)).getText().toString();
-        String ssids = ((EditText) findViewById(R.id.editTextSSID)).getText().toString().replaceAll("\n+", "\n");
+        String ssids = ((EditText) findViewById(R.id.editTextName)).getText().toString().replaceAll("\n+", "\n");
         String[] ssidsCollection = ssids.split("\n");
 
         WiFiLocation wiFiLocation = new WiFiLocation(name, Arrays.asList(ssidsCollection));

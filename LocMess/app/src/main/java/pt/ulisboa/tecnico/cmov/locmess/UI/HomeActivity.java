@@ -149,6 +149,7 @@ public class HomeActivity extends AppCompatActivity {
             if (!wifi.isWifiEnabled()) {
                 wifi.setWifiEnabled(true);
             }
+//            LocalCache.getInstance().setWifiReceiver(_wifiReceiver);
         }
         // setup message fetching service
         if (_fetchMessagesReceiver == null){

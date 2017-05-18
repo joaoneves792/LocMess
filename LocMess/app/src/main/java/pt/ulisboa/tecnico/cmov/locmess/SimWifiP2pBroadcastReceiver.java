@@ -93,31 +93,31 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver implements Si
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-            /*
-            int state = intent.getIntExtra(SimWifiP2pBroadcast.EXTRA_WIFI_STATE, -1);
-            if (state == SimWifiP2pBroadcast.WIFI_P2P_STATE_ENABLED) {
-        		Toast.makeText(_appContext, "WiFi Direct enabled",Toast.LENGTH_SHORT).show();
-            } else {
-        		//Toast.makeText(mActivity, "WiFi Direct disabled",Toast.LENGTH_SHORT).show();
-            }
-            */
+//            int state = intent.getIntExtra(SimWifiP2pBroadcast.EXTRA_WIFI_STATE, -1);
+//            if (state == SimWifiP2pBroadcast.WIFI_P2P_STATE_ENABLED) {
+//        		Toast.makeText(_appContext, "WiFi Direct enabled",Toast.LENGTH_SHORT).show();
+//            } else {
+//        		//Toast.makeText(mActivity, "WiFi Direct disabled",Toast.LENGTH_SHORT).show();
+//            }
+
         } else if (SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-        	//Toast.makeText(_appContext, "Peer list changed",Toast.LENGTH_SHORT).show();
+        	Toast.makeText(_appContext, "Peer list changed",Toast.LENGTH_SHORT).show();
+            _manager.requestPeers(_channel, this);
+
             deliverMessages();
+
         } else if (SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION.equals(action)) {
-            /*
-        	SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
-        			SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
-        	ginfo.print();
-    		Toast.makeText(_appContext, "Network membership changed", Toast.LENGTH_SHORT).show();
-            */
+//        	SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
+//        			SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
+//        	ginfo.print();
+//    		Toast.makeText(_appContext, "Network membership changed", Toast.LENGTH_SHORT).show();
+
         } else if (SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION.equals(action)) {
-            /*
-        	SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
-        			SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
-        	ginfo.print();
-    		Toast.makeText(_appContext, "Group ownership changed", Toast.LENGTH_SHORT).show();
-            */
+//        	SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
+//        			SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
+//        	ginfo.print();
+//    		Toast.makeText(_appContext, "Group ownership changed", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -145,7 +145,15 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver implements Si
         }
     }
 
-    public void onPeersAvailable(SimWifiP2pDeviceList devices){
+    public void onPeersAvailable(SimWifiP2pDeviceList devices) {
+        ArrayList<String> peers = new ArrayList<>();
+
+        // compile list of devices in range
+        for (SimWifiP2pDevice device : devices.getDeviceList()) {
+            peers.add(device.deviceName);
+        }
+        LocalCache.getInstance().setPeerList(peers);
+
         for(SimWifiP2pDevice device : devices.getDeviceList()){
             String ip = device.getVirtIp();
             if(null != _pendingMessages) {
