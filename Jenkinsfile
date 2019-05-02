@@ -8,7 +8,7 @@ pipeline {
 		mvn clean compile install
 		cd ..
 		cd ./LocMessServer
-		mvn clean compile'
+		mvn clean compile
 		'''
             }
         }
