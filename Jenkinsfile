@@ -6,7 +6,7 @@ pipeline {
 	} 
     }
     environment {
-	MAVEN_OPTS = '-Duser.home=/root'
+	MAVEN_OPTS = '-Duser.home=/home/joao'
     }
     stages {
         stage('build') {
