@@ -2,7 +2,7 @@ pipeline {
     agent { 
 	docker { 
 		image 'maven:3.6.0' 
-		/*args '-v /home/joao/.m2:/root/.m2'*/
+		args '-v /home/joao/.m2:/home/joao/.m2'
 	} 
     }
     environment {
