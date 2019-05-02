@@ -3,7 +3,13 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'cd ./LocMessServer;  mvn clean compile'
+                sh '''
+		cd ./crypto-lib
+		mvn clean compile install
+		cd ..
+		cd ./LocMessServer
+		mvn clean compile'
+		'''
             }
         }
     }
