@@ -25,7 +25,7 @@ pipeline {
 	        sh '''
 		cd ./LocMessServer
 		mvn test
-		''''
+		'''
 	    }
 	}
 	post {
