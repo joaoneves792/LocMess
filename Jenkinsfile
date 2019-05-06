@@ -28,14 +28,13 @@ pipeline {
 		'''
 	    }
 	}
-	post {
-	    allways {
-                echo 'FINISHED'
-	    }
-	    success {
-		echo 'Ready to deploy!'
-            }
+    }
+    post {
+        always {
+            echo 'FINISHED'
+	}
+	success {
+	    echo 'Ready to deploy!'
         }
-
     }
 }
