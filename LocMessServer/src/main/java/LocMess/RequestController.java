@@ -366,9 +366,11 @@ public class RequestController implements ErrorController{
 			printAttribute("location", location.getName());
 			printAttribute("whitelisted", ""+whitelisted);
 			int i=0;
-			for (Map.Entry<String,String> rule : rules.entrySet()) {
-				printAttribute("rule."+(i++), rule.toString());
-			}
+			if(rules != null) {
+                for (Map.Entry<String, String> rule : rules.entrySet()) {
+                    printAttribute("rule." + (i++), rule.toString());
+                }
+            }
 			printAttribute("startDate", startDate.toString());
 			printAttribute("endDate", endDate.toString());
 			printAttribute("message", message.replaceAll("[\\t\\n\\r]"," "));

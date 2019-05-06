@@ -20,5 +20,22 @@ pipeline {
 		'''
             }
         }
+	stage('test') {
+	    steps {
+	        sh '''
+		cd ./LocMessServer
+		mvn test
+		''''
+	    }
+	}
+	post {
+	    allways {
+                echo 'FINISHED'
+	    }
+	    success {
+		echo 'Ready to deploy!'
+            }
+        }
+
     }
 }
