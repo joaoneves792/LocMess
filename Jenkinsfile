@@ -37,7 +37,7 @@ pipeline {
 	}
 	stage('production_image'){
     	    agent { 
-	        docker-agent 
+	        label 'docker-agent'
 	    }
 	    steps {
             sh '''
