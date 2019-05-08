@@ -37,7 +37,7 @@ pipeline {
 	}
 	stage('production_image'){
     	    agent { 
-	        label 'docker-agent'
+	        label 'remote-docker'
 	    }
 	    steps {
             sh '''
