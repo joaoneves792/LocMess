@@ -36,10 +36,14 @@ pipeline {
 	    }
 	}
 	stage('production_image'){
-		agent docker-agent
-		sh '''
-		docker build -t locmess:production .
-		'''
+    	    agent { 
+	        docker-agent 
+	    }
+	    steps {
+            sh '''
+	    docker build -t locmess:production .
+	    '''
+            }
 	}
     }
     post {
