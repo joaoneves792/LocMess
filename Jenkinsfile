@@ -1,15 +1,16 @@
 pipeline {
-    agent { 
-	docker { 
-		image 'maven:3.6.0' 
-		args '-v /home/joao/.m2:/home/joao/.m2'
-	} 
-    }
+    agent none
     environment {
 	MAVEN_OPTS = '-Duser.home=/home/joao'
     }
     stages {
         stage('build') {
+    	    agent { 
+	        docker { 
+		    image 'maven:3.6.0' 
+		    args '-v /home/joao/.m2:/home/joao/.m2'
+		} 
+	    }
             steps {
                 sh '''
 		cd ./crypto-lib
@@ -21,12 +22,24 @@ pipeline {
             }
         }
 	stage('test') {
+    	    agent { 
+	        docker { 
+		    image 'maven:3.6.0' 
+		    args '-v /home/joao/.m2:/home/joao/.m2'
+		} 
+	    }
 	    steps {
 	        sh '''
 		cd ./LocMessServer
 		mvn test
 		'''
 	    }
+	}
+	stage('production_image'){
+		agent docker-agent
+		sh '''
+		docker build -t locmess:production .
+		'''
 	}
     }
     post {
